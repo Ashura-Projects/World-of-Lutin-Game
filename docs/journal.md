@@ -11,7 +11,7 @@ Reprise : lire ce fichier, puis `prompts/03-reprise-et-corrections.md`.
 | J4 — Récolte & métiers | **fait** (panneau bâtiments au J6) | bois et pierre arrivent en réserve sans action (tests couper/creuser/cueillir/chasser/assigner) ; `recolte.jpg`, `travail.jpg` |
 | J5 — Les lutins bâtissent | **fait** | maison (murs, toit, porte, 4 lits) bâtie par les lutins, reconnue « maison », ils y dorment (test) ; tentes attribuées ; `village.jpg` |
 | J6 — Agriculture & production | **fait** | champ case par case → récolte + paille (test), blé → farine → pain avec l'eau du puits (test), hiver de 5 jours en autonomie (test) ; `ferme.jpg` |
-| J7 — Prédateurs, gestion & sauvegarde | à faire | |
+| J7 — Prédateurs, gestion & sauvegarde | **fait** | loups (nuit) et ours, milice qui abat le loup (tests), sauvegarde → réouverture identique (test), rangs/objectifs/bilan (tests) ; `loups.jpg` |
 | J8 — Familles, école & recherche | à faire | |
 
 ## J0 — Fondations
@@ -67,3 +67,11 @@ Settings, GameSetup), GUT 9.7.1 headless, export Android arm64 (`com.ashura.worl
 - Tâches « labourer, semer, récolter, fabriquer » : le lutin va chercher les intrants à la réserve (`BuildExec`).
 - Menus : Zones (champs par case ou rectangle, culture par case), Gestion (ateliers, affectation lutin → bâtiment, commandes).
 - Froid : l'hiver, la chaleur baisse loin d'un feu (rayon `heated_radius`) ; feu sans bûches = alerte.
+
+## J7 — Prédateurs, gestion & sauvegarde
+- `Combat` : loups (chassent la nuit, en meute), ours ; PV/dégâts/portée/cadence fixes (`animals.json`, `equipment.json`) ; les lutins ont des PV et se défendent ;
+  cloche Mobiliser (arme prise en réserve : fusil, sinon lance ; uniforme bleu affiché) / Se cacher / Fin ; XP de combat et tableau de chasse ; potions ; mort.
+- `Village` : rangs (`ranks.json`), objectifs (`objectives.json`), bilan quotidien, alertes (famine, froid, bois). `GameSim` regroupe toute la simulation.
+- Sauvegarde : auto toutes les 5 min (`autosave_s`), à la mise en arrière-plan et à la fermeture ; test d'aller-retour complet strictement identique.
+- Interface : Militaire (cloche, armes, combattants), Tableau de bord (dans Gestion), alertes en bulles, rang dans la barre du haut.
+- Non fait : le guérisseur ne va pas encore soigner activement (les blessés boivent une potion à la réserve) ; formation du guérisseur au J8.

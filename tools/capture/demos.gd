@@ -12,6 +12,8 @@ static func run(game: Node, action: String) -> void:
 			game.camera.focus(l.pos)
 			game.lutins_view.selected_id = l.id
 			game.hud.show_lutin(l)
+		"loups":
+			loups(game)
 		"ferme":
 			ferme(game)
 		"village":
@@ -114,3 +116,16 @@ static func ferme(game: Node) -> void:
 	game.camera.distance = 15.0
 	game.camera.focus(Vector3(c) + Vector3(3, 0, 2))
 	game.hud.menu_button("Gestion").button_pressed = true
+
+
+static func loups(game: Node) -> void:
+	var c: Vector3i = game.colony.stock.pos
+	GameClock.tick_index = GameClock.ticks_per_day() + int(GameClock.ticks_per_day() * 0.82)
+	game.colony.stock.add("flintlock", 4)
+	for i in 3:
+		game.fauna.spawn("wolf", c + Vector3i(9, 0, -2 + i * 2))
+	game.fauna.spawn("bear", c + Vector3i(-10, 0, 4))
+	game.sim.combat.ring("mobilize")
+	game.camera.distance = 14.0
+	game.camera.focus(Vector3(c) + Vector3(4, 0, 0))
+	game.hud.menu_button("Militaire").button_pressed = true

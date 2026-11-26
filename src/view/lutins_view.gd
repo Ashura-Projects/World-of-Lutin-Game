@@ -13,6 +13,12 @@ var selected_id: int = -1
 func setup(c: Colony) -> void:
 	colony = c
 	colony.lutin_added.connect(_add)
+	colony.lutin_removed.connect(
+		func(id: int) -> void:
+			if _models.has(id):
+				_models[id].queue_free()
+				_models.erase(id)
+	)
 	for l in colony.lutins:
 		_add(l)
 	_marker = MeshInstance3D.new()

@@ -27,6 +27,9 @@ var harvest_panel: HarvestPanel
 var jobs_panel: JobsPanel
 var zones_panel: ZonesPanel
 var workshops_panel: WorkshopsPanel
+var military_panel: MilitaryPanel
+var dashboard: DashboardPanel
+var _toasts: VBoxContainer
 var _res_labels: Dictionary = {}
 var _food_drop: PanelContainer
 
@@ -60,12 +63,50 @@ func bind_game(game: Node) -> void:
 	workshops_panel.position = Vector2(350, 70)
 	workshops_panel.visible = false
 	root.add_child(workshops_panel)
+	military_panel = MilitaryPanel.new()
+	military_panel.setup(game)
+	military_panel.position = Vector2(420, 80)
+	military_panel.visible = false
+	root.add_child(military_panel)
+	_panel_toggle("Militaire", military_panel)
+	dashboard = DashboardPanel.new()
+	dashboard.setup(game)
+	dashboard.position = Vector2(390, 80)
+	dashboard.visible = false
+	root.add_child(dashboard)
+	_toasts = VBoxContainer.new()
+	_toasts.position = Vector2(1180, 80)
+	_toasts.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	root.add_child(_toasts)
+	EventBus.alert.connect(_toast)
 	_panel_toggle("Zones", zones_panel)
 	_panel_toggle("Gestion", workshops_panel)
 	_panel_toggle("Récolter", harvest_panel)
 	_panel_toggle("Lutins", jobs_panel)
 	_build_resources()
 	_setup_build(game.build_tool, game.world_view)
+
+
+## Alertes en bulles (en haut à droite), quelques secondes.
+func _toast(kind: String, text: String) -> void:
+	var l := Label.new()
+	l.text = text
+	l.add_theme_color_override(
+		"font_color", Color("ffd27a") if kind in ["mort", "alerte", "froid", "cloche"] else UiStyle.TXT
+	)
+	var p := PanelContainer.new()
+	p.add_theme_stylebox_override("panel", UiStyle.box(Color(0.08, 0.06, 0.06, 0.9), UiStyle.GOLD_D, 1, 6))
+	p.add_child(l)
+	_toasts.add_child(p)
+	if _toasts.get_child_count() > 5:
+		_toasts.get_child(0).queue_free()
+	get_tree().create_timer(6.0).timeout.connect(p.queue_free)
+
+
+func toggle_dashboard() -> void:
+	dashboard.visible = not dashboard.visible
+	if dashboard.visible:
+		dashboard.refresh()
 
 
 func _panel_toggle(button_name: String, panel: Control) -> void:
@@ -93,7 +134,7 @@ func _close_others(keep: String) -> void:
 
 ## Ressources en haut : Nourriture (total des aliments, détail déroulant), bûches, pierre, fer, or.
 func _build_resources() -> void:
-	var x := 690
+	var x := 668
 	for r: Array in [
 		["food", "Nourriture"], ["log", "Bûches"], ["stone", "Pierre"], ["iron_ore", "Fer"], ["gold", "Or"]
 	]:
@@ -106,7 +147,7 @@ func _build_resources() -> void:
 		_res_labels[r[0]] = [b, r[1]]
 		x += wide + 8
 	_food_drop = PanelContainer.new()
-	_food_drop.position = Vector2(690, 62)
+	_food_drop.position = Vector2(668, 62)
 	_food_drop.visible = false
 	root.add_child(_food_drop)
 	_res_labels["food"][0].pressed.connect(func() -> void: _food_drop.visible = not _food_drop.visible)
@@ -174,7 +215,7 @@ func _bar(rect: Rect2) -> Panel:
 func _build_top() -> void:
 	var bar := _bar(Rect2(0, 0, 1600, 62))
 	bar.set_anchors_preset(Control.PRESET_TOP_WIDE)
-	_time_label = UiStyle.title_label("", 26)
+	_time_label = UiStyle.title_label("", 22)
 	_time_label.position = Vector2(18, 12)
 	bar.add_child(_time_label)
 	var speeds: Array = DataRegistry.get_table("time").get("speeds", [0, 1, 2, 4])
@@ -182,13 +223,13 @@ func _build_top() -> void:
 		var s := int(speeds[i])
 		var b := Button.new()
 		b.text = "II" if s == 0 else "x%d" % s
-		b.position = Vector2(300 + i * 66, 6)
+		b.position = Vector2(400 + i * 64, 6)
 		b.custom_minimum_size = Vector2(58, 50)
 		b.pressed.connect(func() -> void: GameClock.set_speed(s))
 		bar.add_child(b)
 		_speed_buttons.append(b)
 	_fps_label = Label.new()
-	_fps_label.position = Vector2(590, 18)
+	_fps_label.position = Vector2(18, 64)
 	_fps_label.add_theme_color_override("font_color", UiStyle.TXT_D)
 	bar.add_child(_fps_label)
 	var gear := Button.new()
@@ -277,6 +318,12 @@ func _process(_delta: float) -> void:
 	var sname: String = seasons[GameClock.season_index()]["name"] if not seasons.is_empty() else ""
 	var dps := int(DataRegistry.get_table("time").get("days_per_season", 5))
 	_time_label.text = "%s · jour %d" % [sname, GameClock.day() % dps + 1]
+	if _game != null and _game.sim != null:
+		_time_label.text += " · " + _game.sim.village.rank_name()
 	_fps_label.text = "%d img/s" % Engine.get_frames_per_second()
 	if Engine.get_process_frames() % 15 == 0:
 		_refresh_resources()
+	if Engine.get_process_frames() % 30 == 0:
+		for p: Control in [military_panel, dashboard]:
+			if p != null and p.visible:
+				p.call("refresh")

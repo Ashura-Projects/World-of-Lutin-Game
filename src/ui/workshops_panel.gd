@@ -13,7 +13,16 @@ func setup(g: Node) -> void:
 	custom_minimum_size = Vector2(900, 0)
 	var v := VBoxContainer.new()
 	add_child(v)
-	v.add_child(UiStyle.title_label("Ateliers et affectation", 30))
+	var head := HBoxContainer.new()
+	v.add_child(head)
+	var title := UiStyle.title_label("Ateliers et affectation", 30)
+	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	head.add_child(title)
+	var dash := Button.new()
+	dash.text = "Tableau de bord"
+	dash.custom_minimum_size = Vector2(240, 50)
+	dash.pressed.connect(func() -> void: game.hud.toggle_dashboard())
+	head.add_child(dash)
 	var scroll := ScrollContainer.new()
 	scroll.custom_minimum_size = Vector2(880, 420)
 	v.add_child(scroll)
