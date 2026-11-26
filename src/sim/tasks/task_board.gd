@@ -16,6 +16,8 @@ var _by_cell: Dictionary = {}  # Vector3i -> id (évite les doublons)
 var _haul_reserved: Dictionary = {}  # case de pile -> id lutin
 var _work: Dictionary
 var exec: TaskExec
+var builds: BuildExec
+var structures: Structures = null
 
 
 func _init(w: VoxelWorld, c: Colony, f: Flora, fa: Fauna, g: GroundItems) -> void:
@@ -26,6 +28,7 @@ func _init(w: VoxelWorld, c: Colony, f: Flora, fa: Fauna, g: GroundItems) -> voi
 	ground = g
 	_work = DataRegistry.get_table("jobs").get("work", {})
 	exec = TaskExec.new(self)
+	builds = BuildExec.new(self)
 	c.task_board = self
 
 
@@ -68,6 +71,42 @@ func add_dig(cell: Vector3i) -> int:
 		return -1
 	var job := "builder" if b.has("cost") else ("miner" if b.get("tool", "shovel") == "pickaxe" else "digger")
 	return _new_task("dig", cell, job, float(b.get("hardness", b.get("build_time", 2))))
+
+
+## Plan de bloc : un bâtisseur apportera le matériau (coût du bloc) puis le posera.
+func add_build_block(cell: Vector3i, block_id: int) -> int:
+	var b := DataRegistry.block(block_id)
+	if not b.has("cost") or world.types.solid[world.get_block(cell)] == 1:
+		return -1
+	return _new_task("build", cell, "builder", float(b.get("build_time", 2)), {"block": block_id})
+
+
+## Objet ou bâtiment à monter (tente, feu de camp, lit…).
+func add_structure(kind: String, cell: Vector3i) -> int:
+	if structures == null or not structures.at(cell).is_empty():
+		return -1
+	if not Pathfinder.walkable(world, cell):
+		return -1  # il faut un sol solide et sec
+	var d := Structures.def(kind)
+	var sid := structures.add(kind, cell)
+	return _new_task(
+		"build_struct", cell, "builder", float(d.get("build_time", 10)), {"struct_kind": kind, "struct_id": sid}
+	)
+
+
+## Branché sur l'outil de construction : en partie, poser = plans ; gomme = annuler un plan ou démolir.
+func place_blueprints(cells: Array, block_id: int, erase: bool) -> int:
+	var n := 0
+	for p: Vector3i in cells:
+		if erase:
+			if _by_cell.has(p) and tasks[_by_cell[p]]["kind"] == "build":
+				cancel(_by_cell[p])
+				n += 1
+			else:
+				n += int(add_dig(p) >= 0)
+		else:
+			n += int(add_build_block(p, block_id) >= 0)
+	return n
 
 
 func add_gather(cell: Vector3i) -> int:
@@ -136,6 +175,8 @@ func cancel(id: int) -> void:
 			release(l)
 	_by_cell.erase(t["cell"])
 	tasks.erase(id)
+	if t["kind"] == "build_struct" and structures != null:
+		structures.remove(int(t["struct_id"]))
 	tasks_changed.emit()
 
 
@@ -172,6 +213,8 @@ func _can_do(l: Lutin, t: Dictionary) -> bool:
 
 ## Appelé par la colonie pour un lutin libre. Renvoie true si une tâche est prise.
 func assign(l: Lutin) -> bool:
+	if l.carrying.has("build"):
+		return builds.resume(l)
 	if not l.carrying.is_empty():
 		return exec.start_delivery(l)
 	var best: Dictionary = {}
@@ -180,11 +223,14 @@ func assign(l: Lutin) -> bool:
 	for t: Dictionary in tasks.values():
 		if t["reserved"] != -1 or int(t["blocked"]) > now or not _can_do(l, t):
 			continue
-		var d := Vector3(t["cell"]).distance_squared_to(Vector3(l.cell)) - float(t["cell"].y) * 4.0
+		var d := Vector3(t["cell"]).distance_squared_to(Vector3(l.cell))
+		d += float(t["cell"].y) * 16.0 if t["kind"] == "build" else -float(t["cell"].y) * 4.0  # bâtir de bas en haut
 		if d < best_d:
 			best_d = d
 			best = t
 	if not best.is_empty():
+		if best["kind"] in ["build", "build_struct"]:
+			return builds.start(l, best)
 		return exec.start(l, best)
 	if l.job == "hauler" or bool(_work.get("haul_any_idle", true)):
 		return exec.start_haul(l)
@@ -239,6 +285,11 @@ func from_dict(d: Dictionary) -> void:
 		e["id"] = int(e["id"])
 		e["reserved"] = -1
 		e["target"] = int(e.get("target", -1))
+		e.erase("phase")
+		if e.has("block"):
+			e["block"] = int(e["block"])
+		if e.has("struct_id"):
+			e["struct_id"] = int(e["struct_id"])
 		tasks[e["id"]] = e
 		if e["kind"] != "hunt":
 			_by_cell[e["cell"]] = e["id"]

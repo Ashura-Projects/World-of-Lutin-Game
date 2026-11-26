@@ -39,6 +39,23 @@ func setup(t: BuildTool) -> void:
 		if first:
 			_select_material(n)
 			first = false
+	var objs := HBoxContainer.new()
+	objs.add_theme_constant_override("separation", 6)
+	v.add_child(objs)
+	for b: Dictionary in DataRegistry.get_table("buildings").get("buildings", []):
+		if not b.get("available_from_start", false) or b.get("zone", false):
+			continue
+		var ob := Button.new()
+		ob.text = b["name"]
+		ob.custom_minimum_size = Vector2(0, 50)
+		ob.add_theme_font_size_override("font_size", 17)
+		var kind: String = b["id"]
+		ob.pressed.connect(
+			func() -> void:
+				_select_mode(BuildTool.Mode.OBJECT)
+				tool.object_kind = kind
+		)
+		objs.add_child(ob)
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 6)
 	v.add_child(row)

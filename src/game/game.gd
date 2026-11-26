@@ -18,6 +18,9 @@ var ground: GroundItems
 var board: TaskBoard
 var items_view: ItemsView
 var fauna_view: FaunaView
+var structures: Structures
+var structures_view: StructuresView
+var plans_view: PlansView
 var _gen_task: int = -1
 var _loading: Label
 
@@ -55,6 +58,8 @@ func _on_world_ready() -> void:
 	fauna = Fauna.new(world)
 	ground = GroundItems.new()
 	board = TaskBoard.new(world, colony, flora, fauna, ground)
+	structures = Structures.new()
+	board.structures = structures
 	for pair: Array in [
 		["world", world], ["colony", colony], ["flora", flora], ["fauna", fauna], ["ground", ground], ["tasks", board]
 	]:
@@ -82,6 +87,12 @@ func _on_world_ready() -> void:
 	fauna_view = FaunaView.new()
 	add_child(fauna_view)
 	fauna_view.bind(fauna)
+	structures_view = StructuresView.new()
+	add_child(structures_view)
+	structures_view.bind(structures)
+	plans_view = PlansView.new()
+	add_child(plans_view)
+	plans_view.bind(board)
 	lutins_view = LutinsView.new()
 	add_child(lutins_view)
 	lutins_view.setup(colony)
@@ -92,6 +103,9 @@ func _on_world_ready() -> void:
 	build_tool = BuildTool.new()
 	add_child(build_tool)
 	build_tool.setup(world, camera)
+	build_tool.place_handler = board.place_blueprints  # en partie : poser = plans pour les bâtisseurs
+	build_tool.structure_handler = func(kind: String, cell: Vector3i) -> bool:
+		return board.add_structure(kind, cell) >= 0
 	_loading.queue_free()
 	hud.bind_game(self)
 	GameClock.running = true
@@ -135,5 +149,5 @@ func _on_tap(screen: Vector2) -> void:
 
 
 func _exit_tree() -> void:
-	for k in ["world", "colony", "flora", "fauna", "ground", "tasks"]:
+	for k in ["world", "colony", "flora", "fauna", "ground", "structures", "tasks"]:
 		SaveManager.unregister(k)

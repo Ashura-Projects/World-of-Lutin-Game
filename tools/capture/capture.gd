@@ -40,7 +40,7 @@ func _process(delta: float) -> bool:
 		load("res://tools/capture/demos.gd").run(game, _action)
 		_action_done_at = _t
 		return false
-	if _action != "" and _t < _action_done_at + (25.0 if _action == "travail" else 3.0):
+	if _action != "" and _t < _action_done_at + (25.0 if _action in ["travail", "village"] else 3.0):
 		return false
 	if _t > _wait and ready:
 		var img := root.get_viewport().get_texture().get_image()

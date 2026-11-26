@@ -5,7 +5,7 @@ extends Node3D
 
 signal changed
 
-enum Mode { BLOCK, LINE, FILL, WALL, ERASE, ROAD }
+enum Mode { BLOCK, LINE, FILL, WALL, ERASE, ROAD, OBJECT }
 
 var active: bool = false
 var mode: Mode = Mode.BLOCK
@@ -17,6 +17,9 @@ var history: EditHistory
 var max_y: int = 9999
 ## Appelé à la place d'une pose instantanée (J5 : plans pour les bâtisseurs). Signature : (cells, id, erase).
 var place_handler: Callable
+## Pose d'un objet ou bâtiment (tente, lit…) : (kind, case) -> bool.
+var structure_handler: Callable
+var object_kind: String = ""
 var _touches: Dictionary = {}
 var _start := Vector3i.ZERO
 var _start_ok: bool = false
@@ -129,6 +132,11 @@ func _unhandled_input(event: InputEvent) -> void:
 func commit() -> int:
 	var n := 0
 	var erase := mode == Mode.ERASE
+	if mode == Mode.OBJECT:
+		n = int(structure_handler.is_valid() and structure_handler.call(object_kind, _start))
+		_cancel()
+		changed.emit()
+		return n
 	if place_handler.is_valid():
 		n = place_handler.call(_cells, material_id, erase)
 	else:

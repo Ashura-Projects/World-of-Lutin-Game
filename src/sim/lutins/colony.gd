@@ -97,8 +97,8 @@ func _decide(l: Lutin, night: bool) -> void:
 			_go(l, stock.pos, "manger")
 		return
 	if l.needs["sleep"] < float(_needs["sleep"]["go_to_bed_below"]) or (night and l.needs["sleep"] < 90.0):
-		if l.home.y >= 0 and not _near(l.cell, l.home, 0):
-			_go(l, l.home, "dormir")
+		if l.home.y >= 0 and not _near(l.cell, l.home, 1):
+			_go(l, l.home, "dormir", true)
 		else:
 			l.state = Lutin.State.SLEEP
 		return
@@ -133,11 +133,11 @@ func _act(l: Lutin) -> void:
 
 
 ## Demande un chemin (budget limité par tick). Renvoie false si le chemin est impossible.
-func _go(l: Lutin, target: Vector3i, _why: String, near: bool = false) -> bool:
+func _go(l: Lutin, target: Vector3i, _why: String, near: bool = false, reach_up: int = 1) -> bool:
 	if _path_budget <= 0:
 		return true  # on réessaiera au prochain tick
 	_path_budget -= 1
-	var p := Pathfinder.find(world, l.cell, target, int(_move.get("path_max_nodes", 20000)), near)
+	var p := Pathfinder.find(world, l.cell, target, int(_move.get("path_max_nodes", 20000)), near, reach_up)
 	if p.is_empty():
 		return false
 	l.set_path(p)
@@ -145,8 +145,8 @@ func _go(l: Lutin, target: Vector3i, _why: String, near: bool = false) -> bool:
 
 
 ## Pour les tâches (J4) : envoyer un lutin vers une case ; near = s'arrêter à côté.
-func send(l: Lutin, target: Vector3i, near: bool = false) -> bool:
-	return _go(l, target, "tâche", near)
+func send(l: Lutin, target: Vector3i, near: bool = false, reach_up: int = 1) -> bool:
+	return _go(l, target, "tâche", near, reach_up)
 
 
 static func _near(a: Vector3i, b: Vector3i, r: int) -> bool:

@@ -24,7 +24,8 @@ func start(l: Lutin, t: Dictionary) -> bool:
 			board.finish(t)
 			return false
 		target = a["cell"]
-	if not board.colony.send(l, target, true):
+	var reach := int(_work.get("build_reach_up", 3)) if t["kind"] == "dig" else 1
+	if not board.colony.send(l, target, true, reach):
 		t["blocked"] = GameClock.tick_index + 30 * GameClock.ticks_per_second()  # inaccessible : quarantaine
 		return false
 	t["reserved"] = l.id
@@ -63,6 +64,12 @@ func start_delivery(l: Lutin) -> bool:
 
 
 func arrived(l: Lutin) -> void:
+	var bt := _task(l)
+	if not bt.is_empty() and bt["kind"] in ["build", "build_struct"]:
+		board.builds.arrived(l, bt)
+		return
+	if l.carrying.has("build"):
+		return
 	if l.carrying.has("pickup"):
 		var c: Array = l.carrying["pickup"]
 		var cell := Vector3i(int(c[0]), int(c[1]), int(c[2]))
@@ -79,6 +86,9 @@ func arrived(l: Lutin) -> void:
 		return
 	var t := _task(l)
 	if t.is_empty():
+		return
+	if t["kind"] in ["build", "build_struct"]:
+		board.builds.arrived(l, t)
 		return
 	l.state = Lutin.State.WORK
 
@@ -121,6 +131,10 @@ func work(l: Lutin) -> void:
 func _complete(l: Lutin, t: Dictionary) -> void:
 	var cell: Vector3i = t["cell"]
 	match t["kind"]:
+		"build", "build_struct":
+			board.builds.complete(l, t)
+			if t["kind"] == "build" and board.world.get_block(cell) != int(t["block"]):
+				return  # pas encore posable (quelqu'un dans la case)
 		"cut":
 			var kind := board.flora.remove_tree(cell)
 			board.ground.drop(cell, DataRegistry.get_table("flora")["trees"].get(kind, {}).get("drop", {"log": 3}))

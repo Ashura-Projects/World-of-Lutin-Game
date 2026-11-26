@@ -9,7 +9,7 @@ Reprise : lire ce fichier, puis `prompts/03-reprise-et-corrections.md`.
 | J2 — Construire au doigt | **fait** | rayon DDA + face, ligne/remplir/mur/gomme, annuler/rétablir, curseur d'étage ; test « tour creuse de 10 + escalier » ; `construire.jpg` |
 | J3 — Les Lutins | **fait** | A* (marche d'1 bloc max), tour + escalier atteinte (test), 3 jours simulés sans blocage (test), métiers connus (test), sauvegarde colonie ; `lutins.jpg`, `fiche.jpg` |
 | J4 — Récolte & métiers | **fait** (panneau bâtiments au J6) | bois et pierre arrivent en réserve sans action (tests couper/creuser/cueillir/chasser/assigner) ; `recolte.jpg`, `travail.jpg` |
-| J5 — Les lutins bâtissent | à faire | |
+| J5 — Les lutins bâtissent | **fait** | maison (murs, toit, porte, 4 lits) bâtie par les lutins, reconnue « maison », ils y dorment (test) ; tentes attribuées ; `village.jpg` |
 | J6 — Agriculture & production | à faire | |
 | J7 — Prédateurs, gestion & sauvegarde | à faire | |
 | J8 — Familles, école & recherche | à faire | |
@@ -53,3 +53,10 @@ Settings, GameSetup), GUT 9.7.1 headless, export Android arm64 (`com.ashura.worl
 - Interface : menu Récolter (aperçu cercle/boîte, Valider, Assigner…), panneau Lutins (métier, Auto), ressources en haut (Nourriture déroulante),
   routes terre/pavée dans Construire, outil visible seulement en action.
 - Reste à faire plus tard : panneau d'affectation lutin → **bâtiment** (au J6, quand les ateliers existent).
+
+## J5 — Les lutins bâtissent
+- Écran de configuration (titre → Nouvelle partie) : 2 à 10 lutins, graine.
+- `Structures` (tente, feu de camp, établi, lit, foyer, table, étagère, porte, torche), `RoomDetector` (air fermé, porte = fermeture, type selon `rooms.json`).
+- `BuildExec` : plan → le bâtisseur prend les matériaux à la réserve → pose ; règle de solidité ; portée de 3 blocs en hauteur (`build_reach_up`).
+- En partie, l'outil Construire crée des **plans** (bleus) ; la gomme annule un plan ou ordonne une démolition (rouge). Lits/tentes attribués automatiquement.
+- Problème connu : un plan peut être posé à travers un arbre (le tronc reste visible).

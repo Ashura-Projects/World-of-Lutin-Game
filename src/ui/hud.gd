@@ -121,7 +121,7 @@ func _refresh_resources() -> void:
 func _setup_build(tool: BuildTool, view: WorldView) -> void:
 	var panel := BuildPanel.new()
 	panel.setup(tool)
-	panel.position = Vector2(170, 440)
+	panel.position = Vector2(170, 380)
 	panel.visible = false
 	root.add_child(panel)
 	var btn := menu_button("Construire")

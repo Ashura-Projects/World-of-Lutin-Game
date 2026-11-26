@@ -200,6 +200,8 @@
     "xp_per_level": 100,
     "speed_per_level": 0.1,
     "carry_capacity": 4,
-    "haul_any_idle": true
+    "haul_any_idle": true,
+    "build_reach_up": 3,
+    "_reach_doc": "Le bâtisseur pose (ou creuse) un bloc jusqu'à build_reach_up blocs au-dessus de sa tête, à 1 case de distance."
   }
 }

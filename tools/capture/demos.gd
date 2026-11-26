@@ -12,6 +12,8 @@ static func run(game: Node, action: String) -> void:
 			game.camera.focus(l.pos)
 			game.lutins_view.selected_id = l.id
 			game.hud.show_lutin(l)
+		"village":
+			village(game)
 		"recolte":
 			recolte(game)
 		"travail":
@@ -55,3 +57,34 @@ static func recolte(game: Node) -> void:
 	game.camera.distance = 18.0
 	game.camera.focus(Vector3(c))
 	game.hud.menu_button("Récolter").button_pressed = true
+
+
+static func village(game: Node) -> void:
+	var c: Vector3i = game.colony.stock.pos
+	var st: Stockpile = game.colony.stock
+	st.add("hide", 12)
+	st.add("log", 20)
+	st.add("plank", 120)
+	st.add("stone", 20)
+	st.add("hammer", 2)
+	for l: Lutin in game.colony.lutins.slice(0, 3):
+		game.colony.change_job(l, "builder")
+	var b: TaskBoard = game.board
+	for i in 3:
+		b.add_structure("tent", c + Vector3i(-4 + i * 3, 0, 4))
+	b.add_structure("campfire", c + Vector3i(0, 0, 2))
+	var x0 := c + Vector3i(4, 0, -3)
+	var walls: Array[Vector3i] = []
+	for side: Array in [
+		[x0, x0 + Vector3i(4, 0, 0)],
+		[x0 + Vector3i(4, 0, 0), x0 + Vector3i(4, 0, 4)],
+		[x0 + Vector3i(4, 0, 4), x0 + Vector3i(0, 0, 4)],
+		[x0 + Vector3i(0, 0, 4), x0]
+	]:
+		for p in Shapes.wall(side[0], side[1], 3):
+			if not walls.has(p) and not (p.x == x0.x + 2 and p.z == x0.z and p.y < x0.y + 2):
+				walls.append(p)
+	b.place_blueprints(walls, game.world.types.num("plank_block"), false)
+	GameClock.set_speed(4)
+	game.camera.distance = 16.0
+	game.camera.focus(Vector3(c) + Vector3(2, 0, 0))

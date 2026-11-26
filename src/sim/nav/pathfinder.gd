@@ -44,7 +44,7 @@ static func step_cost(world: VoxelWorld, q: Vector3i) -> float:
 
 ## Chemin de `from` à `to` (inclus). Vide si impossible. `near` : accepte d'arriver à côté de la cible.
 static func find(
-	world: VoxelWorld, from: Vector3i, to: Vector3i, max_nodes: int = 20000, near: bool = false
+	world: VoxelWorld, from: Vector3i, to: Vector3i, max_nodes: int = 20000, near: bool = false, reach_up: int = 1
 ) -> Array[Vector3i]:
 	var empty: Array[Vector3i] = []
 	if from == to:
@@ -58,7 +58,7 @@ static func find(
 	while not open_heap.is_empty() and visited < max_nodes:
 		var cur: Vector3i = _pop(open_heap)[2]
 		visited += 1
-		if cur == to or (near and _adjacent(cur, to)):
+		if cur == to or (near and _adjacent(cur, to, reach_up)):
 			return _rebuild(came, cur)
 		for nb in neighbors(world, cur):
 			var ng: float = g[cur] + step_cost(world, nb)
@@ -70,9 +70,11 @@ static func find(
 	return empty
 
 
-static func _adjacent(a: Vector3i, b: Vector3i) -> bool:
+## `a` (case du lutin) est à portée de `b` : 1 case à l'horizontale, de 1 bloc plus bas à `reach_up` blocs plus haut.
+static func _adjacent(a: Vector3i, b: Vector3i, reach_up: int = 1) -> bool:
 	var d := (a - b).abs()
-	return d.x + d.z <= 1 and d.y <= 1
+	var dy := b.y - a.y
+	return d.x + d.z <= 1 and dy >= -2 and dy <= reach_up
 
 
 static func _h(a: Vector3i, b: Vector3i) -> float:
