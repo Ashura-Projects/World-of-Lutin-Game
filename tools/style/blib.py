@@ -83,6 +83,16 @@ def cone(loc, r, depth, material, verts=10, rot=(0, 0, 0)):
     return _finish(ob, material)
 
 
+def limb(a, b, r, material, verts=8):
+    """Cylindre allant du point a au point b (bras, jambes)."""
+    va, vb = Vector(a), Vector(b)
+    d = vb - va
+    bpy.ops.mesh.primitive_cylinder_add(vertices=verts, radius=r, depth=d.length, location=(va + vb) / 2)
+    ob = bpy.context.object
+    ob.rotation_euler = d.to_track_quat("Z", "Y").to_euler()
+    return _finish(ob, material)
+
+
 def box(loc, size, material, rot=(0, 0, 0), bevel=0.0):
     bpy.ops.mesh.primitive_cube_add(size=1, location=loc)
     ob = bpy.context.object

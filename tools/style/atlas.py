@@ -43,7 +43,27 @@ PALETTES = {
         "thatch": (182, 156, 96), "packed": (104, 80, 60), "ice": (164, 196, 212),
         "leaves": (70, 110, 56),
     },
+    "C": {  # sombre « dark fantasy » : tons froids et sales, contraste fort
+        "grass": (58, 72, 40), "dirt": (66, 50, 38), "fertile": (44, 34, 28),
+        "sand": (128, 116, 92), "clay": (104, 74, 62), "stone": (86, 86, 88),
+        "bedrock": (30, 30, 34), "iron": (138, 84, 56), "coal": (22, 22, 24),
+        "snow": (196, 202, 210), "water": (48, 84, 92), "wood": (70, 52, 38),
+        "wood_core": (132, 108, 78), "plank": (102, 78, 54), "cobble": (82, 80, 80),
+        "cut": (118, 114, 108), "brick": (100, 52, 42), "mortar": (110, 104, 96),
+        "thatch": (122, 102, 62), "packed": (72, 56, 42), "ice": (126, 150, 164),
+        "leaves": (44, 62, 38),
+    },
 }
+
+
+def grime(img, rng):
+    """Palette sombre : salissures et bords assombris (aspect usé, réaliste)."""
+    for y in range(TILE):
+        for x in range(TILE):
+            e = min(x, y, TILE - 1 - x, TILE - 1 - y)
+            f = (0.78 if e == 0 else 0.9 if e == 1 else 1.0) * rng.uniform(0.86, 1.06)
+            img.putpixel((x, y), shade(img.getpixel((x, y)), f))
+    return img
 
 
 def clamp(v: float) -> int:
@@ -217,7 +237,10 @@ def build(out_dir: Path) -> None:
         rng = random.Random(42)  # même graine : seules les couleurs changent
         atlas = Image.new("RGB", (COLS * TILE, rows * TILE), (255, 0, 255))
         for i, name in enumerate(TILES):
-            atlas.paste(make_tile(name, pal, rng), ((i % COLS) * TILE, (i // COLS) * TILE))
+            tile = make_tile(name, pal, rng)
+            if key == "C" and name not in ("water", "ice", "snow"):
+                tile = grime(tile, rng)
+            atlas.paste(tile, ((i % COLS) * TILE, (i // COLS) * TILE))
         atlas.save(out_dir / f"atlas_{key}.png")
     (out_dir / "atlas_layout.json").write_text(
         json.dumps({"tile": TILE, "cols": COLS, "rows": rows, "tiles": layout}, indent=1)

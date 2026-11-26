@@ -18,7 +18,7 @@ import voxel  # noqa: E402
 argv = sys.argv[sys.argv.index("--") + 1:]
 ATLAS, OUT = Path(argv[0]), Path(argv[1])
 PAL = argv[2] if len(argv) > 2 else "A"
-SEASONS = [argv[3]] if len(argv) > 3 else ["ete", "hiver"]
+MOODS = [argv[3]] if len(argv) > 3 else ["jour", "crepuscule", "hiver"]
 OUT.mkdir(parents=True, exist_ok=True)
 
 W, D = 32, 24
@@ -99,27 +99,76 @@ def house(grid, winter):
     return [(x, 9, G + 1) for x in range(24, 27)] + [(x, 9, G + 2) for x in range(21, 27)]
 
 
-def scene(season):
-    winter = season == "hiver"
+def point_light(loc, color, energy, radius=0.1):
+    ld = bpy.data.lights.new("feu", "POINT")
+    ld.energy = energy
+    ld.color = blib.srgb(color)[:3]
+    ld.shadow_soft_size = radius
+    ob = bpy.data.objects.new("feu", ld)
+    ob.location = loc
+    bpy.context.scene.collection.objects.link(ob)
+
+
+def torch(x, y, z):
+    """Torche sur poteau : flamme émissive + lumière chaude."""
+    blib.cyl((x, y, z + 0.6), 0.04, 1.2, blib.mat("poteau", (60, 44, 30)), verts=6)
+    blib.cone((x, y, z + 1.32), 0.07, 0.22, blib.mat("flamme", (255, 150, 50), emit=20.0), verts=6)
+    point_light((x, y, z + 1.5), (255, 150, 70), 60, 0.15)
+
+
+def fog(color, start, depth):
+    """Brume par la passe « mist » + compositeur (pas de volumétrie : rendu rapide)."""
+    sc = bpy.context.scene
+    sc.view_layers[0].use_pass_mist = True
+    sc.world.mist_settings.start = start
+    sc.world.mist_settings.depth = depth
+    sc.world.mist_settings.falloff = "QUADRATIC"
+    sc.use_nodes = True
+    nt = sc.node_tree
+    for n in list(nt.nodes):
+        nt.nodes.remove(n)
+    rl = nt.nodes.new("CompositorNodeRLayers")
+    mix = nt.nodes.new("CompositorNodeMixRGB")
+    mix.inputs[2].default_value = blib.srgb(color)
+    comp = nt.nodes.new("CompositorNodeComposite")
+    nt.links.new(rl.outputs["Mist"], mix.inputs[0])
+    nt.links.new(rl.outputs["Image"], mix.inputs[1])
+    nt.links.new(mix.outputs[0], comp.inputs["Image"])
+
+
+def scene(mood):
+    season = mood
+    winter = mood == "hiver"
+    voxel.SOMBRE = True
     blib.reset_scene()
-    bpy.context.scene.cycles.samples = 64
-    if winter:
-        blib.lights(sun_dir=(math.radians(62), 0, math.radians(-40)), strength=2.6, world=(186, 206, 236),
-                    world_strength=1.0, sun_color=(236, 242, 255))
-    else:
-        blib.lights(sun_dir=(math.radians(50), 0, math.radians(-40)), strength=3.6, world=(170, 205, 245),
-                    world_strength=0.9, sun_color=(255, 240, 214))
+    bpy.context.scene.cycles.samples = 80
+    vs = bpy.context.scene.view_settings
+    vs.view_transform = "AgX"
+    vs.look = "AgX - Medium High Contrast"
+    vs.exposure = 0.6
+    if mood == "hiver":  # jour d'hiver gris et froid
+        blib.lights(sun_dir=(math.radians(55), 0, math.radians(-40)), strength=3.0, world=(150, 162, 186),
+                    world_strength=0.9, sun_color=(210, 222, 255))
+        fog_c, fog_s = (150, 158, 176), 10
+    elif mood == "crepuscule":  # soleil bas orangé, torches allumées
+        blib.lights(sun_dir=(math.radians(74), 0, math.radians(-60)), strength=4.0, world=(84, 90, 110),
+                    world_strength=0.8, sun_color=(255, 160, 90))
+        fog_c, fog_s = (78, 82, 98), 12
+    else:  # jour : lumière franche mais voilée, couleurs sobres
+        blib.lights(sun_dir=(math.radians(48), 0, math.radians(-40)), strength=4.6, world=(160, 176, 200),
+                    world_strength=0.9, sun_color=(255, 236, 206))
+        fog_c, fog_s = (170, 180, 196), 16
     grid = terrain(winter)
     ghosts = house(grid, winter)
     voxel.build_mesh(grid, ATLAS / f"atlas_{PAL}.png", ATLAS / "atlas_layout.json")
     voxel.ghost_blocks(ghosts)
-    # végétation
-    for (x, y, k, s) in [(2, 9, "chene", 1.1), (5, 21, "pin", 1.0), (8, 20, "pin", 1.2), (1, 18, "bouleau", 1.0),
-                         (27, 4, "chene", 1.2), (30, 9, "pin", 1.1), (24, 2, "bouleau", 1.0), (11, 20, "chene", 1.0),
-                         (1, 2, "pin", 1.0), (19, 21, "pin", 1.1), (29, 14, "pin", 1.0)]:
+    for (x, y, k, s) in [(2, 9, "chene", 1.1), (5, 21, "pin", 1.3), (8, 20, "pin", 1.5), (1, 18, "pin", 1.2),
+                         (27, 4, "chene", 1.2), (30, 9, "pin", 1.4), (24, 2, "pin", 1.2), (11, 20, "chene", 1.0),
+                         (1, 2, "pin", 1.3), (19, 21, "pin", 1.4), (29, 14, "pin", 1.2), (3, 23, "pin", 1.5)]:
         top = max(z for (gx, gy, z) in grid if gx == x and gy == y) + 1
         voxel.tree(k, x + 0.5, y + 0.5, top, s, winter)
-    for (x, y) in [(10, 14), (21, 17), (4, 11)]:
+    voxel.tree("chene", 22.5, 19.5, G, 1.0, True)  # arbre mort
+    for (x, y) in [(10, 14), (4, 11)]:
         voxel.bush(x + 0.5, y + 0.5, G, winter)
     if not winter:
         for x in range(3, 9):
@@ -127,28 +176,47 @@ def scene(season):
                 if (x + y) % 5:
                     voxel.wheat(x, y, G)
         for x in (6, 9, 20, 25):
-            y = int(river_y(x) + 2.0)
-            voxel.reed(x, y, G)
+            voxel.reed(x, int(river_y(x) + 2.0), G)
     voxel.log_pile(9, 10, G)
-    # lanterne à la porte (lumière chaude)
-    blib.sphere((15.5, 11.7, G + 2.2), 0.09, blib.mat("lanterne", (255, 200, 110), emit=8.0), 8, 6)
-    # lutins au travail (taille ≈ 1 bloc)
+    # rochers
+    rock = blib.mat("roche", (70, 70, 74), 0.9)
+    for (x, y, r) in [(20.5, 15.5, 0.45), (26, 13, 0.6), (1.5, 12.5, 0.4)]:
+        bpy.ops.mesh.primitive_ico_sphere_add(subdivisions=1, radius=r, location=(x, y, G + r * 0.5))
+        bpy.context.object.data.materials.append(rock)
+    # petit cimetière (les anciens meurent de vieillesse)
+    grave = blib.mat("tombe", (96, 96, 100), 0.9)
+    for i in range(3):
+        gx, gy = 21.5 + i * 1.2, 17.5
+        blib.box((gx, gy, G + 0.3), (0.12, 0.1, 0.6), grave)
+        blib.box((gx, gy, G + 0.45), (0.4, 0.1, 0.1), grave)
+    # feu de camp
+    blib.cyl((12.5, 14.0 - 3.5, G + 0.05), 0.35, 0.1, blib.mat("pierres_feu", (60, 58, 56)), verts=8)
+    blib.cone((12.5, 10.5, G + 0.3), 0.18, 0.45, blib.mat("flamme", (255, 150, 50), emit=20.0), verts=6)
+    point_light((12.5, 10.5, G + 0.8), (255, 140, 60), 120, 0.3)
+    # torches et fenêtres éclairées
+    torch(14.4, 11.3, G)
+    torch(20.6, 8.4, G)
+    point_light((15.5, 14.0, G + 1.5), (255, 170, 90), 80, 0.3)  # intérieur de la maison
+    # lutins (peau bleu sombre, outils seulement en action)
     s = 0.82
-    lutin.build("A", "bucheron", "adult", loc=(3.4, 8.3, G), rot_z=math.radians(-60), scale=s)
-    lutin.build("A", "porteur", "adult", loc=(12.2, 8.0, G), rot_z=math.radians(40), scale=s)
-    lutin.build("A", "batisseur", "adult", loc=(22.5, 8.0, G), rot_z=math.radians(20), scale=s)
-    lutin.build("A", "batisseur", "adult", loc=(25.5, 8.2, G), rot_z=math.radians(-30), scale=s)
-    lutin.build("A", "fermier", "adult", loc=(6.0, 12.4, G), rot_z=math.radians(10), scale=s)
-    lutin.build("A", "pecheur", "adult", loc=(16.5, river_y(16) + 2.2, G), rot_z=math.radians(150), scale=s)
-    lutin.build("A", "cueilleur", "adult", loc=(10.5, 13.2, G), rot_z=math.radians(-20), scale=s)
-    lutin.build("A", "base", "child", loc=(14.8, 10.6, G), rot_z=math.radians(-10), scale=s)
-    # caméra du jeu : vue plongeante libre (~45°)
+    kw = dict(scale=s, skin="bleu_sombre", sombre=True)
+    lutin.build("bucheron", loc=(3.4, 8.3, G), rot_z=math.radians(-60), action=True, **kw)
+    lutin.build("porteur", loc=(12.2, 8.0, G), rot_z=math.radians(40), action=True, **kw)
+    lutin.build("batisseur", loc=(22.5, 8.0, G), rot_z=math.radians(20), action=True, **kw)
+    lutin.build("batisseur", loc=(25.5, 8.2, G), rot_z=math.radians(-30), action=True, **kw)
+    lutin.build("fermier", loc=(6.0, 12.4, G), rot_z=math.radians(10), action=not winter, **kw)
+    lutin.build("pecheur", loc=(16.5, river_y(16) + 2.2, G), rot_z=math.radians(150), action=True, **kw)
+    lutin.build("cueilleur", loc=(11.2, 11.6, G), rot_z=math.radians(-120), **kw)
+    lutin.build("base", "child", loc=(13.6, 11.0, G), rot_z=math.radians(150), **kw)
+    lutin.build("chasseur", loc=(18.5, 18.0, G), rot_z=math.radians(-150), action=True, **kw)
+    fog(fog_c, fog_s, 45)
     blib.camera((1.0, -9.0, 19.0), (15.0, 12.0, 2.5), lens=34)
     blib.render(OUT / f"scene_{PAL}_{season}.png", 1600, 900)
-    # zoom « près des lutins »
-    blib.camera((7.0, -0.5, 8.5), (12.5, 9.5, 3.4), lens=38)
-    blib.render(OUT / f"scene_{PAL}_{season}_zoom.png", 1600, 900)
+    if mood == "jour":
+        fog(fog_c, 8, 35)
+        blib.camera((7.0, -0.5, 8.5), (12.5, 9.5, 3.4), lens=38)
+        blib.render(OUT / f"scene_{PAL}_{season}_zoom.png", 1600, 900)
 
 
-for season in SEASONS:
-    scene(season)
+for mood in MOODS:
+    scene(mood)

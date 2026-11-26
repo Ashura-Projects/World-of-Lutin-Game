@@ -36,6 +36,14 @@ FACES = {
     "dirt_block": ("dirt_packed",) * 3,
 }
 LIQUID = {"water", "ice"}
+SOMBRE = False  # ambiance dark fantasy : végétation désaturée et assombrie
+
+
+def g_(c):
+    if not SOMBRE:
+        return c
+    g = sum(c) / 3
+    return tuple(int((v * 0.55 + g * 0.45) * 0.62) for v in c)
 
 DIRS = [  # normale, 4 coins (sens anti-horaire vu de l'extérieur), type de face
     ((0, 0, 1), [(0, 0, 1), (1, 0, 1), (1, 1, 1), (0, 1, 1)], 0),
@@ -128,15 +136,15 @@ def ghost_blocks(cells):
 
 def tree(kind, x, y, z, s=1.0, winter=False):
     trunk_c = (236, 232, 222) if kind == "bouleau" else (110, 74, 44)
-    trunk = mat("tronc_" + kind, trunk_c, 0.9)
+    trunk = mat("tronc_" + kind, g_(trunk_c), 0.9)
     leaf_c = {"chene": (78, 150, 58), "pin": (46, 112, 70), "bouleau": (140, 186, 70)}[kind]
     if winter and kind != "pin":
         leaf_c = None
-    snow = mat("neige_feuille", (240, 244, 250), 0.9)
+    snow = mat("neige_feuille", g_((240, 244, 250)), 0.9)
     if kind == "pin":
         cyl((x, y, z + 0.6 * s), 0.12 * s, 1.2 * s, trunk)
         for i, (r, h) in enumerate(((1.0, 1.2), (0.8, 1.0), (0.55, 0.8))):
-            cone((x, y, z + (1.2 + i * 0.7) * s), r * s, h * s, mat("pin", leaf_c, 0.8), verts=7)
+            cone((x, y, z + (1.2 + i * 0.7) * s), r * s, h * s, mat("pin", g_(leaf_c), 0.8), verts=7)
             if winter:
                 cone((x, y, z + (1.32 + i * 0.7) * s), r * 0.8 * s, h * 0.75 * s, snow, verts=7)
         return
@@ -148,7 +156,7 @@ def tree(kind, x, y, z, s=1.0, winter=False):
             cyl((x + 0.3 * s * math.cos(ang), y + 0.3 * s * math.sin(ang), z + (h + 0.25) * s), 0.04 * s, 0.8 * s, trunk,
                 verts=5, rot=(math.sin(ang) * -0.8, math.cos(ang) * 0.8, 0))
         return
-    leaves = mat("feuilles_" + kind, leaf_c, 0.8)
+    leaves = mat("feuilles_" + kind, g_(leaf_c), 0.8)
     blobs = [(0, 0, h + 0.4, 0.9), (0.45, 0.2, h + 0.1, 0.6), (-0.4, -0.25, h + 0.15, 0.62), (0.1, -0.2, h + 0.85, 0.6)]
     if kind == "bouleau":
         blobs = [(0, 0, h + 0.3, 0.6), (0.1, 0.1, h + 0.8, 0.45), (-0.1, 0, h - 0.1, 0.5)]
@@ -159,27 +167,27 @@ def tree(kind, x, y, z, s=1.0, winter=False):
 
 
 def bush(x, y, z, winter=False):
-    sphere((x, y, z + 0.25), (0.35, 0.35, 0.28), mat("buisson", (66, 130, 54) if not winter else (110, 96, 80), 0.9), 8, 5)
+    sphere((x, y, z + 0.25), (0.35, 0.35, 0.28), mat("buisson", g_((66, 130, 54)) if not winter else (110, 96, 80), 0.9), 8, 5)
     if not winter:
         for i in range(5):
             a = i * 1.3
-            sphere((x + 0.28 * math.cos(a), y + 0.28 * math.sin(a), z + 0.3 + 0.05 * (i % 2)), 0.05, mat("baie", (200, 30, 60), 0.3), 6, 4)
+            sphere((x + 0.28 * math.cos(a), y + 0.28 * math.sin(a), z + 0.3 + 0.05 * (i % 2)), 0.05, mat("baie", g_((200, 30, 60)), 0.3), 6, 4)
 
 
 def wheat(x, y, z):
     for i in range(3):
         for j in range(3):
-            cone((x + 0.2 + i * 0.3, y + 0.2 + j * 0.3, z + 0.18), 0.05, 0.36, mat("ble", (220, 190, 80), 0.8), verts=5)
+            cone((x + 0.2 + i * 0.3, y + 0.2 + j * 0.3, z + 0.18), 0.05, 0.36, mat("ble", g_((220, 190, 80)), 0.8), verts=5)
 
 
 def reed(x, y, z):
     for i in range(4):
-        cyl((x + 0.2 * (i % 2) + 0.3, y + 0.2 * (i // 2) + 0.3, z + 0.35), 0.02, 0.7, mat("roseau", (110, 140, 60)), verts=4)
-        cyl((x + 0.2 * (i % 2) + 0.3, y + 0.2 * (i // 2) + 0.3, z + 0.75), 0.035, 0.15, mat("massette", (110, 70, 40)), verts=5)
+        cyl((x + 0.2 * (i % 2) + 0.3, y + 0.2 * (i // 2) + 0.3, z + 0.35), 0.02, 0.7, mat("roseau", g_((110, 140, 60))), verts=4)
+        cyl((x + 0.2 * (i % 2) + 0.3, y + 0.2 * (i // 2) + 0.3, z + 0.75), 0.035, 0.15, mat("massette", g_((110, 70, 40))), verts=5)
 
 
 def log_pile(x, y, z):
     for i in range(3):
-        cyl((x + 0.5, y + 0.2 + i * 0.22, z + 0.12), 0.11, 0.9, mat("buche", (130, 86, 48)), verts=7, rot=(0, math.pi / 2, 0))
+        cyl((x + 0.5, y + 0.2 + i * 0.22, z + 0.12), 0.11, 0.9, mat("buche", g_((130, 86, 48))), verts=7, rot=(0, math.pi / 2, 0))
     for i in range(2):
-        cyl((x + 0.5, y + 0.31 + i * 0.22, z + 0.31), 0.11, 0.9, mat("buche", (130, 86, 48)), verts=7, rot=(0, math.pi / 2, 0))
+        cyl((x + 0.5, y + 0.31 + i * 0.22, z + 0.31), 0.11, 0.9, mat("buche", g_((130, 86, 48))), verts=7, rot=(0, math.pi / 2, 0))
