@@ -90,17 +90,28 @@ func _update_needs(l: Lutin, tpd: float) -> void:
 
 
 func _decide(l: Lutin, night: bool) -> void:
-	if l.mobilized:
-		return  # la mobilisation (Combat) dirige le lutin
-	if l.hiding:
-		if l.state == Lutin.State.WALK and l.has_path():
-			return
-		var shelter := l.home if l.home.y >= 0 else stock.pos
-		if not _near(l.cell, shelter, 1):
-			_go(l, shelter, "abri", true)
-		else:
-			l.state = Lutin.State.SLEEP
+	if _decide_alert(l):
 		return
+	_decide_normal(l, night)
+
+
+## Cloche : mobilisé (Combat le dirige) ou à l'abri. Renvoie true si la cloche décide.
+func _decide_alert(l: Lutin) -> bool:
+	if l.mobilized:
+		return true
+	if not l.hiding:
+		return false
+	if l.state == Lutin.State.WALK and l.has_path():
+		return true
+	var shelter := l.home if l.home.y >= 0 else stock.pos
+	if not _near(l.cell, shelter, 1):
+		_go(l, shelter, "abri", true)
+	else:
+		l.state = Lutin.State.SLEEP
+	return true
+
+
+func _decide_normal(l: Lutin, night: bool) -> void:
 	if l.state == Lutin.State.WORK and not l.can_work():
 		if l.wait_ticks > 0:
 			return
@@ -166,7 +177,8 @@ func _act(l: Lutin) -> void:
 				task_board.call("arrived", l)
 
 
-## Les enfants vont à l'école le jour (s'il y en a une), sinon jouent près de la maison ; les bébés restent près de la maison.
+## Les enfants vont à l'école le jour (s'il y en a une), sinon jouent près de la maison ;
+## les bébés restent près de la maison.
 func _child_day(l: Lutin) -> void:
 	var school: Vector3i = education.call("school_cell") if education != null else Vector3i(-1, -1, -1)
 	if l.age_stage() == "child" and school.y >= 0:

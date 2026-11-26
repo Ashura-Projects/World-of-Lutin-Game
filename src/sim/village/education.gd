@@ -49,7 +49,8 @@ static func center(id: String) -> Dictionary:
 	return DataRegistry.find("education", "training_centers", id)
 
 
-## Efficacité de la formation : 1 si l'aptitude requise est atteinte (enfant bien éduqué), sinon formation courte d'adulte.
+## Efficacité de la formation : 1 si l'aptitude requise est atteinte (enfant bien éduqué),
+## sinon formation courte d'adulte.
 func efficiency_for(l: Lutin, center_id: String) -> float:
 	var req: Dictionary = center(center_id).get("requires", {})
 	for k: String in req:

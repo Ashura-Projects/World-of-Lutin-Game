@@ -1,6 +1,7 @@
 class_name MilitaryPanel
 extends PanelContainer
-## Menu Militaire : cloche (Mobiliser / Se cacher / Fin de l'alerte), armes en réserve, combattants (tableau de chasse, XP).
+## Menu Militaire : cloche (Mobiliser / Se cacher / Fin de l'alerte), armes en réserve,
+## combattants (tableau de chasse, XP).
 
 var game: Node
 var _list: VBoxContainer
