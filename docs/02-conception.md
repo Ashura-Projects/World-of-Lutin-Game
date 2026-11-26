@@ -30,6 +30,11 @@
 - **Validé** : le métier de base dépend de **l'outil** porté (hache = bûcheron, pioche = mineur…). Les outils se fabriquent → l'économie contrôle la main-d'œuvre.
 - Métiers de base : voir `data/jobs.json` — porteur (sans outil), bûcheron, mineur, bâtisseur, cueilleur, pêcheur, chasseur, fermier, menuisier, tailleur de pierre, forgeron, cuisinier.
 - Les lutins gagnent de l'**expérience** dans leur métier → travaillent plus vite.
+- **Validé — métiers connus** : chaque lutin garde la liste des métiers qu'il a pratiqués, chacun avec **son niveau et sa jauge d'XP**
+  (ex. bûcheron niv. 3, mineur niv. 2, fermier niv. 5). Passer à un **métier de base** est libre : métier jamais pratiqué → niveau 1,
+  métier déjà connu → il reprend son niveau. La fiche du lutin affiche ces métiers comme les aptitudes.
+- **Validé — outil visible seulement en action** : le lutin ne tient son outil que pendant le geste (couper, creuser…) ; au repos, mains vides.
+- **Validé** : le chasseur utilise un **fusil à silex** (pas d'arc).
 
 ### Panneau d'affectation (gestion automatisée)
 - Chaque **bâtiment de travail** (atelier, scierie, ferme, mine, cuisine, école…) a des **postes** (nombre de places).
@@ -91,6 +96,9 @@
 - Bonus si l'établi est dans une pièce du bon type (atelier, cuisine).
 
 ## 8. Gestion et objectifs (partie longue)
+- **Validé — cloche d'alerte** (bouton court sur la fiche et la barre du haut) : choisir **Mobiliser** (prendre les armes, point de rassemblement)
+  ou **Se cacher** (courir à l'abri). Utile surtout en Phase 2 (orcs) ; en Phase 1 : animaux sauvages / exercice. **[À VALIDER : présent dès la Phase 1 ?]**
+- Ressources affichées en haut : **Nourriture** (= total de tous les aliments, détail dans un menu déroulant), bois, pierre, fer, **or** (échanges).
 - Tableau de bord : stocks, production/consommation par jour, lutins, moral, alertes (famine, froid, plus d'outils).
 - **Rangs** : Campement → Hameau → Village → Bourg. Chaque rang débloque matériaux, objets, métiers.
 - Objectifs facultatifs proposés au fil de la partie (« construire une tour de 20 blocs », « nourrir 30 lutins un hiver »).
@@ -98,6 +106,8 @@
 # PHASE 2 — MODE AVENTURE ROYALE (à détailler après la Phase 1)
 - Départ avec **3 à 4 lutins**, un roi/une reine lutin à protéger.
 - **Orcs** rouges grassouillets : camps sur la carte, raids nocturnes, sièges avec béliers et échelles.
+- **Fiche de guerrier** : techniques de combat (niveaux), ennemis vaincus, **réputation** avec titres, et **grades** :
+  Recrue → Soldat → Capitaine → Commandant → Général. Ton inspiré du **murim** (maîtres, techniques, légendes) **sans magie abusive**.
 - Combat : **soldats** (guerrier, archer) et **mages** formés à la caserne / tour des mages (§3b), ordres de groupe, défense par étages, créneaux.
 - **Destruction et effondrement** des blocs non soutenus (sièges spectaculaires).
 - **Carte régionale** : autres royaumes lutins (IA), tribus orques, provinces à prendre.

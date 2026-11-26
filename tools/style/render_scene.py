@@ -34,7 +34,7 @@ def terrain(winter):
     for x in range(W):
         for y in range(D):
             # colline en fond à droite
-            hill = max(0.0, 7.0 - math.hypot(x - 30, y - 23) / 1.3)
+            hill = max(0.0, 11.0 - math.hypot(x - 31, y - 24) / 1.05)  # montagne à explorer
             top = G + int(hill)
             ry = river_y(x)
             in_river = abs(y + 0.5 - ry) < 1.6
@@ -48,7 +48,7 @@ def terrain(winter):
                     b = "dirt"
                 else:
                     b = "sand" if bank else "grass"
-                    if hill >= 6:
+                    if hill >= 9:
                         b = "snow" if not winter else "snow_block"
                     elif hill >= 2:
                         b = "stone"
@@ -131,7 +131,11 @@ def fog(color, start, depth):
     mix = nt.nodes.new("CompositorNodeMixRGB")
     mix.inputs[2].default_value = blib.srgb(color)
     comp = nt.nodes.new("CompositorNodeComposite")
-    nt.links.new(rl.outputs["Mist"], mix.inputs[0])
+    scale = nt.nodes.new("CompositorNodeMath")
+    scale.operation = "MULTIPLY"
+    scale.inputs[1].default_value = 0.5  # brume légère : on voit encore le décor
+    nt.links.new(rl.outputs["Mist"], scale.inputs[0])
+    nt.links.new(scale.outputs[0], mix.inputs[0])
     nt.links.new(rl.outputs["Image"], mix.inputs[1])
     nt.links.new(mix.outputs[0], comp.inputs["Image"])
 
@@ -210,7 +214,7 @@ def scene(mood):
     lutin.build("base", "child", loc=(13.6, 11.0, G), rot_z=math.radians(150), **kw)
     lutin.build("chasseur", loc=(18.5, 18.0, G), rot_z=math.radians(-150), action=True, **kw)
     fog(fog_c, fog_s, 45)
-    blib.camera((1.0, -9.0, 19.0), (15.0, 12.0, 2.5), lens=34)
+    blib.camera((1.0, -9.0, 19.0), (16.0, 13.5, 4.0), lens=32)
     blib.render(OUT / f"scene_{PAL}_{season}.png", 1600, 900)
     if mood == "jour":
         fog(fog_c, 8, 35)

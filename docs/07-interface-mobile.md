@@ -18,7 +18,11 @@
 6. **Curseur d'étage** sur le bord droit : glisser pour masquer les étages supérieurs.
 
 ## Écran principal (paysage)
-- **Haut** : jour/saison, vitesse, population, alertes.
-- **Bas** : Construire · Récolter · Zones (champs, réserve, chasse) · Lutins (métiers) · Gestion.
+- **Haut** : jour/saison, vitesse, population, ressources (Nourriture = total des aliments, bois, pierre, fer, or ; chaque case ouvre un **menu déroulant** de détail), **cloche d'alerte**, **engrenage**.
+- **Bas** : Construire · Récolter · Zones (champs, réserve, chasse) · Lutins (métiers) · **Militaire** · **Commerce** · Gestion.
 - **Droite** : panneau de la sélection (repliable) + curseur d'étage.
+- **Engrenage** : Reprendre, Sauvegarder, Charger, Paramètres (son, graphismes, langue, taille des textes), Menu principal, Quitter.
+- **Dialogues** : boîtes d'événement (portrait, texte sur parchemin, 2-3 choix), ex. un marchand arrive.
+- **Menu principal** : Continuer, Nouvelle partie (Bac à sable / Aventure Royale, graine de carte), Charger, Paramètres, Crédits, Quitter.
+- Style (v2, en validation) : cadres de fer sombre à filets dorés, parchemin vieilli, titres en Cinzel.
 - Zones tactiles ≥ 48 dp ; jamais plus de 2 niveaux de menu pour une action fréquente.

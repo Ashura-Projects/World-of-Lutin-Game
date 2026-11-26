@@ -63,7 +63,7 @@
     {
       "id": "hunter",
       "name": "Chasseur",
-      "tool": "bow",
+      "tool": "flintlock",
       "tasks": [
         "hunt",
         "butcher"

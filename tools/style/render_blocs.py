@@ -19,7 +19,7 @@ OUT.mkdir(parents=True, exist_ok=True)
 ROOT = Path(__file__).resolve().parents[2]
 blocks = [b for b in json.loads((ROOT / "data/blocks.json").read_text())["blocks"] if b["id"] != "air"]
 
-for pal in "AB":
+for pal in "BC":
     for b in blocks:
         blib.reset_scene()
         blib.lights(sun_dir=(math.radians(45), 0, math.radians(-35)), strength=3.0, world=(225, 230, 240), world_strength=1.0)

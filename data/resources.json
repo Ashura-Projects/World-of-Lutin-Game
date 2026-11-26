@@ -33,7 +33,7 @@
     {"id": "hoe",        "name": "Houe",            "category": "tool",      "stack": 5},
     {"id": "basket",     "name": "Panier",          "category": "tool",      "stack": 5},
     {"id": "fishing_rod","name": "Canne à pêche",   "category": "tool",      "stack": 5},
-    {"id": "bow",        "name": "Arc",             "category": "tool",      "stack": 5},
+    {"id": "flintlock",  "name": "Fusil à silex",   "category": "tool",      "stack": 5},
     {"id": "saw",        "name": "Scie",            "category": "tool",      "stack": 5},
     {"id": "chisel",     "name": "Ciseau",          "category": "tool",      "stack": 5},
     {"id": "tongs",      "name": "Pinces",          "category": "tool",      "stack": 5},

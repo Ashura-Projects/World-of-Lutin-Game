@@ -61,7 +61,7 @@ def grime(img, rng):
     for y in range(TILE):
         for x in range(TILE):
             e = min(x, y, TILE - 1 - x, TILE - 1 - y)
-            f = (0.78 if e == 0 else 0.9 if e == 1 else 1.0) * rng.uniform(0.86, 1.06)
+            f = (0.9 if e == 0 else 1.0) * rng.uniform(0.9, 1.05)
             img.putpixel((x, y), shade(img.getpixel((x, y)), f))
     return img
 
@@ -238,7 +238,7 @@ def build(out_dir: Path) -> None:
         atlas = Image.new("RGB", (COLS * TILE, rows * TILE), (255, 0, 255))
         for i, name in enumerate(TILES):
             tile = make_tile(name, pal, rng)
-            if key == "C" and name not in ("water", "ice", "snow"):
+            if key == "C" and name not in ("water", "ice", "snow", "grass_top", "sand"):
                 tile = grime(tile, rng)
             atlas.paste(tile, ((i % COLS) * TILE, (i // COLS) * TILE))
         atlas.save(out_dir / f"atlas_{key}.png")
