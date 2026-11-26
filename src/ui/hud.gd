@@ -25,6 +25,8 @@ func _ready() -> void:
 var sheet: LutinSheet
 var harvest_panel: HarvestPanel
 var jobs_panel: JobsPanel
+var zones_panel: ZonesPanel
+var workshops_panel: WorkshopsPanel
 var _res_labels: Dictionary = {}
 var _food_drop: PanelContainer
 
@@ -48,6 +50,18 @@ func bind_game(game: Node) -> void:
 	jobs_panel.position = Vector2(420, 80)
 	jobs_panel.visible = false
 	root.add_child(jobs_panel)
+	zones_panel = ZonesPanel.new()
+	zones_panel.setup(game)
+	zones_panel.position = Vector2(170, 470)
+	zones_panel.visible = false
+	root.add_child(zones_panel)
+	workshops_panel = WorkshopsPanel.new()
+	workshops_panel.setup(game)
+	workshops_panel.position = Vector2(350, 70)
+	workshops_panel.visible = false
+	root.add_child(workshops_panel)
+	_panel_toggle("Zones", zones_panel)
+	_panel_toggle("Gestion", workshops_panel)
 	_panel_toggle("Récolter", harvest_panel)
 	_panel_toggle("Lutins", jobs_panel)
 	_build_resources()
@@ -60,8 +74,8 @@ func _panel_toggle(button_name: String, panel: Control) -> void:
 	b.toggled.connect(
 		func(on: bool) -> void:
 			panel.visible = on
-			if on and panel is JobsPanel:
-				panel.refresh()
+			if on and panel.has_method("refresh"):
+				panel.call("refresh")
 			if not on and panel is HarvestPanel:
 				panel.hide_preview()
 			if on:

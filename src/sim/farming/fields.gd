@@ -4,7 +4,8 @@ extends RefCounted
 
 signal changed(cell: Vector3i)
 
-var plots: Dictionary = {}  # case du sol (bloc field_plot) -> {"crop", "state": planned/tilled/sown/ripe, "growth": jours}
+## case du sol (bloc field_plot) -> {"crop", "state": planned/tilled/sown/ripe, "growth": jours}
+var plots: Dictionary = {}
 
 
 static func crop(id: String) -> Dictionary:
@@ -35,7 +36,7 @@ static func can_sow_now(crop_id: String) -> bool:
 
 
 ## Croissance quotidienne (rien ne pousse l'hiver), multipliée par la fertilité.
-func grow_day(world: VoxelWorld) -> void:
+func grow_day(_world: VoxelWorld = null) -> void:
 	var seasons: Array = DataRegistry.get_table("time").get("seasons", [])
 	if not seasons.is_empty() and seasons[GameClock.season_index()]["id"] == "winter":
 		if not bool(DataRegistry.get_table("crops").get("winter_growth", false)):

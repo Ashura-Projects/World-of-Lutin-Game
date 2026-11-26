@@ -11,7 +11,8 @@
       "out": {
         "plank": 2
       },
-      "work": 8
+      "work": 8,
+      "name": "Planches"
     },
     {
       "id": "cut_stone",
@@ -23,7 +24,8 @@
       "out": {
         "cut_stone": 1
       },
-      "work": 10
+      "work": 10,
+      "name": "Pierre taillée"
     },
     {
       "id": "fire_bricks",
@@ -36,7 +38,8 @@
       "out": {
         "brick": 4
       },
-      "work": 20
+      "work": 20,
+      "name": "Briques"
     },
     {
       "id": "grind_flour",
@@ -48,7 +51,8 @@
       "out": {
         "flour": 3
       },
-      "work": 10
+      "work": 10,
+      "name": "Farine (blé)"
     },
     {
       "id": "bake_bread",
@@ -62,7 +66,8 @@
       "out": {
         "bread": 4
       },
-      "work": 15
+      "work": 15,
+      "name": "Pain"
     },
     {
       "id": "cook_stew",
@@ -75,7 +80,8 @@
       "out": {
         "stew": 2
       },
-      "work": 15
+      "work": 15,
+      "name": "Ragoût"
     },
     {
       "id": "smelt_iron",
@@ -88,7 +94,8 @@
       "out": {
         "iron_ingot": 1
       },
-      "work": 25
+      "work": 25,
+      "name": "Lingot de fer"
     },
     {
       "id": "forge_axe",
@@ -101,7 +108,8 @@
       "out": {
         "axe": 1
       },
-      "work": 20
+      "work": 20,
+      "name": "Hache"
     },
     {
       "id": "forge_pickaxe",
@@ -114,7 +122,8 @@
       "out": {
         "pickaxe": 1
       },
-      "work": 20
+      "work": 20,
+      "name": "Pioche"
     },
     {
       "id": "forge_hammer",
@@ -127,7 +136,8 @@
       "out": {
         "hammer": 1
       },
-      "work": 20
+      "work": 20,
+      "name": "Marteau"
     },
     {
       "id": "make_basket",
@@ -139,7 +149,8 @@
       "out": {
         "basket": 1
       },
-      "work": 10
+      "work": 10,
+      "name": "Panier"
     },
     {
       "id": "make_rod",
@@ -152,7 +163,8 @@
       "out": {
         "fishing_rod": 1
       },
-      "work": 10
+      "work": 10,
+      "name": "Canne à pêche"
     },
     {
       "id": "tan_leather",
@@ -164,7 +176,8 @@
       "out": {
         "leather": 1
       },
-      "work": 20
+      "work": 20,
+      "name": "Cuir"
     },
     {
       "id": "weave_cloth",
@@ -176,7 +189,8 @@
       "out": {
         "cloth": 1
       },
-      "work": 20
+      "work": 20,
+      "name": "Tissu"
     },
     {
       "id": "sew_clothes",
@@ -189,7 +203,8 @@
       "out": {
         "clothes": 1
       },
-      "work": 25
+      "work": 25,
+      "name": "Vêtements"
     },
     {
       "id": "hew_beam",
@@ -201,7 +216,8 @@
       "out": {
         "beam": 1
       },
-      "work": 10
+      "work": 10,
+      "name": "Poutre"
     },
     {
       "id": "spin_linen",
@@ -213,7 +229,8 @@
       "out": {
         "linen": 2
       },
-      "work": 12
+      "work": 12,
+      "name": "Fil de lin"
     },
     {
       "id": "grind_barley",
@@ -225,7 +242,8 @@
       "out": {
         "flour": 2
       },
-      "work": 10
+      "work": 10,
+      "name": "Farine (orge)"
     },
     {
       "id": "draw_water",
@@ -235,7 +253,8 @@
       "out": {
         "water": 1
       },
-      "work": 4
+      "work": 4,
+      "name": "Eau"
     },
     {
       "id": "forge_flintlock",
@@ -248,7 +267,8 @@
       "out": {
         "flintlock": 1
       },
-      "work": 40
+      "work": 40,
+      "name": "Fusil à silex"
     },
     {
       "id": "make_shuttle",
@@ -260,7 +280,8 @@
       "out": {
         "shuttle": 1
       },
-      "work": 8
+      "work": 8,
+      "name": "Navette"
     },
     {
       "id": "make_bread_peel",
@@ -272,7 +293,8 @@
       "out": {
         "bread_peel": 1
       },
-      "work": 8
+      "work": 8,
+      "name": "Pelle à pain"
     },
     {
       "id": "make_flail",
@@ -285,7 +307,8 @@
       "out": {
         "flail": 1
       },
-      "work": 8
+      "work": 8,
+      "name": "Fléau"
     },
     {
       "id": "brew_potion",
@@ -298,7 +321,8 @@
       "out": {
         "healing_potion": 1
       },
-      "work": 20
+      "work": 20,
+      "name": "Potion de soin"
     },
     {
       "id": "make_mortar",
@@ -310,7 +334,8 @@
       "out": {
         "mortar": 1
       },
-      "work": 10
+      "work": 10,
+      "name": "Mortier"
     }
   ]
 }

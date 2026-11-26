@@ -125,3 +125,30 @@ func test_production_aller_retour() -> void:
 	p2.from_dict(JSON.parse_string(JSON.stringify(prod.to_dict())))
 	assert_eq(p2.orders[mill][0]["recipe"], "grind_flour")
 	assert_eq(p2.fields.plots[Vector3i(2, 1, 2)]["crop"], "potato")
+
+
+## Critère J6 : le village passe un hiver complet (5 jours) en autonomie : personne n'a faim ni froid à mourir.
+func test_un_hiver_en_autonomie() -> void:
+	_built("campfire", c.stock.pos + Vector3i(1, 0, 0))
+	for i in 4:
+		_built("tent", c.stock.pos + Vector3i(-3 + i * 2, 0, 3))
+	st.assign_homes(c)
+	c.stock.add("log", 20)
+	c.stock.add("bread", 40)
+	var logs := c.stock.count("log")
+	var tpd := GameClock.ticks_per_day()
+	GameClock.tick_index = tpd * 15 + int(tpd * 0.3)  # premier matin d'hiver
+	var min_hunger := 100.0
+	var min_warmth := 100.0
+	for i in tpd * 5:
+		GameClock.step()
+		c.tick()
+		if i % tpd == 0:
+			prod.daily()
+			c.heating_ok = not prod.fire_out
+		for l in c.lutins:
+			min_hunger = minf(min_hunger, l.needs["hunger"])
+			min_warmth = minf(min_warmth, l.needs["warmth"])
+	assert_gt(min_hunger, 5.0, "personne n'a eu faim au point de mourir")
+	assert_gt(min_warmth, 5.0, "personne n'a gelé")
+	assert_lt(c.stock.count("log"), logs, "le feu a consommé du bois")

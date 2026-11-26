@@ -12,6 +12,8 @@ static func run(game: Node, action: String) -> void:
 			game.camera.focus(l.pos)
 			game.lutins_view.selected_id = l.id
 			game.hud.show_lutin(l)
+		"ferme":
+			ferme(game)
 		"village":
 			village(game)
 		"recolte":
@@ -88,3 +90,27 @@ static func village(game: Node) -> void:
 	GameClock.set_speed(4)
 	game.camera.distance = 16.0
 	game.camera.focus(Vector3(c) + Vector3(2, 0, 0))
+
+
+static func ferme(game: Node) -> void:
+	var c: Vector3i = game.colony.stock.pos
+	var st: Structures = game.structures
+	st.add("mill", c + Vector3i(-5, 0, -3), true)
+	st.add("well", c + Vector3i(-2, 0, -4), true)
+	st.add("sawbench", c + Vector3i(3, 0, -4), true)
+	game.colony.stock.add("hoe", 2)
+	for l: Lutin in game.colony.lutins.slice(0, 2):
+		game.colony.change_job(l, "farmer")
+	for x in 6:
+		for z in 4:
+			var p := c + Vector3i(2 + x, 0, 3 + z)
+			var top := Vector3i(p.x, game.world.surface_y(p.x, p.z) - 1, p.z)
+			if ZonesPanel.farmable(game.world, top):
+				game.fields.plan(top, "wheat" if z < 2 else "flax")
+				if x < 3:
+					game.fields.plots[top]["state"] = "ripe"
+					game.world.set_block(top, game.world.types.num("field_plot"))
+	GameClock.set_speed(4)
+	game.camera.distance = 15.0
+	game.camera.focus(Vector3(c) + Vector3(3, 0, 2))
+	game.hud.menu_button("Gestion").button_pressed = true

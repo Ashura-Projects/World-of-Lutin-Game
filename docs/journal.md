@@ -10,7 +10,7 @@ Reprise : lire ce fichier, puis `prompts/03-reprise-et-corrections.md`.
 | J3 — Les Lutins | **fait** | A* (marche d'1 bloc max), tour + escalier atteinte (test), 3 jours simulés sans blocage (test), métiers connus (test), sauvegarde colonie ; `lutins.jpg`, `fiche.jpg` |
 | J4 — Récolte & métiers | **fait** (panneau bâtiments au J6) | bois et pierre arrivent en réserve sans action (tests couper/creuser/cueillir/chasser/assigner) ; `recolte.jpg`, `travail.jpg` |
 | J5 — Les lutins bâtissent | **fait** | maison (murs, toit, porte, 4 lits) bâtie par les lutins, reconnue « maison », ils y dorment (test) ; tentes attribuées ; `village.jpg` |
-| J6 — Agriculture & production | à faire | |
+| J6 — Agriculture & production | **fait** | champ case par case → récolte + paille (test), blé → farine → pain avec l'eau du puits (test), hiver de 5 jours en autonomie (test) ; `ferme.jpg` |
 | J7 — Prédateurs, gestion & sauvegarde | à faire | |
 | J8 — Familles, école & recherche | à faire | |
 
@@ -60,3 +60,10 @@ Settings, GameSetup), GUT 9.7.1 headless, export Android arm64 (`com.ashura.worl
 - `BuildExec` : plan → le bâtisseur prend les matériaux à la réserve → pose ; règle de solidité ; portée de 3 blocs en hauteur (`build_reach_up`).
 - En partie, l'outil Construire crée des **plans** (bleus) ; la gomme annule un plan ou ordonne une démolition (rouge). Lits/tentes attribués automatiquement.
 - Problème connu : un plan peut être posé à travers un arbre (le tronc reste visible).
+
+## J6 — Agriculture & production
+- `Fields` (cases planifiées → labourées → semées en saison → mûres → récoltées ; rendements × fertilité × niveau ; rien ne pousse l'hiver),
+  `Production` (commandes « garder N » / « faire N » par atelier, une à la fois ; postes de travail et mode auto ; bois de chauffage l'hiver).
+- Tâches « labourer, semer, récolter, fabriquer » : le lutin va chercher les intrants à la réserve (`BuildExec`).
+- Menus : Zones (champs par case ou rectangle, culture par case), Gestion (ateliers, affectation lutin → bâtiment, commandes).
+- Froid : l'hiver, la chaleur baisse loin d'un feu (rayon `heated_radius`) ; feu sans bûches = alerte.

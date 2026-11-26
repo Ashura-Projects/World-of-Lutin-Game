@@ -21,6 +21,9 @@ var fauna_view: FaunaView
 var structures: Structures
 var structures_view: StructuresView
 var plans_view: PlansView
+var fields: Fields
+var production: Production
+var fields_view: FieldsView
 var _gen_task: int = -1
 var _loading: Label
 
@@ -60,6 +63,10 @@ func _on_world_ready() -> void:
 	board = TaskBoard.new(world, colony, flora, fauna, ground)
 	structures = Structures.new()
 	board.structures = structures
+	colony.structures = structures
+	fields = Fields.new()
+	board.fields = fields
+	production = Production.new(board, fields)
 	for pair: Array in [
 		["world", world], ["colony", colony], ["flora", flora], ["fauna", fauna], ["ground", ground], ["tasks", board]
 	]:
@@ -72,6 +79,7 @@ func _on_world_ready() -> void:
 		colony.auto_assign_jobs()
 		fauna.populate(["deer", "boar"], c)
 	EventBus.tick.connect(_on_tick)
+	EventBus.day_changed.connect(func(_d: int) -> void: production.daily())
 	world_view = WorldView.new()
 	add_child(world_view)
 	world_view.setup(world)
@@ -90,6 +98,9 @@ func _on_world_ready() -> void:
 	structures_view = StructuresView.new()
 	add_child(structures_view)
 	structures_view.bind(structures)
+	fields_view = FieldsView.new()
+	add_child(fields_view)
+	fields_view.bind(fields)
 	plans_view = PlansView.new()
 	add_child(plans_view)
 	plans_view.bind(board)
@@ -113,6 +124,9 @@ func _on_world_ready() -> void:
 
 func _on_tick(_i: int) -> void:
 	colony.tick()
+	if GameClock.tick_index % GameClock.ticks_per_second() == 0:
+		production.plan()
+		colony.heating_ok = not production.fire_out
 	if GameClock.tick_index % 2 == 0:
 		var cells := []
 		for l in colony.lutins:
@@ -142,6 +156,9 @@ func _start_spot() -> Vector3i:
 func _on_tap(screen: Vector2) -> void:
 	if build_tool.active:
 		return
+	if hud.zones_panel != null and hud.zones_panel.visible:
+		hud.zones_panel.on_tap(screen)
+		return
 	if hud.harvest_panel != null and hud.harvest_panel.visible:
 		hud.harvest_panel.on_tap(screen)
 		return
@@ -149,5 +166,5 @@ func _on_tap(screen: Vector2) -> void:
 
 
 func _exit_tree() -> void:
-	for k in ["world", "colony", "flora", "fauna", "ground", "structures", "tasks"]:
+	for k in ["world", "colony", "flora", "fauna", "ground", "structures", "production", "tasks"]:
 		SaveManager.unregister(k)
