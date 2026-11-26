@@ -532,6 +532,12 @@
       "name": "Rabot",
       "category": "tool",
       "stack": 20
+    },
+    {
+      "id": "salt",
+      "name": "Sel",
+      "category": "processed",
+      "stack": 40
     }
   ]
 }

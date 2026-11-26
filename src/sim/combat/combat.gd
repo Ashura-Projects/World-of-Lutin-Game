@@ -183,6 +183,11 @@ func _self_heal(l: Lutin) -> void:
 	var max_hp := float(_cfg.get("hp", 50))
 	if l.hp >= max_hp:
 		return
+	# un guérisseur du village vient lui apporter une potion
+	if l.hp < max_hp * 0.7 and colony.task_board != null and colony.stock.count("healing_potion") > 0:
+		if GameClock.tick_index % (GameClock.ticks_per_second() * 5) == l.id % (GameClock.ticks_per_second() * 5):
+			if colony.lutins.any(func(h: Lutin) -> bool: return h.job == "healer"):
+				colony.task_board.call("add_heal", l)
 	l.hp = minf(max_hp, l.hp + float(_cfg.get("regen_per_day", 5)) / GameClock.ticks_per_day())
 	if l.hp < max_hp * float(_cfg.get("self_potion_below", 0.5)) and Colony._near(l.cell, colony.stock.pos, 2):
 		if colony.stock.take("healing_potion", 1) == 1:

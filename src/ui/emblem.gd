@@ -1,6 +1,7 @@
 class_name Emblem
 extends Control
-## Dessin de l'emblème de la faction (forme, partition, symbole) — en 2D pour l'interface et dans une texture pour les fanions.
+## Dessin de l'emblème de la faction (forme, partition, symbole) —
+## en 2D pour l'interface et dans une texture pour les fanions.
 
 var faction: Faction
 

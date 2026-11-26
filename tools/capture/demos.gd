@@ -12,6 +12,8 @@ static func run(game: Node, action: String) -> void:
 			game.camera.focus(l.pos)
 			game.lutins_view.selected_id = l.id
 			game.hud.show_lutin(l)
+		"marchand":
+			marchand(game)
 		"deco":
 			deco(game)
 		"faction":
@@ -215,3 +217,10 @@ static func deco(game: Node) -> void:
 static func faction(game: Node) -> void:
 	deco(game)
 	game.hud.open_faction()
+
+
+static func marchand(game: Node) -> void:
+	game.colony.stock.add("gold", 40)
+	game.colony.stock.add("log", 30)
+	game.sim.trade.daily(game.sim.trade.next_day)
+	game.hud.menu_button("Commerce").button_pressed = true

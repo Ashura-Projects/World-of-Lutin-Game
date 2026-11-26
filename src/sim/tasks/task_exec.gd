@@ -134,7 +134,7 @@ func work(l: Lutin) -> void:
 func _complete(l: Lutin, t: Dictionary) -> void:
 	var cell: Vector3i = t["cell"]
 	match t["kind"]:
-		"build", "build_struct", "sow", "craft":
+		"build", "build_struct", "sow", "craft", "heal":
 			board.builds.complete(l, t)
 			if t["kind"] == "build" and board.world.get_block(cell) != int(t["block"]):
 				return  # pas encore posable (quelqu'un dans la case)

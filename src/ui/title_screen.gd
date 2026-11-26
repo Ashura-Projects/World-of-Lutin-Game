@@ -46,12 +46,12 @@ func _build() -> void:
 	var newb := _menu_button(col, "Nouvelle partie", _on_new_game)
 	if cont.disabled:
 		UiStyle.make_primary(newb)
-	_menu_button(col, "Paramètres", func() -> void: _toast("Paramètres : bientôt"))
-	_menu_button(col, "Crédits", func() -> void: _toast("Projet d'Ashura — voir assets/CREDITS.md"))
+	_menu_button(col, "Paramètres", func() -> void: _popup(SettingsPanel.new()))
+	_menu_button(col, "Crédits", func() -> void: _popup(CreditsPanel.new()))
 	_menu_button(col, "Quitter", func() -> void: get_tree().quit())
 
 	var ver := Label.new()
-	ver.text = "v0.1 · projet d'Ashura"
+	ver.text = "v%s · projet d'Ashura" % ProjectSettings.get_setting("application/config/version", "1.0.0")
 	ver.add_theme_color_override("font_color", UiStyle.TXT_D)
 	ver.add_theme_font_size_override("font_size", 16)
 	ver.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
@@ -170,6 +170,11 @@ func _on_continue() -> void:
 func _start_game() -> void:
 	GameSetup.load_slot = ""
 	get_tree().change_scene_to_file(GAME_SCENE)
+
+
+func _popup(p: Control) -> void:
+	p.position = Vector2(560, 120)
+	add_child(p)
 
 
 func _toast(text: String) -> void:

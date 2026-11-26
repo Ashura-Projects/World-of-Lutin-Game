@@ -133,6 +133,15 @@
 - **Rangs** : Campement → Hameau → Village → Bourg. Chaque rang débloque matériaux, objets, métiers.
 - Objectifs facultatifs proposés au fil de la partie (« construire une tour de 20 blocs », « nourrir 30 lutins un hiver »).
 
+## 9. Ajouts v1.0 (validés par Ashura)
+- **Fabrication complète** (`data/recipes.json`, 70 recettes) : verre et fioles (sable + charbon), fer → lingots → outils et armes,
+  bois → planches/poutres, meubles à l'**atelier d'ébéniste**, décorations (lanterne, tapis, pots, **fanions** muraux et sur poteau), teintures.
+- Ressources naturelles : baies, champignons, plantes médicinales, lin sauvage, roseaux ; sable, argile, charbon, fer, **or** dans la roche.
+- **Faction** (`data/faction.json`) : nom, devise, couleurs, emblème (forme, partition, symbole) ; servira aux royaumes en Phase 2.
+- **Commerce** (`data/trade.json`) : marchand ambulant tous les 4 jours ; achat/vente contre de l'or.
+- **Son** (`data/audio.json`) : musiques de fond, ambiances selon ce que regarde la caméra et le zoom (forêt, eau, nuit, vent, feu), bruitages.
+- **Moral** : logement et décoration de la pièce (`rooms.json` › decor), froid.
+
 # PHASE 2 — MODE AVENTURE ROYALE (à détailler après la Phase 1)
 - Départ avec **3 à 4 lutins**, un roi/une reine lutin à protéger.
 - **Orcs** rouges grassouillets : camps sur la carte, raids nocturnes, sièges avec béliers et échelles.

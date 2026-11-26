@@ -83,3 +83,19 @@ Settings, GameSetup), GUT 9.7.1 headless, export Android arm64 (`com.ashura.worl
 - `Research` : points, choix, effets (rendement, école, farine, vitesse de recherche) et déblocages (blocs et bâtiments grisés tant que non découverts).
 - Les enfants ne travaillent pas : école le jour, jeux près de la maison ; les métiers spécialisés exigent une formation.
 - Interface : Gestion → Recherche (technologies, cours de l'école, inscriptions).
+
+## v1.0.0 (après J8, demandes d'Ashura)
+- Fabrication : 70 recettes, nouveaux ateliers (verrerie, ébéniste, couture, teinture), métiers verrier et ébéniste ; test de cohérence :
+  chaque ingrédient s'obtient, chaque atelier/métier existe, chaque outil se fabrique.
+- Nature : champignons, roseaux (berges), choux, minerai d'or ; buissons avec baies visibles / cueillis.
+- Son : `tools/audio/generate_audio.py` (synthèse originale) → 3 musiques, 5 ambiances, 13 bruitages ; `Audio` (autoload) + `SoundDirector`.
+- Faction : éditeur (titre → Nouvelle partie, et Gestion → Faction), emblème dessiné (`Emblem`), fanions 3D, uniforme aux couleurs.
+- Meubles et décorations en 3D, moral selon la décoration ; poser un plan sur un arbre ordonne de le couper.
+- Commerce (marchand + dialogue), guérisseur actif, Paramètres (volumes, qualité), Crédits, version 1.0.0.
+- Performance : recherches de chemin étalées sur plusieurs ticks ; tick moyen 3,5 ms (50 lutins, grande carte, CPU du cloud).
+
+## Problèmes connus (v1.0.0)
+- **Pas testé sur le téléphone** : ni les 60 img/s, ni le tactile réel, ni le son (le cloud n'a pas de carte son).
+- Le tick reste au-dessus de 4 ms au pire (~10 ms) ; sur téléphone il peut être 1,5 à 2 fois plus lent.
+- Les lutins attendent parfois une seconde avant de partir (recherche de chemin étalée).
+- La relecture du code par un agent indépendant n'a pas été faite (interrompue).

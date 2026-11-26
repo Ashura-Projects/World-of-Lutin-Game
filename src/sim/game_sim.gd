@@ -21,6 +21,7 @@ var research: Research
 var education: Education
 var population: Population
 var faction: Faction
+var trade: Trade
 
 
 func _init(w: VoxelWorld) -> void:
@@ -44,6 +45,7 @@ func _init(w: VoxelWorld) -> void:
 	education = Education.new(colony, structures, production, research)
 	population = Population.new(colony, structures, w)
 	faction = Faction.new(GameSetup.faction)
+	trade = Trade.new(colony)
 
 
 ## Nouvelle partie sur un monde généré.
@@ -77,6 +79,7 @@ func daily() -> void:
 	population.daily()
 	education.daily()
 	structures.assign_homes(colony)
+	trade.daily(GameClock.day())
 	village.daily()
 
 

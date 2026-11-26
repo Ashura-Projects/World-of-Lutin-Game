@@ -10,7 +10,7 @@ var _cfg: Dictionary
 func _ready() -> void:
 	_cfg = DataRegistry.get_table("lighting")
 	sun = DirectionalLight3D.new()
-	sun.shadow_enabled = true
+	sun.shadow_enabled = str(Settings.get_value("quality")) != "low"
 	sun.directional_shadow_max_distance = 120.0
 	add_child(sun)
 	env = Environment.new()

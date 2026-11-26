@@ -35,6 +35,8 @@ func _natural() -> Dictionary:
 			out[k] = true
 	for k: String in DataRegistry.get_table("start")["cart"]["fixed"]:
 		out[k] = true
+	for k: String in DataRegistry.get_table("trade")["always_offer"]:
+		out[k] = true  # au marchand
 	return out
 
 

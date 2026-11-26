@@ -17,6 +17,8 @@ static func cost_of(t: Dictionary) -> Dictionary:
 			return Fields.crop(t["crop"]).get("seed", {})
 		"craft":
 			return Production.recipe(t["recipe"]).get("in", {})
+		"heal":
+			return {"healing_potion": 1}
 	return Structures.def(t["struct_kind"]).get("cost", {})
 
 
@@ -101,7 +103,13 @@ func _refund(l: Lutin, t: Dictionary) -> void:
 
 
 func complete(l: Lutin, t: Dictionary) -> void:
-	if t["kind"] == "sow":
+	if t["kind"] == "heal":
+		var patient := board.colony.find_lutin(int(t["target"]))
+		if patient != null:
+			var max_hp := float(DataRegistry.get_table("population").get("combat", {}).get("hp", 50))
+			patient.hp = minf(max_hp, patient.hp + float(Stockpile._resource("healing_potion").get("heal", 30)))
+			EventBus.alert.emit("soin", "%s soigne %s." % [l.name, patient.name])
+	elif t["kind"] == "sow":
 		if board.fields != null:
 			board.fields.set_state(t["cell"], "sown")
 	elif t["kind"] == "craft":

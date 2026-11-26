@@ -30,6 +30,7 @@ var workshops_panel: WorkshopsPanel
 var military_panel: MilitaryPanel
 var dashboard: DashboardPanel
 var research_panel: ResearchPanel
+var commerce_panel: CommercePanel
 var _toasts: VBoxContainer
 var _res_labels: Dictionary = {}
 var _food_drop: PanelContainer
@@ -70,6 +71,13 @@ func bind_game(game: Node) -> void:
 	military_panel.visible = false
 	root.add_child(military_panel)
 	_panel_toggle("Militaire", military_panel)
+	commerce_panel = CommercePanel.new()
+	commerce_panel.setup(game)
+	commerce_panel.position = Vector2(350, 80)
+	commerce_panel.visible = false
+	root.add_child(commerce_panel)
+	_panel_toggle("Commerce", commerce_panel)
+	game.sim.trade.merchant_arrived.connect(_merchant_dialog)
 	dashboard = DashboardPanel.new()
 	dashboard.setup(game)
 	dashboard.position = Vector2(390, 80)
@@ -107,6 +115,38 @@ func _toast(kind: String, text: String) -> void:
 	if _toasts.get_child_count() > 5:
 		_toasts.get_child(0).queue_free()
 	get_tree().create_timer(6.0).timeout.connect(p.queue_free)
+
+
+## Dialogue d'événement (maquette validée) : un marchand arrive.
+func _merchant_dialog() -> void:
+	var p := PanelContainer.new()
+	p.add_theme_stylebox_override("panel", UiStyle.box(UiStyle.IRON, UiStyle.GOLD, 3, 10))
+	p.position = Vector2(500, 380)
+	var v := VBoxContainer.new()
+	p.add_child(v)
+	v.add_child(UiStyle.title_label("Un marchand au village", 28))
+	var txt := Label.new()
+	txt.text = "« Le bonjour ! J'ai du fer, du sel et des remèdes.\n  Contre de l'or, ou je rachète vos surplus. »"
+	txt.add_theme_color_override("font_color", UiStyle.PARCH)
+	v.add_child(txt)
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 10)
+	v.add_child(row)
+	for b: Array in [["Commercer", true], ["Plus tard", false]]:
+		var btn := Button.new()
+		btn.text = b[0]
+		btn.custom_minimum_size = Vector2(220, 56)
+		if b[1]:
+			UiStyle.make_primary(btn)
+		var open: bool = b[1]
+		btn.pressed.connect(
+			func() -> void:
+				p.queue_free()
+				if open:
+					menu_button("Commerce").button_pressed = true
+		)
+		row.add_child(btn)
+	root.add_child(p)
 
 
 func open_faction() -> void:
@@ -311,6 +351,13 @@ func _build_menu() -> void:
 		v.add_child(b)
 
 
+func _settings() -> void:
+	_menu_panel.visible = false
+	var sp := SettingsPanel.new()
+	sp.position = Vector2(520, 100)
+	root.add_child(sp)
+
+
 func _close_menu() -> void:
 	_menu_panel.visible = false
 
@@ -351,6 +398,6 @@ func _process(_delta: float) -> void:
 	if Engine.get_process_frames() % 15 == 0:
 		_refresh_resources()
 	if Engine.get_process_frames() % 30 == 0:
-		for p: Control in [military_panel, dashboard]:
+		for p: Control in [military_panel, dashboard, commerce_panel]:
 			if p != null and p.visible:
 				p.call("refresh")

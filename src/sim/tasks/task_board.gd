@@ -6,7 +6,7 @@ extends RefCounted
 signal tasks_changed
 
 ## Tâches où l'on va d'abord chercher des matériaux à la réserve.
-const FETCH_KINDS := ["build", "build_struct", "sow", "craft"]
+const FETCH_KINDS := ["build", "build_struct", "sow", "craft", "heal"]
 
 var world: VoxelWorld
 var colony: Colony
@@ -137,6 +137,31 @@ func _clear_tree(cell: Vector3i) -> void:
 		add_cut(t)
 
 
+## Le guérisseur apporte une potion à un blessé.
+func add_heal(patient: Lutin) -> int:
+	for t: Dictionary in tasks.values():
+		if t["kind"] == "heal" and int(t["target"]) == patient.id:
+			return -1
+	var id := next_id
+	var t := {
+		"id": id,
+		"kind": "heal",
+		"cell": patient.cell,
+		"job": "healer",
+		"work": 3.0,
+		"progress": 0.0,
+		"reserved": -1,
+		"assigned": [],
+		"blocked": 0,
+		"target": patient.id,
+		"repeat": false
+	}
+	tasks[id] = t
+	next_id += 1
+	tasks_changed.emit()
+	return id
+
+
 func add_gather(cell: Vector3i) -> int:
 	var f := DataRegistry.get_table("flora")
 	if flora.bushes.has(cell):
@@ -209,7 +234,8 @@ func cancel(id: int) -> void:
 
 
 func finish(t: Dictionary) -> void:
-	_by_cell.erase(t["cell"])
+	if t["kind"] != "heal":
+		_by_cell.erase(t["cell"])
 	tasks.erase(t["id"])
 	tasks_changed.emit()
 

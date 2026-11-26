@@ -104,3 +104,19 @@ func test_mort_d_un_lutin() -> void:
 	combat.tick()
 	assert_eq(c.lutins.size(), 3)
 	assert_signal_emitted(combat, "lutin_died")
+
+
+func test_le_guerisseur_soigne() -> void:
+	var board := TaskBoard.new(w, c, Flora.new(), fauna, ground)
+	var healer := c.lutins[0]
+	healer.trained["healer"] = 1.0
+	c.stock.add("mortar", 1)
+	assert_true(c.change_job(healer, "healer"))
+	var patient := c.lutins[2]
+	patient.hp = 15.0
+	c.stock.add("healing_potion", 2)
+	for i in 30 * GameClock.ticks_per_second():
+		GameClock.step()
+		c.tick()
+		combat.tick()
+	assert_gt(patient.hp, 30.0, "le guérisseur a apporté une potion")
