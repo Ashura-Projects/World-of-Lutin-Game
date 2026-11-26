@@ -52,6 +52,18 @@ func setup(t: BuildTool) -> void:
 		b.pressed.connect(func() -> void: _select_mode(m))
 		row.add_child(b)
 		_mode_buttons.append(b)
+	for road: Array in [["road_dirt", "Route terre"], ["road_stone", "Route pavée"]]:
+		var rb := Button.new()
+		rb.text = road[1]
+		rb.custom_minimum_size = Vector2(130, 56)
+		rb.add_theme_font_size_override("font_size", 18)
+		var rid := tool.world.types.num(road[0])
+		rb.pressed.connect(
+			func() -> void:
+				_select_mode(BuildTool.Mode.ROAD)
+				tool.material_id = rid
+		)
+		row.add_child(rb)
 	row.add_child(_small("−", func() -> void: _height(-1)))
 	_height_label = Label.new()
 	_height_label.custom_minimum_size = Vector2(70, 0)

@@ -153,6 +153,45 @@ func _hat(kind: String, m: Material, head: Vector3) -> void:
 			_part(body, _cyl(0.27, 0.27, 0.05, 16), m, Vector3(0, head.y + 0.12, 0))
 
 
+## L'outil n'apparaît que pendant l'action (validé) : manche + tête, à l'échelle exagérée du style.
+func show_tool(on: bool) -> void:
+	if tool_slot == null:
+		return
+	if not on:
+		for c in tool_slot.get_children():
+			c.queue_free()
+		return
+	if tool_slot.get_child_count() > 0:
+		return
+	var tool_id = DataRegistry.find("jobs", "jobs", _job).get("tool")
+	if tool_id == null:
+		return
+	var wood := mat("80583a", 0.8)
+	var iron := mat("a0a4ac", 0.35, 0.7)
+	var long := ["flintlock", "fishing_rod", "shovel", "hoe"].has(tool_id)
+	_part(
+		tool_slot,
+		_cyl(0.02, 0.02, 0.75 if long else 0.5),
+		wood,
+		Vector3(0, -0.05, -0.1),
+		Vector3.ONE,
+		Vector3(PI / 2.4, 0, 0)
+	)
+	var head := BoxMesh.new()
+	match str(tool_id):
+		"axe":
+			head.size = Vector3(0.04, 0.12, 0.16)
+		"pickaxe":
+			head.size = Vector3(0.04, 0.05, 0.4)
+		"hammer", "tongs":
+			head.size = Vector3(0.08, 0.08, 0.16)
+		"basket":
+			head.size = Vector3(0.2, 0.14, 0.2)
+		_:
+			head.size = Vector3(0.05, 0.05, 0.1)
+	_part(tool_slot, head, iron if tool_id != "basket" else mat("b08448", 0.9), Vector3(0, 0.12, -0.32))
+
+
 ## Animation simple : marche (jambes et bras qui balancent), sommeil (couché), travail (bras qui frappe).
 func animate(t: float, walking: bool, sleeping: bool, working: bool) -> void:
 	if body == null:

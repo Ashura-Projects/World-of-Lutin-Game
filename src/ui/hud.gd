@@ -23,6 +23,10 @@ func _ready() -> void:
 
 
 var sheet: LutinSheet
+var harvest_panel: HarvestPanel
+var jobs_panel: JobsPanel
+var _res_labels: Dictionary = {}
+var _food_drop: PanelContainer
 
 
 func show_lutin(l: Lutin) -> void:
@@ -34,14 +38,90 @@ func bind_game(game: Node) -> void:
 	sheet = LutinSheet.new()
 	sheet.position = Vector2(20, 80)
 	root.add_child(sheet)
+	harvest_panel = HarvestPanel.new()
+	harvest_panel.setup(game)
+	harvest_panel.position = Vector2(170, 400)
+	harvest_panel.visible = false
+	root.add_child(harvest_panel)
+	jobs_panel = JobsPanel.new()
+	jobs_panel.setup(game)
+	jobs_panel.position = Vector2(420, 80)
+	jobs_panel.visible = false
+	root.add_child(jobs_panel)
+	_panel_toggle("Récolter", harvest_panel)
+	_panel_toggle("Lutins", jobs_panel)
+	_build_resources()
 	_setup_build(game.build_tool, game.world_view)
+
+
+func _panel_toggle(button_name: String, panel: Control) -> void:
+	var b := menu_button(button_name)
+	b.toggle_mode = true
+	b.toggled.connect(
+		func(on: bool) -> void:
+			panel.visible = on
+			if on and panel is JobsPanel:
+				panel.refresh()
+			if not on and panel is HarvestPanel:
+				panel.hide_preview()
+			if on:
+				_close_others(button_name)
+	)
+
+
+## Un seul menu du bas ouvert à la fois.
+func _close_others(keep: String) -> void:
+	for n in ["Construire", "Récolter", "Zones", "Lutins", "Militaire", "Commerce", "Gestion"]:
+		var b := menu_button(n)
+		if n != keep and b.toggle_mode and b.button_pressed:
+			b.button_pressed = false
+
+
+## Ressources en haut : Nourriture (total des aliments, détail déroulant), bûches, pierre, fer, or.
+func _build_resources() -> void:
+	var x := 690
+	for r: Array in [
+		["food", "Nourriture"], ["log", "Bûches"], ["stone", "Pierre"], ["iron_ore", "Fer"], ["gold", "Or"]
+	]:
+		var b := Button.new()
+		b.position = Vector2(x, 6)
+		var wide := 200 if r[0] == "food" else 140
+		b.custom_minimum_size = Vector2(wide, 50)
+		b.add_theme_font_size_override("font_size", 17)
+		root.add_child(b)
+		_res_labels[r[0]] = [b, r[1]]
+		x += wide + 8
+	_food_drop = PanelContainer.new()
+	_food_drop.position = Vector2(690, 62)
+	_food_drop.visible = false
+	root.add_child(_food_drop)
+	_res_labels["food"][0].pressed.connect(func() -> void: _food_drop.visible = not _food_drop.visible)
+
+
+func _refresh_resources() -> void:
+	if _game == null or _game.colony == null:
+		return
+	var st: Stockpile = _game.colony.stock
+	for k: String in _res_labels:
+		var n := st.food_total() if k == "food" else st.count(k)
+		_res_labels[k][0].text = "%s %d%s" % [_res_labels[k][1], n, " ▾" if k == "food" else ""]
+	if _food_drop.visible:
+		for c in _food_drop.get_children():
+			c.queue_free()
+		var l := Label.new()
+		var lines := []
+		for id: String in st.items:
+			if Stockpile._resource(id).get("category", "") == "food":
+				lines.append("%s : %d" % [Stockpile._resource(id).get("name", id), st.count(id)])
+		l.text = "\n".join(lines) if not lines.is_empty() else "Aucune nourriture"
+		_food_drop.add_child(l)
 
 
 ## Mode Construire : barre des matériaux + curseur d'étage (bord droit).
 func _setup_build(tool: BuildTool, view: WorldView) -> void:
 	var panel := BuildPanel.new()
 	panel.setup(tool)
-	panel.position = Vector2(170, 470)
+	panel.position = Vector2(170, 440)
 	panel.visible = false
 	root.add_child(panel)
 	var btn := menu_button("Construire")
@@ -94,7 +174,7 @@ func _build_top() -> void:
 		bar.add_child(b)
 		_speed_buttons.append(b)
 	_fps_label = Label.new()
-	_fps_label.position = Vector2(600, 18)
+	_fps_label.position = Vector2(590, 18)
 	_fps_label.add_theme_color_override("font_color", UiStyle.TXT_D)
 	bar.add_child(_fps_label)
 	var gear := Button.new()
@@ -184,3 +264,5 @@ func _process(_delta: float) -> void:
 	var dps := int(DataRegistry.get_table("time").get("days_per_season", 5))
 	_time_label.text = "%s · jour %d" % [sname, GameClock.day() % dps + 1]
 	_fps_label.text = "%d img/s" % Engine.get_frames_per_second()
+	if Engine.get_process_frames() % 15 == 0:
+		_refresh_resources()

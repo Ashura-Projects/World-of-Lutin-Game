@@ -314,6 +314,12 @@
       "name": "Mortier et pilon",
       "category": "tool",
       "stack": 5
+    },
+    {
+      "id": "gold",
+      "name": "Or",
+      "category": "currency",
+      "stack": 999
     }
   ]
 }

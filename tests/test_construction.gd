@@ -82,3 +82,15 @@ func test_tour_creuse_avec_escalier() -> void:
 		h.apply([ring[i % 8] + Vector3i(0, i + 1, 0)], stone)
 	assert_eq(w.get_block(Vector3i(12, 10, 10)), stone)
 	assert_eq(w.get_block(Vector3i(12, 5, 12)), 0, "la tour est creuse au centre")
+
+
+func test_route_remplace_le_dessus_du_sol() -> void:
+	var tool := BuildTool.new()
+	var cam := CameraController.new()
+	add_child_autofree(cam)
+	add_child_autofree(tool)
+	tool.setup(w, cam)
+	tool.mode = BuildTool.Mode.ROAD
+	tool.material_id = w.types.num("road_stone")
+	assert_eq(tool.stroke(Vector3i(2, 0, 2), Vector3i(6, 0, 2)), 5)
+	assert_eq(w.get_block(Vector3i(4, 0, 2)), w.types.num("road_stone"))

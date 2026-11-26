@@ -12,6 +12,12 @@ var build_tool: BuildTool
 var colony: Colony
 var lutins_view: LutinsView
 var props_view: PropsView
+var flora: Flora
+var fauna: Fauna
+var ground: GroundItems
+var board: TaskBoard
+var items_view: ItemsView
+var fauna_view: FaunaView
 var _gen_task: int = -1
 var _loading: Label
 
@@ -45,23 +51,37 @@ func _process(_delta: float) -> void:
 
 func _on_world_ready() -> void:
 	colony = Colony.new(world)
-	SaveManager.register("world", world)
-	SaveManager.register("colony", colony)
+	flora = Flora.new()
+	fauna = Fauna.new(world)
+	ground = GroundItems.new()
+	board = TaskBoard.new(world, colony, flora, fauna, ground)
+	for pair: Array in [
+		["world", world], ["colony", colony], ["flora", flora], ["fauna", fauna], ["ground", ground], ["tasks", board]
+	]:
+		SaveManager.register(pair[0], pair[1])
 	var loaded := GameSetup.load_slot != "" and SaveManager.load_game(GameSetup.load_slot)
-	var c := Vector3i(world.size.x / 2, 0, world.size.z / 2)
 	if not loaded:
-		c = _start_spot()
+		var c := _start_spot()
+		flora.load_from_generator(generator)
 		colony.spawn_start(c, GameSetup.lutin_count)
-	EventBus.tick.connect(func(_i: int) -> void: colony.tick())
+		colony.auto_assign_jobs()
+		fauna.populate(["deer", "boar"], c)
+	EventBus.tick.connect(_on_tick)
 	world_view = WorldView.new()
 	add_child(world_view)
 	world_view.setup(world)
 	flora_view = FloraView.new()
 	add_child(flora_view)
-	flora_view.show_flora(generator.trees, generator.bushes)
+	flora_view.bind(flora)
 	props_view = PropsView.new()
 	add_child(props_view)
 	props_view.place(PropsView.cart(), colony.stock.pos + Vector3i(2, 0, 0))
+	items_view = ItemsView.new()
+	add_child(items_view)
+	items_view.bind(ground)
+	fauna_view = FaunaView.new()
+	add_child(fauna_view)
+	fauna_view.bind(fauna)
 	lutins_view = LutinsView.new()
 	add_child(lutins_view)
 	lutins_view.setup(colony)
@@ -75,6 +95,15 @@ func _on_world_ready() -> void:
 	_loading.queue_free()
 	hud.bind_game(self)
 	GameClock.running = true
+
+
+func _on_tick(_i: int) -> void:
+	colony.tick()
+	if GameClock.tick_index % 2 == 0:
+		var cells := []
+		for l in colony.lutins:
+			cells.append(l.cell)
+		fauna.tick(cells)
 
 
 ## Point de départ : case de plaine sèche la plus proche du centre de la carte.
@@ -99,9 +128,12 @@ func _start_spot() -> Vector3i:
 func _on_tap(screen: Vector2) -> void:
 	if build_tool.active:
 		return
+	if hud.harvest_panel != null and hud.harvest_panel.visible:
+		hud.harvest_panel.on_tap(screen)
+		return
 	hud.show_lutin(lutins_view.pick(camera.cam, screen))
 
 
 func _exit_tree() -> void:
-	SaveManager.unregister("world")
-	SaveManager.unregister("colony")
+	for k in ["world", "colony", "flora", "fauna", "ground", "tasks"]:
+		SaveManager.unregister(k)

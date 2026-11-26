@@ -82,6 +82,59 @@ func show_items(kind: String, mesh: Mesh, positions: Array) -> void:
 	mmi.multimesh = mm
 
 
+var _flora: Flora
+
+
+func bind(f: Flora) -> void:
+	_flora = f
+	f.changed.connect(func(_k: String) -> void: refresh())
+	EventBus.day_changed.connect(func(_d: int) -> void: refresh())
+	refresh()
+
+
+static func herb_mesh(kind: String) -> Mesh:
+	var st := SurfaceTool.new()
+	for i in 3:
+		var c := CylinderMesh.new()
+		c.top_radius = 0.0
+		c.bottom_radius = 0.06
+		c.height = 0.45
+		c.radial_segments = 4
+		c.rings = 1
+		st.append_from(
+			c,
+			0,
+			Transform3D(
+				Basis(Vector3.UP, i * 2.1).rotated(Vector3.RIGHT, 0.2),
+				Vector3(0.15 * cos(i * 2.1), 0.22, 0.15 * sin(i * 2.1))
+			)
+		)
+	st.generate_normals()
+	var m := st.commit()
+	m.surface_set_material(0, _mat(Color("6f8fc8") if kind == "wild_flax" else Color("9fb870")))
+	return m
+
+
+## Reconstruit les MultiMesh depuis la simulation (arbres coupés, buissons cueillis…).
+func refresh() -> void:
+	var trees := []
+	for p: Vector3i in _flora.trees:
+		trees.append({"pos": p, "kind": _flora.trees[p]})
+	var bushes := []
+	for p: Vector3i in _flora.bushes:
+		if _flora.bush_ready(p, GameClock.day()):
+			bushes.append({"pos": p})
+	for k: String in ["pin", "chene", "bouleau"]:
+		if not trees.any(func(t: Dictionary) -> bool: return t["kind"] == k):
+			show_items(k, tree_mesh(k), [])
+	show_flora(trees, bushes)
+	var herbs := {}
+	for p: Vector3i in _flora.herbs:
+		herbs.get_or_add(_flora.herbs[p], []).append(p)
+	for k: String in ["wild_flax", "medicinal_herb"]:
+		show_items(k, herb_mesh(k), herbs.get(k, []))
+
+
 func show_flora(trees: Array, bushes: Array) -> void:
 	var by_kind := {}
 	for t: Dictionary in trees:

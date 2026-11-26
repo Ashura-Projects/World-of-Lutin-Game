@@ -12,6 +12,11 @@ static func run(game: Node, action: String) -> void:
 			game.camera.focus(l.pos)
 			game.lutins_view.selected_id = l.id
 			game.hud.show_lutin(l)
+		"recolte":
+			recolte(game)
+		"travail":
+			recolte(game)
+			game.hud.menu_button("Récolter").button_pressed = false
 		"construire":
 			_tour(game)
 			game.hud.menu_button("Construire").button_pressed = true
@@ -39,3 +44,14 @@ static func _tour(game: Node) -> void:
 	tool.stroke(c + Vector3i(7, 0, 0), c + Vector3i(14, 0, 0))
 	game.camera.distance = 26
 	game.camera.focus(Vector3(c) + Vector3(5, 3, 2))
+
+
+static func recolte(game: Node) -> void:
+	var c: Vector3i = game.colony.stock.pos
+	game.board.order_circle("cut", c, 12)
+	game.board.order_circle("gather", c, 12)
+	game.board.order_dig(Shapes.dig_box(c + Vector3i(4, -1, 4), 3, 3, 2))
+	GameClock.set_speed(4)
+	game.camera.distance = 18.0
+	game.camera.focus(Vector3(c))
+	game.hud.menu_button("Récolter").button_pressed = true

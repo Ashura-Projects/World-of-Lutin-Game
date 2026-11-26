@@ -59,7 +59,9 @@ func _process(delta: float) -> void:
 			m.rotation.y = lerp_angle(m.rotation.y, atan2(-dir.x, -dir.z), minf(1.0, delta * 10.0))
 		m.position = m.position.lerp(target, minf(1.0, delta * 12.0))
 		var walking := l.state == Lutin.State.WALK
-		m.animate(_time + l.id, walking, l.state == Lutin.State.SLEEP, l.state == Lutin.State.WORK)
+		var working := l.state == Lutin.State.WORK
+		m.show_tool(working)
+		m.animate(_time + l.id, walking, l.state == Lutin.State.SLEEP, working)
 		if l.id == selected_id:
 			_marker.visible = true
 			_marker.position = m.position + Vector3(0, 0.05, 0)

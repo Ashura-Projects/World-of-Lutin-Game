@@ -5,7 +5,7 @@ extends Node3D
 
 signal changed
 
-enum Mode { BLOCK, LINE, FILL, WALL, ERASE }
+enum Mode { BLOCK, LINE, FILL, WALL, ERASE, ROAD }
 
 var active: bool = false
 var mode: Mode = Mode.BLOCK
@@ -63,7 +63,7 @@ func target_cell(screen: Vector2) -> Dictionary:
 	if not r["hit"]:
 		return {"ok": false}
 	var p: Vector3i = r["pos"]
-	return {"ok": true, "cell": p if mode == Mode.ERASE else p + r["normal"]}
+	return {"ok": true, "cell": p if mode in [Mode.ERASE, Mode.ROAD] else p + r["normal"]}
 
 
 ## Case sous le doigt dans le plan horizontal du début du tracé (lignes, rectangles, murs).
@@ -89,6 +89,8 @@ func _shape(end: Vector3i) -> Array[Vector3i]:
 			return Shapes.wall(_start, end, wall_height)
 		Mode.ERASE:
 			return Shapes.rect(_start, end)
+		Mode.ROAD:
+			return Shapes.line(_start, end)
 	var one: Array[Vector3i] = [_start]
 	return one
 
@@ -130,7 +132,7 @@ func commit() -> int:
 	if place_handler.is_valid():
 		n = place_handler.call(_cells, material_id, erase)
 	else:
-		n = history.apply(_cells, 0 if erase else material_id, not erase)
+		n = history.apply(_cells, 0 if erase else material_id, not erase and mode != Mode.ROAD)
 	_cancel()
 	changed.emit()
 	return n

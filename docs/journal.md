@@ -8,7 +8,7 @@ Reprise : lire ce fichier, puis `prompts/03-reprise-et-corrections.md`.
 | J1 — Le monde en blocs | **fait** (perf téléphone non mesurée) | même graine = même monde (test) ; 256×256 : génération 2,4 s, maillage 2,4 s, pire chunk 5,2 ms, 376 k triangles (CPU cloud) ; `monde_128.jpg` |
 | J2 — Construire au doigt | **fait** | rayon DDA + face, ligne/remplir/mur/gomme, annuler/rétablir, curseur d'étage ; test « tour creuse de 10 + escalier » ; `construire.jpg` |
 | J3 — Les Lutins | **fait** | A* (marche d'1 bloc max), tour + escalier atteinte (test), 3 jours simulés sans blocage (test), métiers connus (test), sauvegarde colonie ; `lutins.jpg`, `fiche.jpg` |
-| J4 — Récolte & métiers | à faire | |
+| J4 — Récolte & métiers | **fait** (panneau bâtiments au J6) | bois et pierre arrivent en réserve sans action (tests couper/creuser/cueillir/chasser/assigner) ; `recolte.jpg`, `travail.jpg` |
 | J5 — Les lutins bâtissent | à faire | |
 | J6 — Agriculture & production | à faire | |
 | J7 — Prédateurs, gestion & sauvegarde | à faire | |
@@ -45,3 +45,11 @@ Settings, GameSetup), GUT 9.7.1 headless, export Android arm64 (`com.ashura.worl
   avec le contenu de `start.json`, besoins, manger à la réserve, dormir la nuit, flâner ; budget de chemins par tick), `Stockpile`.
 - Vue : `LutinModel` (modèle validé reconstruit en primitives, tenues de `data/outfits.json`), `LutinsView` (lissage, animation, sélection au doigt),
   `LutinSheet` (fiche), chariot de départ.
+
+## J4 — Récolte & métiers
+- `Flora`, `Fauna` (cerfs, sangliers), `GroundItems`, `TaskBoard` + `TaskExec` : couper, creuser (boîte + / −), puits, cueillir (cercle 1-20),
+  chasser (fusil : portée, recharge, dégâts de `equipment.json`), pêcher (tâche répétée), transport automatique par les porteurs (et lutins libres).
+- Métiers = outils de la réserve (`Colony.change_job`), mode auto au départ, métiers connus avec XP et vitesse par niveau.
+- Interface : menu Récolter (aperçu cercle/boîte, Valider, Assigner…), panneau Lutins (métier, Auto), ressources en haut (Nourriture déroulante),
+  routes terre/pavée dans Construire, outil visible seulement en action.
+- Reste à faire plus tard : panneau d'affectation lutin → **bâtiment** (au J6, quand les ateliers existent).
