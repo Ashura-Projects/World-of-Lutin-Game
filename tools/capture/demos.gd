@@ -6,6 +6,12 @@ static func run(game: Node, action: String) -> void:
 	match action:
 		"tour":
 			_tour(game)
+		"fiche":
+			var l: Lutin = game.colony.lutins[0]
+			game.camera.distance = 7.0
+			game.camera.focus(l.pos)
+			game.lutins_view.selected_id = l.id
+			game.hud.show_lutin(l)
 		"construire":
 			_tour(game)
 			game.hud.menu_button("Construire").button_pressed = true

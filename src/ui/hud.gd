@@ -22,8 +22,18 @@ func _ready() -> void:
 	EventBus.speed_changed.connect(func(_s: int) -> void: _refresh_speed())
 
 
+var sheet: LutinSheet
+
+
+func show_lutin(l: Lutin) -> void:
+	sheet.show_lutin(l)
+
+
 func bind_game(game: Node) -> void:
 	_game = game
+	sheet = LutinSheet.new()
+	sheet.position = Vector2(20, 80)
+	root.add_child(sheet)
 	_setup_build(game.build_tool, game.world_view)
 
 

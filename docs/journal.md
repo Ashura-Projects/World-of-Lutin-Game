@@ -7,7 +7,7 @@ Reprise : lire ce fichier, puis `prompts/03-reprise-et-corrections.md`.
 | J0 — Fondations | **fait** | 10 tests verts ; build GitHub Actions vert (tests + APK) ; `docs/captures/titre.jpg` |
 | J1 — Le monde en blocs | **fait** (perf téléphone non mesurée) | même graine = même monde (test) ; 256×256 : génération 2,4 s, maillage 2,4 s, pire chunk 5,2 ms, 376 k triangles (CPU cloud) ; `monde_128.jpg` |
 | J2 — Construire au doigt | **fait** | rayon DDA + face, ligne/remplir/mur/gomme, annuler/rétablir, curseur d'étage ; test « tour creuse de 10 + escalier » ; `construire.jpg` |
-| J3 — Les Lutins | à faire | |
+| J3 — Les Lutins | **fait** | A* (marche d'1 bloc max), tour + escalier atteinte (test), 3 jours simulés sans blocage (test), métiers connus (test), sauvegarde colonie ; `lutins.jpg`, `fiche.jpg` |
 | J4 — Récolte & métiers | à faire | |
 | J5 — Les lutins bâtissent | à faire | |
 | J6 — Agriculture & production | à faire | |
@@ -39,3 +39,9 @@ Settings, GameSetup), GUT 9.7.1 headless, export Android arm64 (`com.ashura.worl
 - `VoxelRaycast` (DDA), `Shapes` (ligne, rectangle, mur, boîte de creusage), `EditHistory` (annuler/rétablir), `BuildTool` (1 doigt = construire,
   2 doigts = caméra, aperçu bleu / rouge pour la gomme), `BuildPanel`, curseur d'étage.
 - Mode créatif : pose instantanée. Au J5, `BuildTool.place_handler` transformera les poses en plans pour les bâtisseurs.
+
+## J3 — Les Lutins
+- `Pathfinder` (A* + tas binaire, routes moins chères), `Lutin` (besoins, métiers connus niveau + XP, chemin), `Colony` (apparition autour du chariot
+  avec le contenu de `start.json`, besoins, manger à la réserve, dormir la nuit, flâner ; budget de chemins par tick), `Stockpile`.
+- Vue : `LutinModel` (modèle validé reconstruit en primitives, tenues de `data/outfits.json`), `LutinsView` (lissage, animation, sélection au doigt),
+  `LutinSheet` (fiche), chariot de départ.

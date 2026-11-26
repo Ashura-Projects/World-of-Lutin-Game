@@ -66,5 +66,39 @@
       "mobilize": "les adultes prennent l'arme en réserve et vont au point de rassemblement",
       "hide": "tous courent à l'abri le plus proche (tente, maison)"
     }
+  },
+  "movement": {
+    "_doc": "Déplacement : blocs par seconde (× speed_mult des routes). Monte/descend 1 bloc au maximum.",
+    "walk_speed": 2.2,
+    "max_step": 1,
+    "path_max_nodes": 20000,
+    "paths_per_tick": 3,
+    "wander_radius": 10,
+    "idle_wait_s": [
+      2,
+      6
+    ]
+  },
+  "needs": {
+    "_doc": "Besoins 0-100 (100 = comblé). Pertes par jour de jeu.",
+    "hunger": {
+      "loss_per_day": 55,
+      "eat_below": 45,
+      "critical": 10
+    },
+    "sleep": {
+      "loss_per_day": 70,
+      "go_to_bed_below": 35,
+      "recover_per_day": 220,
+      "wake_above": 95
+    },
+    "warmth": {
+      "loss_per_day_winter": 60,
+      "recover_near_fire_per_day": 200
+    },
+    "mood": {
+      "base": 70
+    },
+    "eat_duration_s": 3
   }
 }
