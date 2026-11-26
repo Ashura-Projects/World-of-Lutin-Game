@@ -70,7 +70,10 @@ func build(job: String, age_scale: float = 1.0) -> void:
 	var o: Dictionary = cfg.get("outfits", {}).get(job, cfg.get("outfits", {}).get("none", {}))
 	var skin := mat(str(cfg.get("skin", "466ca0")), 0.55)
 	var nose := mat(str(cfg.get("skin_shade", "365684")), 0.5)
-	var tunic := mat(str(o.get("tunic", "5a6a48")), 0.85)
+	var tunic_hex := str(o.get("tunic", "5a6a48"))
+	if job == "militia" and Faction.current != null:
+		tunic_hex = Color(Faction.current.color1).darkened(0.25).to_html(false)  # uniforme aux couleurs de la faction
+	var tunic := mat(tunic_hex, 0.85)
 	var s := 0.82 * age_scale
 	body = Node3D.new()
 	body.scale = Vector3.ONE * s

@@ -20,6 +20,7 @@ var village: Village
 var research: Research
 var education: Education
 var population: Population
+var faction: Faction
 
 
 func _init(w: VoxelWorld) -> void:
@@ -42,6 +43,7 @@ func _init(w: VoxelWorld) -> void:
 	research = Research.new()
 	education = Education.new(colony, structures, production, research)
 	population = Population.new(colony, structures, w)
+	faction = Faction.new(GameSetup.faction)
 
 
 ## Nouvelle partie sur un monde généré.
@@ -79,7 +81,9 @@ func daily() -> void:
 
 
 func register_saves() -> void:
-	var objs := [world, colony, flora, fauna, ground, structures, production, board, combat, village, education]
+	var objs := [
+		world, colony, flora, fauna, ground, structures, production, board, combat, village, education, faction
+	]
 	for i in SAVE_KEYS.size():
 		SaveManager.register(SAVE_KEYS[i], objs[i])
 

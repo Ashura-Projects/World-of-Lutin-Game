@@ -6,6 +6,7 @@ var lutin_count: int = 6
 var map_size: String = "large"
 var seed_value: int = 0
 var load_slot: String = ""
+var faction: Dictionary = {}  # faction choisie avant la partie (éditeur)
 
 
 func reset_defaults() -> void:
@@ -15,6 +16,7 @@ func reset_defaults() -> void:
 	seed_value = randi() % 100000
 	mode = "sandbox"
 	load_slot = ""
+	faction = DataRegistry.get_table("faction").get("default", {}).duplicate()
 
 
 func clamp_lutins(n: int) -> int:

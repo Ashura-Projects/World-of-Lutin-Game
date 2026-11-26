@@ -91,6 +91,7 @@ func _on_world_ready() -> void:
 	fauna_view.bind(fauna)
 	structures_view = StructuresView.new()
 	add_child(structures_view)
+	structures.set_meta("world", world)
 	structures_view.bind(structures)
 	fields_view = FieldsView.new()
 	add_child(fields_view)

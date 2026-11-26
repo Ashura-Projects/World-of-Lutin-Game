@@ -82,6 +82,7 @@ func add_build_block(cell: Vector3i, block_id: int) -> int:
 	var b := DataRegistry.block(block_id)
 	if not b.has("cost") or world.types.solid[world.get_block(cell)] == 1:
 		return -1
+	_clear_tree(cell)
 	return _new_task("build", cell, "builder", float(b.get("build_time", 2)), {"block": block_id})
 
 
@@ -89,8 +90,16 @@ func add_build_block(cell: Vector3i, block_id: int) -> int:
 func add_structure(kind: String, cell: Vector3i) -> int:
 	if structures == null or not structures.at(cell).is_empty():
 		return -1
-	if not Pathfinder.walkable(world, cell):
+	var on_wall: bool = Structures.def(kind).get("on_wall", false)
+	if on_wall:
+		var wall := false
+		for d: Vector3i in [Vector3i(1, 0, 0), Vector3i(-1, 0, 0), Vector3i(0, 0, 1), Vector3i(0, 0, -1)]:
+			wall = wall or world.is_solid(cell + d)
+		if not wall or world.is_solid(cell):
+			return -1  # un fanion mural se pose contre un mur
+	elif not Pathfinder.walkable(world, cell):
 		return -1  # il faut un sol solide et sec
+	_clear_tree(cell)
 	var d := Structures.def(kind)
 	var sid := structures.add(kind, cell)
 	return _new_task(
@@ -111,6 +120,21 @@ func place_blueprints(cells: Array, block_id: int, erase: bool) -> int:
 		else:
 			n += int(add_build_block(p, block_id) >= 0)
 	return n
+
+
+## Un arbre occupe la case (son tronc monte sur 3 blocs) : on ordonne de le couper d'abord.
+func tree_at(cell: Vector3i) -> Vector3i:
+	for dy in range(0, 4):
+		var p := cell - Vector3i(0, dy, 0)
+		if flora.trees.has(p):
+			return p
+	return Vector3i(-1, -1, -1)
+
+
+func _clear_tree(cell: Vector3i) -> void:
+	var t := tree_at(cell)
+	if t.y >= 0:
+		add_cut(t)
 
 
 func add_gather(cell: Vector3i) -> int:

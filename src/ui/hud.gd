@@ -109,6 +109,20 @@ func _toast(kind: String, text: String) -> void:
 	get_tree().create_timer(6.0).timeout.connect(p.queue_free)
 
 
+func open_faction() -> void:
+	workshops_panel.visible = false
+	var ed := FactionEditor.new()
+	ed.setup(_game.sim.faction)
+	ed.position = Vector2(300, 70)
+	root.add_child(ed)
+	ed.done.connect(
+		func(_f: Faction) -> void:
+			EventBus.alert.emit("faction", "Faction : %s" % _f.name)
+			EventBus.faction_changed.emit()
+			ed.queue_free()
+	)
+
+
 func toggle_research() -> void:
 	research_panel.visible = not research_panel.visible
 	workshops_panel.visible = false

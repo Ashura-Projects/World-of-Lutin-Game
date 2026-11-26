@@ -28,6 +28,11 @@ func setup(g: Node) -> void:
 	res.custom_minimum_size = Vector2(170, 50)
 	res.pressed.connect(func() -> void: game.hud.toggle_research())
 	head.add_child(res)
+	var fac := Button.new()
+	fac.text = "Faction"
+	fac.custom_minimum_size = Vector2(150, 50)
+	fac.pressed.connect(func() -> void: game.hud.open_faction())
+	head.add_child(fac)
 	var scroll := ScrollContainer.new()
 	scroll.custom_minimum_size = Vector2(880, 420)
 	v.add_child(scroll)

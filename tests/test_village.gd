@@ -64,3 +64,22 @@ func test_aller_retour() -> void:
 	v2.from_dict(JSON.parse_string(JSON.stringify(v.to_dict())))
 	assert_eq(v2.rank_id, "hamlet")
 	assert_true(v2.done.has("fire"))
+
+
+func test_deco_donne_du_moral() -> void:
+	var plank := w.types.num("plank_block")
+	for x in range(2, 7):
+		for z in range(2, 7):
+			for y in range(1, 4):
+				if x in [2, 6] or z in [2, 6]:
+					w.set_raw(Vector3i(x, y, z), plank)
+			w.set_raw(Vector3i(x, 4, z), plank)
+	var bed := st.add("bed", Vector3i(3, 1, 3), true)
+	var l := c.lutins[0]
+	l.home = Vector3i(3, 1, 3)
+	v.update_mood()
+	var plain := float(l.needs["mood"])
+	st.add("carpet", Vector3i(4, 1, 4), true)
+	st.add("banner_wall", Vector3i(5, 2, 3), true)
+	v.update_mood()
+	assert_gt(float(l.needs["mood"]), plain, "tapis et fanion : meilleur moral")

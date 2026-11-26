@@ -12,6 +12,10 @@ static func run(game: Node, action: String) -> void:
 			game.camera.focus(l.pos)
 			game.lutins_view.selected_id = l.id
 			game.hud.show_lutin(l)
+		"deco":
+			deco(game)
+		"faction":
+			faction(game)
 		"nature":
 			nature(game)
 		"vue_large":
@@ -168,3 +172,46 @@ static func nature(game: Node) -> void:
 				best = p
 	game.camera.distance = 9.0
 	game.camera.focus(Vector3(best))
+
+
+static func deco(game: Node) -> void:
+	var c: Vector3i = game.colony.stock.pos + Vector3i(3, 0, -6)
+	var w: VoxelWorld = game.world
+	var plank := w.types.num("plank_block")
+	var stone := w.types.num("cut_stone_block")
+	for x in range(0, 7):
+		for z in range(0, 5):
+			var p := c + Vector3i(x, -1, z)
+			w.set_block(p, stone)
+			if (x == 0 or x == 6 or z == 4) and not (x == 3 and z == 4):
+				for y in 3:
+					w.set_block(c + Vector3i(x, y, z), plank)
+	for p: Vector3i in game.flora.trees.keys():
+		if absi(p.x - c.x - 3) < 9 and absi(p.z - c.z - 2) < 9:
+			game.flora.remove_tree(p)
+	var st: Structures = game.structures
+	for e: Array in [
+		["wood_bed", Vector3i(1, 0, 3)],
+		["chest", Vector3i(2, 0, 3)],
+		["wardrobe", Vector3i(5, 0, 3)],
+		["table", Vector3i(3, 0, 2)],
+		["chair", Vector3i(2, 0, 2)],
+		["carpet", Vector3i(3, 0, 1)],
+		["barrel", Vector3i(5, 0, 1)],
+		["lantern", Vector3i(1, 0, 0)],
+		["flowerpot", Vector3i(4, 0, 0)],
+		["weapon_rack", Vector3i(5, 0, 2)],
+		["banner_wall", Vector3i(2, 1, 5)],
+		["banner_pole", Vector3i(-2, 0, 0)],
+		["crate", Vector3i(7, 0, 0)],
+		["bench", Vector3i(7, 0, 2)]
+	]:
+		st.add(e[0], c + e[1], true)
+	game.camera.distance = 11.0
+	game.camera.yaw = 0.5
+	game.camera.focus(Vector3(c) + Vector3(3, 0, 2))
+
+
+static func faction(game: Node) -> void:
+	deco(game)
+	game.hud.open_faction()

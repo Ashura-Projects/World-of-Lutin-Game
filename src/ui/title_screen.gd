@@ -110,6 +110,11 @@ func _build_setup_panel() -> void:
 	row2.add_child(_seed_label)
 	row2.add_child(_small_button("⟲", _new_seed))
 	_refresh_seed()
+	var fb := Button.new()
+	fb.text = "Faction et emblème…"
+	fb.custom_minimum_size = Vector2(460, 56)
+	fb.pressed.connect(_open_faction)
+	v.add_child(fb)
 	var go := Button.new()
 	go.text = "Lancer"
 	go.custom_minimum_size = Vector2(460, 64)
@@ -117,6 +122,18 @@ func _build_setup_panel() -> void:
 	go.pressed.connect(_start_game)
 	sandbox.pressed.connect(_start_game)
 	v.add_child(go)
+
+
+func _open_faction() -> void:
+	var ed := FactionEditor.new()
+	ed.setup(Faction.new(GameSetup.faction))
+	ed.position = Vector2(300, 60)
+	add_child(ed)
+	ed.done.connect(
+		func(f: Faction) -> void:
+			GameSetup.faction = f.to_dict()
+			ed.queue_free()
+	)
 
 
 func _small_button(text: String, cb: Callable) -> Button:

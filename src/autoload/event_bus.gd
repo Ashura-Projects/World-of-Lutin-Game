@@ -12,4 +12,5 @@ signal game_saved(slot: String)
 signal game_loaded(slot: String)
 signal alert(kind: String, text: String)
 signal sfx(name: String, pos: Vector3)
+signal faction_changed
 @warning_ignore_restore("unused_signal")

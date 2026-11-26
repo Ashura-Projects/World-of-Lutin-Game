@@ -99,8 +99,27 @@ func check() -> void:
 			EventBus.alert.emit("objectif", "Objectif atteint : %s" % o["name"])
 
 
+## Moral : base + logement (lit, pièce décorée) − froid (data/population.json, rooms.json).
+func update_mood() -> void:
+	var base := float(DataRegistry.get_table("population").get("needs", {}).get("mood", {}).get("base", 70))
+	var dec: Dictionary = DataRegistry.get_table("rooms").get("decor", {})
+	for l in colony.lutins:
+		var m := base - (10.0 if l.home.y < 0 else 0.0)
+		if l.home.y >= 0:
+			var room := RoomDetector.room_at(world, structures, l.home)
+			if not room.is_empty():
+				var decor: int = mini(room["tags"].count("decor"), int(dec.get("max_items", 8)))
+				m += 5.0 + decor * float(dec.get("mood_per_item", 2))
+		if l.needs["warmth"] < 30.0:
+			m -= float(
+				DataRegistry.get_table("population").get("needs", {}).get("warmth", {}).get("cold_mood_penalty", 20)
+			)
+		l.needs["mood"] = clampf(m, 0.0, 100.0)
+
+
 ## Chaque matin : bilan de la veille et alertes.
 func daily() -> void:
+	update_mood()
 	daily_delta.clear()
 	for id: String in colony.stock.items:
 		daily_delta[id] = colony.stock.count(id) - int(last_stock.get(id, 0))

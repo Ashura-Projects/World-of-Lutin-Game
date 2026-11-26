@@ -32,6 +32,8 @@ func has_materials(t: Dictionary) -> bool:
 
 ## Règle de solidité Phase 1 : un bloc doit toucher un bloc solide ; personne ne doit être dans la case.
 func can_place(t: Dictionary) -> bool:
+	if t["kind"] in ["build", "build_struct"] and board.tree_at(t["cell"]).y >= 0:
+		return false  # attendre que le bûcheron ait coupé l'arbre
 	if t["kind"] != "build":
 		return true
 	var cell: Vector3i = t["cell"]

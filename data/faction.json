@@ -1,0 +1,13 @@
+{
+  "_doc": "Éditeur de faction : nom, devise, couleurs, emblème (forme, partition, symbole). Sert aux fanions, à l'uniforme et plus tard aux royaumes (Phase 2).",
+  "default": {"name": "Le Val du Gué", "motto": "Bâtis. Règne. Deviens légende.", "color1": "2c4a96", "color2": "c49e54",
+              "symbol_color": "f0e6cc", "shape": "ecu", "division": "plain", "symbol": "arbre"},
+  "colors": ["2c4a96", "8c2420", "2f6a3a", "5a2c6e", "c49e54", "e8dcc4", "222222", "b0602a", "4a7aa8", "6e6a66"],
+  "shapes": [{"id": "ecu", "name": "Écu"}, {"id": "rond", "name": "Rond"}, {"id": "losange", "name": "Losange"}, {"id": "etendard", "name": "Étendard"}],
+  "divisions": [{"id": "plain", "name": "Plein"}, {"id": "pale", "name": "Parti"}, {"id": "fess", "name": "Coupé"}, {"id": "quarter", "name": "Écartelé"}, {"id": "bend", "name": "Tranché"}],
+  "symbols": [{"id": "arbre", "name": "Arbre"}, {"id": "epee", "name": "Épée"}, {"id": "marteau", "name": "Marteau"}, {"id": "etoile", "name": "Étoile"},
+              {"id": "gland", "name": "Gland"}, {"id": "montagne", "name": "Montagne"}, {"id": "lune", "name": "Lune"}, {"id": "soleil", "name": "Soleil"},
+              {"id": "couronne", "name": "Couronne"}, {"id": "cerf", "name": "Bois de cerf"}, {"id": "epi", "name": "Épi de blé"}, {"id": "aucun", "name": "Aucun"}],
+  "name_max": 28,
+  "motto_max": 40
+}

@@ -102,3 +102,12 @@ func test_pas_de_tente_sur_l_eau() -> void:
 	w.set_raw(Vector3i(30, 1, 30), w.types.num("water"))
 	assert_eq(board.add_structure("tent", Vector3i(30, 2, 30)), -1)
 	assert_eq(board.add_structure("tent", Vector3i(30, 1, 30)), -1)
+
+
+func test_plan_sur_un_arbre_fait_couper_l_arbre() -> void:
+	board.flora.trees[Vector3i(30, 2, 10)] = "pin"
+	var id := board.add_build_block(Vector3i(30, 3, 10), w.types.num("plank_block"))
+	assert_gt(id, 0)
+	var cut := board.tasks.values().filter(func(t: Dictionary) -> bool: return t["kind"] == "cut")
+	assert_eq(cut.size(), 1, "ordre de coupe ajouté")
+	assert_false(board.builds.can_place(board.tasks[id]), "on ne bâtit pas dans le tronc")
