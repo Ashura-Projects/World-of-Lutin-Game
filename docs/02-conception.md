@@ -97,6 +97,10 @@
 - Les plans créent des tâches : les porteurs apportent les blocs, les **bâtisseurs** les posent.
 - Règle de solidité Phase 1 (simple) : un bloc doit toucher un autre bloc solide. Pas d'effondrement en Phase 1.
 
+### Routes
+- **Validé** : **route en terre** (terre tassée, ×1,3 de vitesse) et **route pavée** (pierre, ×1,6), posées **à plat sur le sol**
+  case par case (glisser = tracé), comme un champ. Les lutins préfèrent les routes dans leurs trajets (`data/blocks.json` › speed_mult).
+
 ### Constructions de départ
 - Dès le début : **tente** (3 peaux + 2 bûches, **1 lutin par tente**), feu de camp, zone de réserve, établi de menuisier (`data/buildings.json`).
 - Ensuite : puits (creusé jusqu'à la nappe), moulin, four à pain, rouet, métier à tisser, puis maisons en blocs.

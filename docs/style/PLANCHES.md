@@ -3,6 +3,7 @@
 Rendus 3D dans **Blender** (modèles faits par script), maquettes d'interface en 2D. Régénérer : `tools/style/build_all.sh`.
 
 ## Validé
+- **Orc B « Bedaine à crête »** · **style d'interface** (fer sombre, boutons rouge et or, parchemin)
 - **Peau bleu sombre** · **palette B** (la plus réaliste, pas trop sombre ; la C est écartée) · pas de magie.
 - Lutin **A « Bouille »** ([planche v1](lutin-variantes.png)) · âges OK · palette **B** comme base, à rendre plus sombre.
 

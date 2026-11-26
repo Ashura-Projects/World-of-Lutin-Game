@@ -58,7 +58,8 @@ forest = (n1 > 0.5) & (~in_water) & (~bank) & (mount < 0.25)
 H = np.clip(np.round(h), 2, 63).astype(int)
 
 # exemples creusés : une mine à ciel ouvert dans les collines, un puits dans la plaine
-mine_c = np.unravel_index(np.argmax(hills * (mount < 0.1) * (xx > 50) * (yy > 50) * (xx < 200) * (yy < 200)), H.shape)
+inner = (mount < 0.08) & (~in_water) & (~bank) & (xx > 50) & (yy > 50) & (xx < 200) & (yy < 200)
+mine_c = np.unravel_index(np.argmax(np.where(inner, H, 0)), H.shape)
 my, mx = mine_c
 for k in range(4):  # gradins de 4×4 en 4×4
     r = 7 - 2 * k
@@ -91,11 +92,11 @@ def block_at(x, y, z, top):
     hsh = _hash(x // 2, y // 2, z // 2)  # poches de 2×2×2 environ
     if z < 12:
         return "iron_ore" if hsh < 900 else "deep_stone"
-    if hsh < 1800 and z < 40:
+    if hsh < 4200 and z < 40:
         return "coal_ore"
-    if hsh < 2600 and z < 30:
+    if hsh < 6800 and z < 30:
         return "iron_ore"
-    if hsh < 3600:
+    if hsh < 8800:
         return "gravel"
     return "stone"
 
@@ -206,7 +207,7 @@ print("arbres:", nt, "mine:", mx, my)
 blib.camera((-120, -150, 230), (128, 118, 20), lens=40)
 blib.render(OUT / "carte_ensemble.png", 1600, 900)
 # zoom sur un coin : couches visibles en coupe + mine
-blib.camera((mx - 26, my - 30, H[my, mx] + 34), (mx + 4, my, H[my, mx] - 8), lens=36)
+blib.camera((mx - 16, my - 20, H[my, mx] + 26), (mx + 2, my, H[my, mx] - 8), lens=32)
 blib.render(OUT / "carte_mine.png", 1600, 900)
 # coin de carte en coupe (bord sud-ouest)
 blib.camera((-22, -26, 48), (14, 14, 18), lens=35)
