@@ -28,7 +28,10 @@ var sim: GameSim
 var _autosave_ticks: int = 0
 var sound: SoundDirector
 var _gen_task: int = -1
-var _loading: Label
+var _loading: LoadingScreen
+var _load_t: float = 0.0
+var _mesh_total: int = 0
+var _cart: Node3D
 
 
 func _ready() -> void:
@@ -41,21 +44,34 @@ func _ready() -> void:
 	add_child(camera)
 	hud = Hud.new()
 	add_child(hud)
-	_loading = UiStyle.title_label("Le monde se forme…", 40)
-	_loading.position = Vector2(560, 320)
-	hud.add_child(_loading)
+	_loading = LoadingScreen.new()
+	add_child(_loading)
+	_loading.play_pressed.connect(func() -> void: GameClock.running = true)
 	world = VoxelWorld.new(GameSetup.map_dims())
 	generator = WorldGenerator.new(world, GameSetup.seed_value)
 	_gen_task = WorkerThreadPool.add_task(generator.generate)
 
 
-func _process(_delta: float) -> void:
-	if _gen_task >= 0 and WorkerThreadPool.is_task_completed(_gen_task):
-		WorkerThreadPool.wait_for_task_completion(_gen_task)
-		_gen_task = -1
-		_on_world_ready()
+func _process(delta: float) -> void:
+	if _gen_task >= 0:
+		_load_t += delta
+		_loading.set_progress(0.6 * (1.0 - exp(-_load_t / 2.5)))  # génération : progression estimée
+		if WorkerThreadPool.is_task_completed(_gen_task):
+			WorkerThreadPool.wait_for_task_completion(_gen_task)
+			_gen_task = -1
+			_on_world_ready()
+	elif is_instance_valid(_loading) and not _loading.is_ready() and world_view != null:
+		var left := world_view.pending_count()
+		_mesh_total = maxi(_mesh_total, left)
+		_loading.set_progress(0.65 + 0.35 * (1.0 - float(left) / maxf(1.0, float(_mesh_total))))
+		if left == 0:
+			_loading.ready_to_play()
 	if sky and world_view:
 		sky.update(GameClock.time_of_day())
+	if _cart != null and colony != null:
+		for l: Lutin in colony.lutins:
+			if l.order.get("kind", "") == "cart" and int(l.order["stage"]) == 1:
+				_cart.position = _cart.position.lerp(l.pos + Vector3(0.9, 0, 0), minf(1.0, delta * 6.0))
 
 
 func _on_world_ready() -> void:
@@ -82,7 +98,11 @@ func _on_world_ready() -> void:
 	flora_view.bind(flora)
 	props_view = PropsView.new()
 	add_child(props_view)
-	props_view.place(PropsView.cart(), colony.stock.pos + Vector3i(2, 0, 0))
+	_cart = PropsView.cart()
+	props_view.place(_cart, colony.stock.pos + Vector3i(2, 0, 0))
+	colony.cart_moved.connect(
+		func(p: Vector3i) -> void: _cart.position = Vector3(p + Vector3i(2, 0, 0)) + Vector3(0.5, 0, 0.5)
+	)
 	items_view = ItemsView.new()
 	add_child(items_view)
 	items_view.bind(ground)
@@ -121,9 +141,9 @@ func _on_world_ready() -> void:
 	sound = SoundDirector.new()
 	add_child(sound)
 	sound.setup(self)
-	_loading.queue_free()
 	hud.bind_game(self)
-	GameClock.running = true
+	_loading.set_progress(0.65)
+	GameClock.running = false  # la partie démarre au bouton « Jouer »
 
 
 func _on_tick(_i: int) -> void:
@@ -161,6 +181,8 @@ func _start_spot() -> Vector3i:
 
 
 func _on_tap(screen: Vector2) -> void:
+	if hud.windows.on_tap(screen):
+		return
 	if build_tool.active:
 		return
 	if hud.zones_panel != null and hud.zones_panel.visible:
@@ -169,7 +191,11 @@ func _on_tap(screen: Vector2) -> void:
 	if hud.harvest_panel != null and hud.harvest_panel.visible:
 		hud.harvest_panel.on_tap(screen)
 		return
-	hud.show_lutin(lutins_view.pick(camera.cam, screen))
+	if hud.orders.active() and hud.orders.on_tap(screen):
+		return  # mode ordres : chaque toucher donne un ordre au lutin choisi
+	var l := lutins_view.pick(camera.cam, screen)
+	if l != null:
+		hud.show_lutin(l)
 
 
 func _exit_tree() -> void:

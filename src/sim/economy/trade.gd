@@ -24,11 +24,13 @@ func price(id: String) -> int:
 
 
 func buy_price(id: String) -> int:
-	return maxi(1, ceili(price(id) * float(_cfg.get("buy_markup", 1.5))))
+	var b: float = Realm.active.trade_bonus() if Realm.active != null else 0.0
+	return maxi(1, ceili(price(id) * float(_cfg.get("buy_markup", 1.5)) * (1.0 - b)))
 
 
 func sell_price(id: String) -> int:
-	return maxi(0, floori(price(id) * float(_cfg.get("sell_ratio", 0.7))))
+	var b: float = Realm.active.trade_bonus() if Realm.active != null else 0.0
+	return maxi(0, floori(price(id) * float(_cfg.get("sell_ratio", 0.7)) * (1.0 + b)))
 
 
 func daily(day: int) -> void:

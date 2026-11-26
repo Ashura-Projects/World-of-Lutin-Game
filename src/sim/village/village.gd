@@ -114,6 +114,8 @@ func update_mood() -> void:
 			m -= float(
 				DataRegistry.get_table("population").get("needs", {}).get("warmth", {}).get("cold_mood_penalty", 20)
 			)
+		if Realm.active != null:
+			m += Realm.active.mood_for(l)  # lois, taxes, titre, seigneur, prison
 		l.needs["mood"] = clampf(m, 0.0, 100.0)
 
 

@@ -45,21 +45,38 @@ func ring(mode: String) -> void:
 	if mode == "none":
 		return
 	for l in colony.lutins:
+		if l.jailed.y >= 0:
+			continue  # les prisonniers restent en cage
 		if not _is_adult(l):
 			l.hiding = true
 			continue
 		if mode == "hide":
 			l.hiding = true
 		elif mode == "mobilize":
-			if colony.task_board != null:
-				colony.task_board.call("release", l)
-			l.mobilized = true
-			for w: String in _cfg.get("weapon_priority", ["flintlock", "spear"]):
-				if colony.stock.take(w, 1) == 1:
-					l.weapon = w
-					break
-			l.state = Lutin.State.IDLE
+			arm(l)
 	EventBus.alert.emit("cloche", "Mobilisation !" if mode == "mobilize" else "Tout le monde à l'abri !")
+
+
+## Mobilise un lutin : il prend la meilleure arme en réserve et l'uniforme.
+func arm(l: Lutin) -> void:
+	if colony.task_board != null:
+		colony.task_board.call("release", l)
+	l.order = {}
+	l.mobilized = true
+	if l.weapon == "":
+		for w: String in _cfg.get("weapon_priority", ["flintlock", "spear"]):
+			if colony.stock.take(w, 1) == 1:
+				l.weapon = w
+				break
+	l.state = Lutin.State.IDLE
+
+
+func disarm(l: Lutin) -> void:
+	if l.weapon != "":
+		colony.stock.add(l.weapon, 1)
+		l.weapon = ""
+	l.mobilized = false
+	l.state = Lutin.State.IDLE
 
 
 func stand_down() -> void:
@@ -150,8 +167,11 @@ func _militia(l: Lutin, tps: float) -> void:
 			bd = dd
 			target = a
 	if target.is_empty():
-		if not Colony._near(l.cell, colony.stock.pos, 3) and not l.has_path() and not l.pending_path:
-			colony.send(l, colony.stock.pos, true)  # point de rassemblement
+		var rally := colony.stock.pos
+		if Units.active != null and l.unit_id >= 0:
+			rally = Units.active.rally_for(l, rally)  # unité : sa place dans la formation
+		if not Colony._near(l.cell, rally, 1) and not l.has_path() and not l.pending_path:
+			colony.send(l, rally, true)  # point de rassemblement
 		return
 	var ws := _weapon_stats(l)
 	if bd <= float(ws["reach"]):
@@ -189,7 +209,7 @@ func _self_heal(l: Lutin) -> void:
 			if colony.lutins.any(func(h: Lutin) -> bool: return h.job == "healer"):
 				colony.task_board.call("add_heal", l)
 	l.hp = minf(max_hp, l.hp + float(_cfg.get("regen_per_day", 5)) / GameClock.ticks_per_day())
-	if l.hp < max_hp * float(_cfg.get("self_potion_below", 0.5)) and colony.at_store(l.cell):
+	if l.hp < max_hp * float(_cfg.get("self_potion_below", 0.5)) and colony.at_store(l.cell, "healing_potion"):
 		if colony.stock.take("healing_potion", 1) == 1:
 			l.hp = minf(max_hp, l.hp + float(Stockpile._resource("healing_potion").get("heal", 30)))
 

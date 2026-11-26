@@ -72,6 +72,17 @@ func test_zone_de_reserve_la_plus_proche_et_sauvegarde() -> void:
 	assert_true(c.at_store(Vector3i(34, 2, 35)))
 	var c2 := Colony.new(w)
 	c2.from_dict(c.to_dict())
-	assert_eq(c2.store_cells, c.store_cells)
+	assert_eq(c2.stores.cells(), c.stores.cells())
 	c.remove_store_cells([far])
 	assert_eq(c.store_near(Vector3i(36, 2, 36)), c.stock.pos)
+
+
+func test_filtre_de_reserve_par_categorie_et_objet() -> void:
+	var near := Vector3i(30, 2, 30)
+	var id := c.stores.add_zone([near])
+	c.stores.set_filter(id, false, ["food"], ["log"])
+	var p := Vector3i(31, 2, 31)
+	assert_eq(c.store_near(p, "log"), near, "les bûches sont acceptées")
+	assert_eq(c.store_near(p, "bread"), near, "catégorie nourriture acceptée")
+	assert_eq(c.store_near(p, "food"), near)
+	assert_eq(c.store_near(p, "stone"), c.stock.pos, "la pierre va à la charrette")

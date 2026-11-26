@@ -1,0 +1,178 @@
+{
+  "_doc": "Royaume (1.1) : ordres aux lutins, charrette, titres et promotions, seigneur, prison, lois et taxes, diplomatie, garnison, entraînement, unités et formations.",
+  "orders": {
+    "hold_s": 40,
+    "_note": "après un « Aller ici », le lutin attend sur place ce temps avant de reprendre sa vie"
+  },
+  "cart": {
+    "move_speed_mult": 0.7
+  },
+  "titles": [
+    {
+      "id": "villager",
+      "name": "Villageois",
+      "mood": 0
+    },
+    {
+      "id": "notable",
+      "name": "Notable",
+      "mood": 4
+    },
+    {
+      "id": "steward",
+      "name": "Intendant",
+      "mood": 6
+    },
+    {
+      "id": "knight",
+      "name": "Chevalier",
+      "mood": 8
+    }
+  ],
+  "lord": {
+    "mood_all": 4,
+    "lord_mood": 15,
+    "needs_room": "throne_room"
+  },
+  "prison": {
+    "mood_per_day": -20,
+    "village_mood_per_prisoner": -1
+  },
+  "tax": {
+    "levels": [
+      {
+        "id": "none",
+        "name": "Aucune",
+        "gold_per_adult_day": 0,
+        "mood": 3
+      },
+      {
+        "id": "low",
+        "name": "Basse",
+        "gold_per_adult_day": 0.2,
+        "mood": 0
+      },
+      {
+        "id": "normal",
+        "name": "Normale",
+        "gold_per_adult_day": 0.5,
+        "mood": -4
+      },
+      {
+        "id": "high",
+        "name": "Lourde",
+        "gold_per_adult_day": 1.0,
+        "mood": -12
+      }
+    ],
+    "default": "low"
+  },
+  "laws": [
+    {
+      "id": "curfew",
+      "name": "Couvre-feu",
+      "desc": "Tout le monde rentre à la nuit : moins de pertes face aux loups, un peu moins de moral.",
+      "mood": -2,
+      "night_hide": true
+    },
+    {
+      "id": "rations",
+      "name": "Rationnement",
+      "desc": "Repas plus petits : la nourriture dure plus longtemps, le moral baisse.",
+      "mood": -6,
+      "food_mult": 0.75
+    },
+    {
+      "id": "feast_day",
+      "name": "Jour de fête hebdomadaire",
+      "desc": "Meilleur moral, travail un peu plus lent.",
+      "mood": 8,
+      "work_mult": 0.9
+    },
+    {
+      "id": "corvee",
+      "name": "Corvée",
+      "desc": "Tous les adultes travaillent plus vite, mais ils râlent.",
+      "mood": -8,
+      "work_mult": 1.15
+    },
+    {
+      "id": "conscription",
+      "name": "Service militaire",
+      "desc": "Les soldats s'entraînent deux fois plus.",
+      "mood": -3,
+      "train_mult": 2.0
+    }
+  ],
+  "diplomacy": {
+    "gift_gold": 20,
+    "gift_relation": 10,
+    "treaty_min": 30,
+    "insult_relation": -15,
+    "drift_per_day": 0.5,
+    "statuses": {
+      "war": "En guerre",
+      "neutral": "Neutre",
+      "peace": "Paix",
+      "alliance": "Alliance",
+      "trade": "Accord commercial"
+    },
+    "factions": [
+      {
+        "id": "pierrefeu",
+        "name": "Bourg de Pierrefeu",
+        "desc": "Village de lutins des collines, mineurs et forgerons.",
+        "relation": 20,
+        "status": "neutral",
+        "price_bonus_trade": 0.1
+      },
+      {
+        "id": "val_dore",
+        "name": "Marchands du Val Doré",
+        "desc": "Guilde de marchands qui envoie le marchand ambulant.",
+        "relation": 35,
+        "status": "neutral",
+        "price_bonus_trade": 0.15
+      },
+      {
+        "id": "clan_crocs",
+        "name": "Clan des Crocs Rouges",
+        "desc": "Orcs des montagnes. Leurs raids viendront avec l'Aventure Royale.",
+        "relation": -40,
+        "status": "war",
+        "price_bonus_trade": 0.0
+      }
+    ]
+  },
+  "military": {
+    "soldier_job": "soldier",
+    "max_soldiers_without_garrison": 2,
+    "soldier_per_bed": 1
+  },
+  "training": {
+    "xp_per_s": 0.5,
+    "search_radius": 40
+  },
+  "units": {
+    "max_members": 12,
+    "spacing": 1,
+    "formations": [
+      {
+        "id": "line",
+        "name": "Ligne"
+      },
+      {
+        "id": "column",
+        "name": "Colonne"
+      },
+      {
+        "id": "square",
+        "name": "Carré"
+      },
+      {
+        "id": "wedge",
+        "name": "Coin"
+      }
+    ]
+  }
+}

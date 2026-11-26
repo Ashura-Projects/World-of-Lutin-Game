@@ -73,6 +73,32 @@
       "priority": 0,
       "requires": [],
       "bonus": {}
+    },
+    {
+      "id": "throne_room",
+      "name": "Salle du trône",
+      "priority": 70,
+      "requires": [
+        "throne",
+        "banner"
+      ],
+      "bonus": {
+        "mood": 6
+      }
+    },
+    {
+      "id": "garrison",
+      "name": "Garnison",
+      "priority": 60,
+      "requires": [
+        "bed",
+        "storage",
+        "weapons"
+      ],
+      "min_beds": 3,
+      "bonus": {
+        "mood": 2
+      }
     }
   ],
   "warmth_sources": [

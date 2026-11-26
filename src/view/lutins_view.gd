@@ -21,6 +21,12 @@ func setup(c: Colony) -> void:
 	)
 	for l in colony.lutins:
 		_add(l)
+	# nouvelles couleurs de faction : on rhabille les soldats (le modèle est reconstruit au prochain cadre)
+	EventBus.faction_changed.connect(
+		func() -> void:
+			for id: int in _jobs:
+				_jobs[id] = ""
+	)
 	_marker = MeshInstance3D.new()
 	var ring := TorusMesh.new()
 	ring.inner_radius = 0.38
@@ -54,7 +60,7 @@ func _process(delta: float) -> void:
 		var m: LutinModel = _models.get(l.id)
 		if m == null:
 			continue
-		var job_view := ("militia" if l.mobilized else l.job) + ":" + l.age_stage()
+		var job_view := ("militia" if l.mobilized or l.job == "soldier" else l.job) + ":" + l.age_stage()
 		if _jobs[l.id] != job_view:
 			m.build(job_view.split(":")[0], _age_scale(l))
 			_jobs[l.id] = job_view

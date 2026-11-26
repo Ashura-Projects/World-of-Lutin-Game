@@ -9,6 +9,9 @@ var values: Dictionary = {
 	"quality": "medium",
 	"language": "fr",
 	"text_size": "large",
+	"music_mode": "all",  # all (toutes en boucle), shuffle (aléatoire), one (un seul morceau)
+	"music_track": "",
+	"playlist": [],  # morceaux cochés (vide = tous)
 }
 
 

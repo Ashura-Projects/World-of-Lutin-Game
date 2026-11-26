@@ -91,7 +91,7 @@ func _birth(mother: Lutin, father: Lutin, bed: Dictionary) -> void:
 	l.id = colony.next_id
 	colony.next_id += 1
 	var names: Array = DataRegistry.get_table("names").get("names", ["Lutin"])
-	l.name = names[Rng.randi_range(0, names.size() - 1)]
+	l.name = colony.unique_name(names)
 	l.sex = "f" if Rng.chance(0.5) else "m"
 	l.age_days = 0
 	l.parents = [mother.id, father.id]

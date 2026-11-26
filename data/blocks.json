@@ -393,6 +393,25 @@
         "side": "cobble",
         "bottom": "dirt"
       }
+    },
+    {
+      "num": 31,
+      "id": "training_ground",
+      "name": "Sol d'entraînement",
+      "solid": true,
+      "surface": true,
+      "cost": {
+        "dirt": 1,
+        "stone": 1
+      },
+      "build_time": 1,
+      "speed_mult": 1.0,
+      "_note": "posé à plat ; les soldats libres viennent s'y entraîner (data/realm.json › training)",
+      "tiles": {
+        "top": "gravel",
+        "side": "dirt",
+        "bottom": "dirt"
+      }
     }
   ]
 }

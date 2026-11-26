@@ -9,7 +9,7 @@ func _ready() -> void:
 	var v := VBoxContainer.new()
 	v.add_theme_constant_override("separation", 10)
 	add_child(v)
-	v.add_child(UiStyle.title_label("World of Lutin", 36))
+	v.add_child(UiStyle.header("World of Lutin", 36, queue_free))
 	var l := Label.new()
 	l.text = (
 		"\n"
@@ -17,7 +17,12 @@ func _ready() -> void:
 			[
 				"Un projet d'Ashura.",
 				"",
-				"Modèles, textures, musiques et sons faits pour le jeu (Blender, scripts).",
+				"Modèles, textures, ambiances et bruitages faits pour le jeu (Blender, scripts).",
+				"",
+				"Musiques : Kevin MacLeod (incompetech.com), licence Creative Commons BY 4.0 :",
+				"Thatched Villagers, Village Consort, Minstrel Guild, Teller of the Tales,",
+				"Folk Round, Achaidh Cheide, Pippin the Hunchback.",
+				"",
 				"Moteur : Godot Engine (licence MIT).",
 				"Police des titres : Cinzel (SIL Open Font License).",
 				"Tests : GUT (MIT).",
@@ -27,8 +32,3 @@ func _ready() -> void:
 		)
 	)
 	v.add_child(l)
-	var ok := Button.new()
-	ok.text = "Fermer"
-	ok.custom_minimum_size = Vector2(300, 54)
-	ok.pressed.connect(queue_free)
-	v.add_child(ok)

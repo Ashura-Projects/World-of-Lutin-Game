@@ -5,13 +5,13 @@ extends RefCounted
 
 signal lutin_added(l: Lutin)
 signal lutin_removed(id: int)
+signal cart_moved(pos: Vector3i)
 
 var world: VoxelWorld
 var lutins: Array[Lutin] = []
 var stock := Stockpile.new()
 var next_id: int = 1
-var store_cells: Array[Vector3i] = []  # zones de réserve définies par le joueur (dépôt et retrait)
-var stores_version: int = 0  # change à chaque modification des zones (pour la vue)
+var stores: StoreZones  # zones de réserve définies par le joueur (dépôt et retrait, avec filtres)
 var task_board: RefCounted = null  # TaskBoard (J4) : fournit des tâches aux lutins libres
 var structures: Structures = null  # sources de chaleur (J6)
 var heating_ok: bool = true  # faux si le bois de chauffage manque
@@ -26,6 +26,7 @@ var _searches: Dictionary = {}  # id lutin -> PathSearch en cours
 
 func _init(w: VoxelWorld) -> void:
 	world = w
+	stores = StoreZones.new(w)
 	_pop = DataRegistry.get_table("population")
 	_move = _pop.get("movement", {})
 	_needs = _pop.get("needs", {})
@@ -49,7 +50,7 @@ func spawn_start(center: Vector3i, n: int) -> void:
 		var l := Lutin.new()
 		l.id = next_id
 		next_id += 1
-		l.name = names[Rng.randi_range(0, names.size() - 1)]
+		l.name = unique_name(names)
 		l.sex = "f" if i % 2 == 0 else "m"
 		l.age_days = adult_from + Rng.randi_range(0, 120)
 		l.hp = float(_pop.get("combat", {}).get("hp", 50))
@@ -60,6 +61,14 @@ func spawn_start(center: Vector3i, n: int) -> void:
 		l.place_at(spot if spot.y >= 0 else stock.pos)
 		lutins.append(l)
 		lutin_added.emit(l)
+
+
+## Un prénom pas encore porté au village (si possible).
+func unique_name(names: Array) -> String:
+	var used := lutins.map(func(x: Lutin) -> String: return x.name)
+	var free := names.filter(func(n: String) -> bool: return not used.has(n))
+	var pool: Array = free if not free.is_empty() else names
+	return str(pool[Rng.randi_range(0, pool.size() - 1)])
 
 
 func tick() -> void:
@@ -104,7 +113,8 @@ func _run_searches() -> void:
 
 
 func _update_needs(l: Lutin, tpd: float) -> void:
-	l.needs["hunger"] = maxf(0.0, l.needs["hunger"] - float(_needs["hunger"]["loss_per_day"]) / tpd)
+	var food_mult: float = Realm.active.food_mult() if Realm.active != null else 1.0
+	l.needs["hunger"] = maxf(0.0, l.needs["hunger"] - float(_needs["hunger"]["loss_per_day"]) * food_mult / tpd)
 	if l.state == Lutin.State.SLEEP:
 		l.needs["sleep"] = minf(100.0, l.needs["sleep"] + float(_needs["sleep"]["recover_per_day"]) / tpd)
 	else:
@@ -123,9 +133,33 @@ func _update_needs(l: Lutin, tpd: float) -> void:
 
 
 func _decide(l: Lutin, night: bool) -> void:
+	if l.jailed.y >= 0:
+		_decide_jailed(l)
+		return
 	if _decide_alert(l):
 		return
+	if LutinOrders.tick(self, l):
+		return
 	_decide_normal(l, night)
+
+
+## Prisonnier : reste dans sa cage (on l'y conduit s'il n'y est pas).
+func _decide_jailed(l: Lutin) -> void:
+	if l.state == Lutin.State.WALK and (l.has_path() or l.pending_path):
+		return
+	if l.cell != l.jailed and Pathfinder.walkable(world, l.jailed):
+		l.place_at(l.jailed)
+	l.state = Lutin.State.SLEEP if GameClock.is_night() else Lutin.State.IDLE
+
+
+## Charrette déplacée (ordre « Déplacer la charrette ») : la réserve principale change de place.
+func move_cart(cell: Vector3i) -> void:
+	var c := Pathfinder.snap(world, cell)
+	if c.y < 0:
+		return
+	stock.pos = c
+	cart_moved.emit(c)
+	EventBus.alert.emit("info", "La charrette a été déplacée.")
 
 
 ## Cloche : mobilisé (Combat le dirige) ou à l'abri. Renvoie true si la cloche décide.
@@ -164,14 +198,15 @@ func _decide_normal(l: Lutin, night: bool) -> void:
 	if l.state == Lutin.State.WALK and l.has_path():
 		return
 	if l.needs["hunger"] < float(_needs["hunger"]["eat_below"]) and stock.food_total() > 0:
-		if at_store(l.cell):
+		if at_store(l.cell, "food"):
 			l.needs["hunger"] = minf(100.0, l.needs["hunger"] + stock.take_best_food())
 			l.state = Lutin.State.EAT
 			l.wait_ticks = int(float(_needs.get("eat_duration_s", 3)) * GameClock.ticks_per_second())
 		else:
-			_go(l, store_near(l.cell), "manger", true)
+			_go(l, store_near(l.cell, "food"), "manger", true)
 		return
-	if l.needs["sleep"] < float(_needs["sleep"]["go_to_bed_below"]) or (night and l.needs["sleep"] < 90.0):
+	var curfew: bool = Realm.active != null and Realm.active.law_on("curfew")
+	if l.needs["sleep"] < float(_needs["sleep"]["go_to_bed_below"]) or (night and (l.needs["sleep"] < 90.0 or curfew)):
 		if l.home.y >= 0 and not _near(l.cell, l.home, 1):
 			_go(l, l.home, "dormir", true)
 		else:
@@ -181,6 +216,8 @@ func _decide_normal(l: Lutin, night: bool) -> void:
 		_child_day(l)
 		return
 	if task_board != null and task_board.call("assign", l):
+		return
+	if Realm.active != null and Realm.active.soldier_idle(l):
 		return
 	# flâner autour du camp
 	l.state = Lutin.State.IDLE
@@ -297,36 +334,23 @@ func remove_lutin(l: Lutin) -> void:
 	lutin_removed.emit(l.id)
 
 
-## Point de réserve le plus proche (chariot ou case d'une zone de réserve).
-func store_near(cell: Vector3i) -> Vector3i:
-	var best := stock.pos
-	var bd := Vector3(cell).distance_squared_to(Vector3(best))
-	for c in store_cells:
-		var d := Vector3(cell).distance_squared_to(Vector3(c))
-		if d < bd:
-			bd = d
-			best = c
-	return best
+## Point de réserve le plus proche qui accepte l'objet (charrette ou zone de réserve). "" = n'importe quoi.
+func store_near(cell: Vector3i, item: String = "") -> Vector3i:
+	return stores.nearest(cell, item, stock.pos)
 
 
-func at_store(cell: Vector3i) -> bool:
-	return _near(cell, store_near(cell), 2)
+func at_store(cell: Vector3i, item: String = "") -> bool:
+	return _near(cell, store_near(cell, item), 2)
 
 
+## Crée une zone de réserve. Renvoie le nombre de cases retenues.
 func add_store_cells(cells: Array) -> int:
-	var n := 0
-	for c: Vector3i in cells:
-		if not store_cells.has(c) and Pathfinder.walkable(world, c):
-			store_cells.append(c)
-			n += 1
-	stores_version += 1
-	return n
+	var id := stores.add_zone(cells)
+	return 0 if id < 0 else stores.find(id)["cells"].size()
 
 
 func remove_store_cells(cells: Array) -> void:
-	for c: Vector3i in cells:
-		store_cells.erase(c)
-	stores_version += 1
+	stores.remove_cells(cells)
 
 
 func find_lutin(id: int) -> Lutin:
@@ -340,10 +364,7 @@ func to_dict() -> Dictionary:
 	var ls := []
 	for l in lutins:
 		ls.append(l.to_dict())
-	var sc := []
-	for c in store_cells:
-		sc.append([c.x, c.y, c.z])
-	return {"lutins": ls, "stock": stock.to_dict(), "next_id": next_id, "stores": sc}
+	return {"lutins": ls, "stock": stock.to_dict(), "next_id": next_id, "zones": stores.to_dict()}
 
 
 func from_dict(d: Dictionary) -> void:
@@ -355,7 +376,6 @@ func from_dict(d: Dictionary) -> void:
 		lutin_added.emit(l)
 	stock.from_dict(d.get("stock", {}))
 	next_id = int(d.get("next_id", lutins.size() + 1))
-	store_cells.clear()
-	for e: Array in d.get("stores", []):
-		store_cells.append(Vector3i(int(e[0]), int(e[1]), int(e[2])))
-	stores_version += 1
+	stores.from_dict(d.get("zones", []))
+	if d.has("stores"):  # sauvegarde 1.0.1 : une seule zone qui accepte tout
+		stores.add_zone(d["stores"].map(func(e: Array) -> Vector3i: return Vector3i(int(e[0]), int(e[1]), int(e[2]))))

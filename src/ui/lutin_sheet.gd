@@ -3,10 +3,16 @@ extends PanelContainer
 ## Fiche d'un lutin (maquette validée) : identité, besoins, aptitudes, métiers connus (niveau + XP).
 
 var lutin: Lutin
+var game: Node
 var _title: Label
+var _family: Label
 var _info: Label
 var _bars: Dictionary = {}
 var _jobs_box: VBoxContainer
+
+
+func setup(g: Node) -> void:
+	game = g
 
 
 func _ready() -> void:
@@ -24,9 +30,16 @@ func _ready() -> void:
 	close.text = "✕"
 	close.custom_minimum_size = Vector2(56, 56)
 	close.pressed.connect(func() -> void: visible = false)
+	close.tooltip_text = "Fermer la fiche (la barre d'ordres reste ouverte)"
 	top.add_child(close)
 	_info = Label.new()
 	v.add_child(_info)
+	_family = Label.new()
+	_family.add_theme_color_override("font_color", UiStyle.PARCH)
+	_family.add_theme_font_size_override("font_size", 18)
+	_family.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_family.custom_minimum_size = Vector2(520, 0)
+	v.add_child(_family)
 	v.add_child(UiStyle.title_label("Besoins", 24))
 	for k: Array in [["hunger", "Faim"], ["sleep", "Sommeil"], ["warmth", "Chaleur"], ["mood", "Moral"]]:
 		_bars[k[0]] = _bar_row(v, k[1])
@@ -77,6 +90,12 @@ func refresh() -> void:
 		"Âge : %d ans (%d j)   ·   Métier : %s niv. %d   ·   %s"
 		% [lutin.age_days / 20, lutin.age_days, job_name(lutin.job), lutin.job_level(), states[lutin.state]]
 	)
+	if game != null:
+		var title := str(game.sim.realm.title_name(lutin))
+		_info.text += "\nTitre : %s   ·   PV %d   ·   XP de combat %d" % [title, int(lutin.hp), int(lutin.combat_xp)]
+		if lutin.jailed.y >= 0:
+			_info.text += "   ·   EN CAGE"
+		_family.text = "Famille — " + Kinship.summary(game.colony, lutin)
 	for k: String in _bars:
 		_bars[k].value = float(lutin.needs.get(k, 0))
 	for c in _jobs_box.get_children():

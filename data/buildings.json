@@ -773,7 +773,8 @@
       "available_from_start": true,
       "object": true,
       "tags": [
-        "decor"
+        "decor",
+        "banner"
       ],
       "on_wall": true
     },
@@ -793,7 +794,8 @@
       "available_from_start": true,
       "object": true,
       "tags": [
-        "decor"
+        "decor",
+        "banner"
       ]
     },
     {
@@ -847,8 +849,66 @@
       "available_from_start": true,
       "object": true,
       "tags": [
+        "decor",
+        "weapons"
+      ]
+    },
+    {
+      "id": "throne",
+      "name": "Trône",
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "cost": {
+        "throne_item": 1
+      },
+      "build_time": 8,
+      "available_from_start": true,
+      "object": true,
+      "tags": [
+        "throne",
         "decor"
       ]
+    },
+    {
+      "id": "wood_cage",
+      "name": "Cage en bois",
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "cost": {
+        "wood_cage_item": 1
+      },
+      "build_time": 8,
+      "available_from_start": true,
+      "object": true,
+      "tags": [
+        "cage"
+      ],
+      "escape_per_day": 0.08
+    },
+    {
+      "id": "iron_cage",
+      "name": "Cage en fer",
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "cost": {
+        "iron_cage_item": 1
+      },
+      "build_time": 10,
+      "available_from_start": true,
+      "object": true,
+      "tags": [
+        "cage"
+      ],
+      "escape_per_day": 0.0
     }
   ]
 }

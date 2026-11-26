@@ -31,6 +31,10 @@ var attack_cool: int = 0
 var trained: Dictionary = {}  # métier formé -> efficacité (1.0 enfant éduqué, 0.5 formation courte d'adulte)
 var parents: Array = []
 var pending_path: bool = false  # une recherche de chemin est en cours (non sauvegardé)
+var order: Dictionary = {}  # ordre direct du joueur (LutinOrders) : aller ici, charrette
+var title: String = "villager"  # titre de faction (data/realm.json › titles)
+var jailed := Vector3i(-1, -1, -1)  # cage où il est enfermé
+var unit_id: int = -1  # unité militaire (Units)
 
 
 func place_at(c: Vector3i) -> void:
@@ -123,6 +127,16 @@ func to_dict() -> Dictionary:
 		"carry": carrying,
 		"home": [home.x, home.y, home.z],
 		"mob": mobilized,
+		"weapon": weapon,
+		"cxp": combat_xp,
+		"kills": kills,
+		"hiding": hiding,
+		"trained": trained,
+		"parents": parents,
+		"order": LutinOrders.order_to_dict(order),
+		"title": title,
+		"jailed": [jailed.x, jailed.y, jailed.z],
+		"unit": unit_id,
 	}
 
 
@@ -170,3 +184,8 @@ func from_dict(d: Dictionary) -> void:
 	parents = []
 	for p_id in d.get("parents", []):
 		parents.append(int(p_id))
+	order = LutinOrders.order_from_dict(d.get("order", {}))
+	title = str(d.get("title", "villager"))
+	var j: Array = d.get("jailed", [-1, -1, -1])
+	jailed = Vector3i(int(j[0]), int(j[1]), int(j[2]))
+	unit_id = int(d.get("unit", -1))

@@ -1,0 +1,24 @@
+{
+  "_doc": "Écran de chargement : phrases affichées pendant la création du monde (changent toutes les « every_s » secondes).",
+  "every_s": 2.6,
+  "messages": [
+    "Les lutins marchent vers la vallée…",
+    "Les ours mangent les lapins…",
+    "On compte les cailloux un par un…",
+    "Un lutin a perdu son bonnet, on le cherche…",
+    "Les loups répètent leur hurlement…",
+    "On plante les arbres à la main…",
+    "La rivière cherche son lit…",
+    "Les sangliers creusent des trous partout…",
+    "On aiguise les haches (pas les lutins)…",
+    "Le marchand fait ses comptes…",
+    "Les montagnes poussent tout doucement…",
+    "Un ours fait la sieste au soleil…",
+    "On tricote les bonnets d'hiver…",
+    "Les cerfs s'entraînent au saut…",
+    "Les champignons se cachent sous les feuilles…",
+    "Les orcs ont été priés d'attendre l'Aventure Royale…",
+    "Un lutin a confondu une pierre avec un pain…",
+    "On cire les bottes du futur seigneur…"
+  ]
+}

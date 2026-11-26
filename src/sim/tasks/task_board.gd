@@ -293,6 +293,8 @@ func assign(l: Lutin) -> bool:
 		if t["reserved"] != -1 or int(t["blocked"]) > now or not _can_do(l, t):
 			continue
 		var d := Vector3(t["cell"]).distance_squared_to(Vector3(l.cell))
+		if t.get("order", false):
+			d -= 1.0e9  # ordre direct du joueur : prioritaire
 		d += (
 			float(t["cell"].y) * 16.0
 			if t["kind"] == "build"

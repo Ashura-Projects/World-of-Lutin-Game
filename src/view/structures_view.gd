@@ -199,6 +199,26 @@ static func model(kind: String) -> Node3D:
 			_box(r, Vector3(0.9, 0.08, 0.2), "6a4a2e", Vector3(0, 1.2, 0.3))
 			for i in 3:
 				_box(r, Vector3(0.04, 1.4, 0.04), "8a8a90", Vector3(-0.3 + i * 0.3, 0.8, 0.28))
+		"throne":
+			_box(r, Vector3(0.8, 0.45, 0.7), "6e4e30", Vector3(0, 0.225, 0))
+			_box(r, Vector3(0.7, 0.08, 0.6), "8c2420", Vector3(0, 0.49, 0))
+			_box(r, Vector3(0.8, 1.5, 0.12), "6e4e30", Vector3(0, 0.95, 0.32))
+			_box(r, Vector3(0.6, 1.1, 0.04), "8c2420", Vector3(0, 0.95, 0.25))
+			for sx: float in [-0.36, 0.36]:
+				_box(r, Vector3(0.1, 0.35, 0.6), "5a3e28", Vector3(sx, 0.62, 0))
+				_box(r, Vector3(0.12, 0.12, 0.12), "c49e54", Vector3(sx, 1.75, 0.32))
+			_box(r, Vector3(0.18, 0.18, 0.06), "c49e54", Vector3(0, 1.62, 0.25))
+		"wood_cage", "iron_cage":
+			var iron := kind == "iron_cage"
+			var col := "4a4a52" if iron else "6a4a2e"
+			_box(r, Vector3(0.95, 0.08, 0.95), col, Vector3(0, 0.04, 0))
+			_box(r, Vector3(0.95, 0.08, 0.95), col, Vector3(0, 1.5, 0))
+			for i in 5:
+				var o := -0.42 + i * 0.21
+				for p: Vector3 in [
+					Vector3(o, 0.77, -0.44), Vector3(o, 0.77, 0.44), Vector3(-0.44, 0.77, o), Vector3(0.44, 0.77, o)
+				]:
+					_box(r, Vector3(0.05 if iron else 0.08, 1.45, 0.05 if iron else 0.08), col, p)
 		"banner_wall", "banner_pole":
 			var pole := kind == "banner_pole"
 			if pole:

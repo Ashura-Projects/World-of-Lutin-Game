@@ -538,6 +538,24 @@
       "name": "Sel",
       "category": "processed",
       "stack": 40
+    },
+    {
+      "id": "throne_item",
+      "name": "Trône",
+      "category": "furniture",
+      "stack": 5
+    },
+    {
+      "id": "wood_cage_item",
+      "name": "Cage en bois",
+      "category": "furniture",
+      "stack": 5
+    },
+    {
+      "id": "iron_cage_item",
+      "name": "Cage en fer",
+      "category": "furniture",
+      "stack": 5
     }
   ]
 }

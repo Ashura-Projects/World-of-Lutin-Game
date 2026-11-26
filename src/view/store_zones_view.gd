@@ -23,10 +23,11 @@ func bind(c: Colony) -> void:
 
 
 func _process(_d: float) -> void:
-	if _colony == null or _colony.stores_version == _version:
+	if _colony == null or _colony.stores.version == _version:
 		return
-	_version = _colony.stores_version
-	multimesh.instance_count = _colony.store_cells.size()
-	for i in _colony.store_cells.size():
-		var c: Vector3i = _colony.store_cells[i]
+	_version = _colony.stores.version
+	var cells := _colony.stores.cells()
+	multimesh.instance_count = cells.size()
+	for i in cells.size():
+		var c: Vector3i = cells[i]
 		multimesh.set_instance_transform(i, Transform3D(Basis(), Vector3(c) + Vector3(0.5, 0.04, 0.5)))

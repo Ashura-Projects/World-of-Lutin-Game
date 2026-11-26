@@ -3,7 +3,22 @@ extends RefCounted
 ## Toute la simulation d'une partie (sans aucun nœud) : utilisée par la scène de jeu et par les tests headless.
 
 const SAVE_KEYS := [
-	"world", "colony", "flora", "fauna", "ground", "structures", "production", "tasks", "combat", "village"
+	"world",
+	"colony",
+	"flora",
+	"fauna",
+	"ground",
+	"structures",
+	"production",
+	"tasks",
+	"combat",
+	"village",
+	"education",
+	"faction",
+	"research",
+	"trade",
+	"realm",
+	"units"
 ]
 
 var world: VoxelWorld
@@ -22,6 +37,8 @@ var education: Education
 var population: Population
 var faction: Faction
 var trade: Trade
+var realm: Realm
+var units: Units
 
 
 func _init(w: VoxelWorld) -> void:
@@ -46,6 +63,8 @@ func _init(w: VoxelWorld) -> void:
 	population = Population.new(colony, structures, w)
 	faction = Faction.new(GameSetup.faction)
 	trade = Trade.new(colony)
+	realm = Realm.new(colony, structures, w)
+	units = Units.new(colony, combat)
 
 
 ## Nouvelle partie sur un monde généré.
@@ -81,11 +100,27 @@ func daily() -> void:
 	structures.assign_homes(colony)
 	trade.daily(GameClock.day())
 	village.daily()
+	realm.daily()
 
 
 func register_saves() -> void:
 	var objs := [
-		world, colony, flora, fauna, ground, structures, production, board, combat, village, education, faction
+		world,
+		colony,
+		flora,
+		fauna,
+		ground,
+		structures,
+		production,
+		board,
+		combat,
+		village,
+		education,
+		faction,
+		research,
+		trade,
+		realm,
+		units
 	]
 	for i in SAVE_KEYS.size():
 		SaveManager.register(SAVE_KEYS[i], objs[i])

@@ -1,7 +1,5 @@
 {
-  "_doc": "Son : musiques (jour / nuit), ambiances selon ce que regarde la caméra (rayon et zoom), bruitages. Volumes en dB.",
-  "music_day": ["matin_au_village", "chemin_des_lutins"],
-  "music_night": ["veillee"],
+  "_doc": "Son : playlist de musiques (Paramètres : toutes en boucle, aléatoire ou un seul morceau), ambiances selon la caméra, bruitages. Volumes en dB.",
   "music_db": -8,
   "ambience_db": -6,
   "sfx_db": -4,
@@ -9,6 +7,58 @@
   "zoom_near": 8,
   "zoom_far": 90,
   "work_sound_every_s": 1.1,
-  "work_sounds": {"cut": "hache", "dig": "pioche", "build": "marteau", "build_struct": "marteau", "craft": "scie", "till": "pelle", "harvest": "pelle"},
-  "howl_chance_per_s_night": 0.01
+  "work_sounds": {
+    "cut": "hache",
+    "dig": "pioche",
+    "build": "marteau",
+    "build_struct": "marteau",
+    "craft": "scie",
+    "till": "pelle",
+    "harvest": "pelle"
+  },
+  "howl_chance_per_s_night": 0.01,
+  "music": [
+    {
+      "id": "villageois",
+      "title": "Thatched Villagers",
+      "author": "Kevin MacLeod",
+      "license": "CC BY 4.0 — incompetech.com"
+    },
+    {
+      "id": "consort_du_village",
+      "title": "Village Consort",
+      "author": "Kevin MacLeod",
+      "license": "CC BY 4.0 — incompetech.com"
+    },
+    {
+      "id": "guilde_des_menestrels",
+      "title": "Minstrel Guild",
+      "author": "Kevin MacLeod",
+      "license": "CC BY 4.0 — incompetech.com"
+    },
+    {
+      "id": "conteur",
+      "title": "Teller of the Tales",
+      "author": "Kevin MacLeod",
+      "license": "CC BY 4.0 — incompetech.com"
+    },
+    {
+      "id": "ronde",
+      "title": "Folk Round",
+      "author": "Kevin MacLeod",
+      "license": "CC BY 4.0 — incompetech.com"
+    },
+    {
+      "id": "achaidh_cheide",
+      "title": "Achaidh Cheide",
+      "author": "Kevin MacLeod",
+      "license": "CC BY 4.0 — incompetech.com"
+    },
+    {
+      "id": "pippin",
+      "title": "Pippin the Hunchback",
+      "author": "Kevin MacLeod",
+      "license": "CC BY 4.0 — incompetech.com"
+    }
+  ]
 }

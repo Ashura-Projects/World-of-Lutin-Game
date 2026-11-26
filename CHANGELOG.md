@@ -1,5 +1,24 @@
 # Journal des versions
 
+## 1.1.0 — Royaume, ordres et confort (2026-11-27)
+Retours d'Ashura sur la 1.0.1.
+- **Lutins** : toucher un lutin → barre d'ordres qui reste ouverte (Auto : couper, cueillir, chasser, aller ici ;
+  Construire ; Creuser ; Charrette) jusqu'à la croix ✕. Menu Lutins : liste (toucher = choisir, double toucher = centrer
+  la caméra), Familles (parents, enfants, frères et sœurs, conjoint), Métiers.
+- **Royaume** (nouveau menu) : faction et emblème, seigneur (salle du trône), membres (promouvoir, soldat, cage),
+  diplomatie (3 voisins), lois et impôts. Nouveaux meubles : trône, cage en bois, cage en fer. Sol d'entraînement.
+- **Militaire** : garnison, soldats en uniforme aux couleurs de la faction qui s'entraînent, **unités** en formation
+  (ligne, colonne, carré, coin) avec ordres Aller à / Attaquer / Tenir / Rentrer.
+- **Réserves** avec filtre (tout, catégories, objets) ; **charrette** déplaçable par un lutin.
+- **Ressources** : menu par catégories (toucher une ressource en haut).
+- **Menus** : croix ✕ sur toutes les fenêtres, plus aucun menu sur la barre du bas, joystick de caméra,
+  boutons caméra et étage sans bruit de clic.
+- **Musique** : 7 morceaux médiévaux et apaisants de Kevin MacLeod (CC BY 4.0, voir Crédits) ; playlist dans
+  Paramètres (toutes en boucle, aléatoire, un seul morceau, cocher ses morceaux).
+- **Logo** de l'application, **fond d'accueil** et **écran de chargement** (barre, phrases drôles, bouton Jouer).
+- Corrections : l'XP de combat, les liens de famille, la faction, la recherche et le commerce sont maintenant bien
+  sauvegardés ; plus de prénoms en double au départ.
+
 ## 1.0.1 — Interface plus claire (2026-11-26)
 Retours d'Ashura après le premier essai sur téléphone.
 - **Caméra** : boutons pivoter ⟲ ⟳, zoom + −, incliner ⤒ ⤓ (en plus des gestes) ; deux doigts déplacent la vue.

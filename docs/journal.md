@@ -102,6 +102,24 @@ Settings, GameSetup), GUT 9.7.1 headless, export Android arm64 (`com.ashura.worl
   supplémentaire (le plus proche est utilisé), pas un inventaire séparé. Démonter un objet rend tout son coût.
 - Non testé : sur téléphone (à faire par Ashura).
 
+## v1.1.0 (retours d'Ashura sur la 1.0.1)
+- Fait : ordres directs aux lutins, menu Lutins (liste, familles, métiers), menu Royaume (faction, seigneur, membres,
+  prison, diplomatie, lois et impôts), garnison, soldats et entraînement, unités en formation, réserves filtrées,
+  charrette déplaçable, menu Ressources, croix sur toutes les fenêtres, joystick, playlist de 7 musiques CC BY,
+  logo, fond d'accueil, écran de chargement.
+- Preuves : 104 tests GUT verts (nouveaux `tests/test_realm.gd`, filtres de réserve, playlist), gdlint propre,
+  tick 3,4 ms (50 lutins), captures `build/captures/v11_*.png`.
+- Bogue ancien corrigé : XP de combat, parents, faction, recherche et commerce n'étaient pas sauvegardés.
+- Choix faits sans Ashura :
+  - « Construire » en mode ordres pose le matériau choisi dans le menu Construire ;
+  - la guerre et la paix ne changent que le statut (les raids arrivent avec l'Aventure Royale) ; l'accord commercial
+    améliore les prix du marchand ;
+  - un soldat est un métier sans tâche civile ; 2 places sans garnison, puis 1 par lit de garnison ;
+  - le stock reste commun, les réserves décident seulement où déposer et prendre chaque ressource ;
+  - le nom affiché sur le logo et le fond est « World of Lutins » ; le nom de l'appli reste « World of Lutin »
+    (à confirmer par Ashura).
+- Non testé : sur téléphone.
+
 ## Problèmes connus (v1.0.0)
 - **Pas testé sur le téléphone** : ni les 60 img/s, ni le tactile réel, ni le son (le cloud n'a pas de carte son).
 - Le tick reste au-dessus de 4 ms au pire (~10 ms) ; sur téléphone il peut être 1,5 à 2 fois plus lent.

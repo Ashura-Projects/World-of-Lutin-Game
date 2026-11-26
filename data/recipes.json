@@ -979,6 +979,51 @@
         "plane": 1
       },
       "work": 20
+    },
+    {
+      "id": "make_throne",
+      "name": "Trône",
+      "station": "cabinetmaker",
+      "job": "cabinetmaker",
+      "in": {
+        "plank": 6,
+        "beam": 2,
+        "cloth": 2,
+        "gold": 2
+      },
+      "out": {
+        "throne_item": 1
+      },
+      "work": 40
+    },
+    {
+      "id": "make_wood_cage",
+      "name": "Cage en bois",
+      "station": "cabinetmaker",
+      "job": "cabinetmaker",
+      "in": {
+        "beam": 4,
+        "plank": 2,
+        "nails": 4
+      },
+      "out": {
+        "wood_cage_item": 1
+      },
+      "work": 25
+    },
+    {
+      "id": "forge_iron_cage",
+      "name": "Cage en fer",
+      "station": "anvil",
+      "job": "smith",
+      "in": {
+        "iron_ingot": 4,
+        "nails": 2
+      },
+      "out": {
+        "iron_cage_item": 1
+      },
+      "work": 35
     }
   ]
 }

@@ -157,5 +157,23 @@
 - **Diplomatie** : émissaires, alliances, tributs, commerce, déclarations de guerre.
 - But de partie : unifier la région / devenir Haut-Roi. **[À VALIDER]**
 
+## 10. Ajouts v1.1 (demandés par Ashura)
+- **Ordres directs** : toucher un lutin ouvre la barre d'ordres (Auto, Construire, Creuser, Charrette, ✕). Tant qu'elle est
+  ouverte, chaque toucher donne un ordre (arbre → couper, plante → cueillir, animal → chasser, sol → aller ici et attendre
+  `orders.hold_s`). Les ordres de travail sont des tâches réservées au lutin et prioritaires.
+- **Charrette** : un lutin la tire jusqu'à l'endroit choisi ; la réserve principale suit.
+- **Réserves** : zones au sol avec filtre (tout, catégories ou objets). Le stock reste commun ; la zone décide où chaque
+  ressource est déposée ou prise (la plus proche qui l'accepte, sinon la charrette).
+- **Royaume** : titres (promouvoir / rétrograder, bonus de moral), seigneur (salle du trône = trône + fanion dans une pièce
+  fermée), prison (cages en bois, évasion possible ; cages en fer), impôts (4 niveaux), lois (couvre-feu, rationnement,
+  jour de fête, corvée, service militaire), diplomatie avec 3 voisins (cadeau, accord commercial = meilleurs prix, paix,
+  guerre, insulte). Guerre sans effet avant l'Aventure Royale.
+- **Soldats** : métier « soldat » sans tâche civile, uniforme aux couleurs de la faction ; places = 2 + 1 par lit de
+  garnison (pièce fermée avec ≥ 3 lits, un coffre, un râtelier d'armes). Libres, ils s'entraînent sur le « Sol
+  d'entraînement » (XP de combat).
+- **Unités** : un capitaine + jusqu'à 11 lutins ; formations ligne, colonne, carré, coin ; ordres Aller à, Attaquer
+  (armes prises, combat autour du point), Tenir, Rentrer, Dissoudre.
+- Valeurs : `data/realm.json`.
+
 ## Questions ouvertes
 1. Carte aléatoire, ou aussi des cartes dessinées à la main ? (par défaut : aléatoire seedée)

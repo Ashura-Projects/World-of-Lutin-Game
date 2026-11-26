@@ -1,6 +1,6 @@
 extends Node
-## Son du jeu : musique (jour / nuit), ambiances qui suivent la caméra et le zoom, bruitages positionnés.
-## Tous les sons sont générés par tools/audio/generate_audio.py (originaux).
+## Son du jeu : playlist de musiques (réglée dans Paramètres), ambiances qui suivent la caméra et le zoom,
+## bruitages positionnés. Ambiances et bruitages : tools/audio/generate_audio.py ; musiques : voir data/audio.json.
 
 const DIR := "res://assets/audio/"
 const AMBIENCES := ["foret", "eau", "nuit", "vent", "feu"]
@@ -14,8 +14,8 @@ var _amb_target: Dictionary = {}
 var _pool: Array[AudioStreamPlayer3D] = []
 var _ui: AudioStreamPlayer
 var _streams: Dictionary = {}
-var _track: int = 0
-var _night: bool = false
+var _track: int = -1
+var current_track: String = ""
 var world_root: Node3D = null  # parent des sons 3D (scène de jeu)
 
 
@@ -82,19 +82,48 @@ func stop_all() -> void:
 		_amb_target[k] = 0.0
 
 
+## Morceaux de la playlist : [{id, title, author, license}].
+func tracks() -> Array:
+	return _cfg.get("music", [])
+
+
+## Morceaux cochés par le joueur (aucun coché = tous).
+func playlist() -> Array:
+	var chosen: Array = Settings.get_value("playlist") if Settings.get_value("playlist") != null else []
+	var out := []
+	for t: Dictionary in tracks():
+		if chosen.is_empty() or chosen.has(t["id"]):
+			out.append(t["id"])
+	return out
+
+
 func _next_track() -> void:
-	var list: Array = _cfg.get("music_night" if _night else "music_day", [])
+	var list := playlist()
 	if list.is_empty():
 		return
-	_track = (_track + 1) % list.size()
-	_music.stream = _load("music/" + str(list[_track]))
+	var mode := str(Settings.get_value("music_mode"))
+	var id: String
+	if mode == "one" and str(Settings.get_value("music_track")) != "":
+		id = str(Settings.get_value("music_track"))
+	elif mode == "shuffle":
+		id = str(list[randi() % list.size()])
+		if list.size() > 1 and id == current_track:
+			id = str(list[(list.find(id) + 1) % list.size()])
+	else:
+		_track = (list.find(current_track) + 1) % list.size()
+		id = str(list[_track])
+	play_track(id)
+
+
+## Joue un morceau tout de suite (bouton ▶ des Paramètres).
+func play_track(id: String) -> void:
+	current_track = id
+	_music.stream = _load("music/" + id)
 	_music.play()
 
 
-func set_night(n: bool) -> void:
-	if n != _night:
-		_night = n
-		_next_track()
+func set_night(_n: bool) -> void:
+	pass  # la playlist ne change plus entre le jour et la nuit
 
 
 ## Ambiances voulues (0..1), lissées ensuite. Le zoom rapproché les rend plus fortes.
@@ -156,9 +185,11 @@ func play_ui(name: String) -> void:
 
 
 func _on_node_added(n: Node) -> void:
-	if n is BaseButton and not n.is_connected("pressed", _click):
-		n.pressed.connect(_click)
+	if n is BaseButton and not n.pressed.is_connected(_click):
+		n.pressed.connect(_click.bind(n))
 
 
-func _click() -> void:
-	play_ui("clic")
+## Clic sonore sur les boutons, sauf ceux marqués « silent » (caméra, joystick, étage).
+func _click(b: BaseButton) -> void:
+	if not b.has_meta("silent"):
+		play_ui("clic")

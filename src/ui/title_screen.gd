@@ -18,26 +18,25 @@ func _ready() -> void:
 func _build() -> void:
 	var bg := TextureRect.new()
 	bg.texture = load("res://assets/ui/title_bg.jpg")
-	bg.set_anchors_preset(Control.PRESET_FULL_RECT)
 	bg.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	bg.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	bg.stretch_mode = TextureRect.STRETCH_SCALE
+	# pleine largeur, calé en haut : le titre de l'image reste visible (le bas est rogné)
+	bg.size = Vector2(1600, 1600.0 * bg.texture.get_height() / bg.texture.get_width())
 	add_child(bg)
 	var veil := ColorRect.new()
-	veil.color = Color(0.05, 0.04, 0.04, 0.55)
+	veil.color = Color(0.05, 0.04, 0.04, 0.12)
 	veil.set_anchors_preset(Control.PRESET_FULL_RECT)
 	add_child(veil)
 
+	# le titre est dans l'image de fond (fournie par Ashura) : menu dans un cadre sombre à gauche
+	var frame := PanelContainer.new()
+	frame.add_theme_stylebox_override("panel", UiStyle.box(Color(0.08, 0.06, 0.06, 0.78), UiStyle.GOLD, 2, 12))
+	frame.position = Vector2(60, 190)
+	add_child(frame)
 	var col := VBoxContainer.new()
-	col.position = Vector2(80, 60)
-	col.custom_minimum_size = Vector2(460, 0)
+	col.custom_minimum_size = Vector2(420, 0)
 	col.add_theme_constant_override("separation", 12)
-	add_child(col)
-	col.add_child(UiStyle.title_label("World of Lutin", 64))
-	var tag := UiStyle.title_label("Bâtis. Règne. Deviens légende.", 22, UiStyle.TXT_D)
-	col.add_child(tag)
-	var spacer := Control.new()
-	spacer.custom_minimum_size = Vector2(0, 16)
-	col.add_child(spacer)
+	frame.add_child(col)
 
 	var cont := _menu_button(col, "Continuer", _on_continue)
 	cont.disabled = not SaveManager.has_save("auto")

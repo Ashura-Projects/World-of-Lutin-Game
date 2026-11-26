@@ -196,12 +196,7 @@ def sfx():
 
 
 if __name__ == "__main__":
-    dorian = [0, 2, 3, 5, 7, 9, 10]
-    mixolydian = [0, 2, 4, 5, 7, 9, 10]
-    aeolian = [0, 2, 3, 5, 7, 8, 10]
-    music("matin_au_village", mixolydian, 84, 24, 0, seed=1)
-    music("chemin_des_lutins", dorian, 96, 28, 2, seed=2)
-    music("veillee", aeolian, 66, 20, -2, seed=3)
+    # Les musiques du jeu sont désormais des morceaux CC BY (voir assets/CREDITS.md) ; music() reste pour essais.
     ambiences()
     sfx()
     print("audio OK")

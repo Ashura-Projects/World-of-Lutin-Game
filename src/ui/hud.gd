@@ -1,10 +1,27 @@
 class_name Hud
 extends CanvasLayer
-## Interface en jeu (STYLE-VALIDE §7) : barre du haut, 7 menus en bas, engrenage.
+## Interface en jeu (STYLE-VALIDE §7) : barre du haut, 8 menus en bas, engrenage.
+## Chaque fenêtre a une croix ✕ et reste entre les deux barres (HudWindows).
+
+const MENUS := ["Construire", "Récolter", "Zones", "Lutins", "Militaire", "Royaume", "Commerce", "Gestion"]
 
 var root: Control
+var windows: HudWindows
+var top: HudTop
+var orders: OrderBar
+var sheet: LutinSheet
+var tools: HudTools
+var build_panel: BuildPanel
+var harvest_panel: HarvestPanel
+var lutins_panel: LutinsPanel
+var zones_panel: ZonesPanel
+var workshops_panel: WorkshopsPanel
+var military_panel: MilitaryPanel
+var realm_panel: RealmPanel
+var dashboard: DashboardPanel
+var research_panel: ResearchPanel
+var commerce_panel: CommercePanel
 var _time_label: Label
-var _fps_label: Label
 var _speed_buttons: Array[Button] = []
 var _menu_panel: PanelContainer
 var _game: Node
@@ -22,133 +39,62 @@ func _ready() -> void:
 	EventBus.speed_changed.connect(func(_s: int) -> void: _refresh_speed())
 
 
-var sheet: LutinSheet
-var tools: HudTools
-var build_panel: BuildPanel
-var harvest_panel: HarvestPanel
-var jobs_panel: JobsPanel
-var zones_panel: ZonesPanel
-var workshops_panel: WorkshopsPanel
-var military_panel: MilitaryPanel
-var dashboard: DashboardPanel
-var research_panel: ResearchPanel
-var commerce_panel: CommercePanel
-var _toasts: VBoxContainer
-var _res_labels: Dictionary = {}
-var _food_drop: PanelContainer
-
-
 func show_lutin(l: Lutin) -> void:
 	sheet.show_lutin(l)
+	if l != null:
+		orders.select(l)
+	else:
+		orders.clear()
 
 
 func bind_game(game: Node) -> void:
 	_game = game
+	windows = HudWindows.new()
+	add_child(windows)
+	windows.setup(root, game)
 	sheet = LutinSheet.new()
-	sheet.position = Vector2(20, 80)
+	sheet.position = Vector2(20, 130)
 	root.add_child(sheet)
-	harvest_panel = HarvestPanel.new()
-	harvest_panel.setup(game)
-	harvest_panel.position = Vector2(170, 400)
-	harvest_panel.visible = false
-	root.add_child(harvest_panel)
-	jobs_panel = JobsPanel.new()
-	jobs_panel.setup(game)
-	jobs_panel.position = Vector2(420, 80)
-	jobs_panel.visible = false
-	root.add_child(jobs_panel)
-	zones_panel = ZonesPanel.new()
-	zones_panel.setup(game)
-	zones_panel.position = Vector2(170, 470)
-	zones_panel.visible = false
-	root.add_child(zones_panel)
-	workshops_panel = WorkshopsPanel.new()
-	workshops_panel.setup(game)
-	workshops_panel.position = Vector2(350, 70)
-	workshops_panel.visible = false
-	root.add_child(workshops_panel)
-	military_panel = MilitaryPanel.new()
-	military_panel.setup(game)
-	military_panel.position = Vector2(420, 80)
-	military_panel.visible = false
-	root.add_child(military_panel)
-	_panel_toggle("Militaire", military_panel)
-	commerce_panel = CommercePanel.new()
-	commerce_panel.setup(game)
-	commerce_panel.position = Vector2(350, 80)
-	commerce_panel.visible = false
-	root.add_child(commerce_panel)
-	_panel_toggle("Commerce", commerce_panel)
-	game.sim.trade.merchant_arrived.connect(_merchant_dialog)
-	dashboard = DashboardPanel.new()
-	dashboard.setup(game)
-	dashboard.position = Vector2(390, 80)
-	dashboard.visible = false
-	root.add_child(dashboard)
-	research_panel = ResearchPanel.new()
-	research_panel.setup(game)
-	research_panel.position = Vector2(360, 80)
-	research_panel.visible = false
-	root.add_child(research_panel)
-	_toasts = VBoxContainer.new()
-	_toasts.position = Vector2(1150, 120)
-	_toasts.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	root.add_child(_toasts)
-	EventBus.alert.connect(_toast)
-	_panel_toggle("Zones", zones_panel)
-	_panel_toggle("Gestion", workshops_panel)
-	_panel_toggle("Récolter", harvest_panel)
-	_panel_toggle("Lutins", jobs_panel)
-	_build_resources()
+	sheet.setup(game)
+	windows.add(sheet, func() -> void: show_lutin(null), true)
+	harvest_panel = _menu_panel_add(HarvestPanel.new(), "Récolter", Vector2(170, 380))
+	lutins_panel = _menu_panel_add(LutinsPanel.new(), "Lutins", Vector2(300, 70))
+	zones_panel = _menu_panel_add(ZonesPanel.new(), "Zones", Vector2(170, 420))
+	root.add_child(zones_panel.filter_panel)
+	windows.add(zones_panel.filter_panel, func() -> void: zones_panel.filter_panel.visible = false)
+	workshops_panel = _menu_panel_add(WorkshopsPanel.new(), "Gestion", Vector2(350, 70))
+	military_panel = _menu_panel_add(MilitaryPanel.new(), "Militaire", Vector2(300, 70))
+	realm_panel = _menu_panel_add(RealmPanel.new(), "Royaume", Vector2(250, 70))
+	commerce_panel = _menu_panel_add(CommercePanel.new(), "Commerce", Vector2(350, 80))
+	dashboard = _free_panel_add(DashboardPanel.new(), Vector2(390, 80))
+	research_panel = _free_panel_add(ResearchPanel.new(), Vector2(360, 80))
+	top = HudTop.new()
+	add_child(top)
+	top.setup(self, game)
+	orders = OrderBar.new()
+	add_child(orders)
+	orders.setup(self, game)
 	_setup_build(game.build_tool, game.world_view)
 
 
-## Alertes en bulles (en haut à droite), quelques secondes.
-func _toast(kind: String, text: String) -> void:
-	var l := Label.new()
-	l.text = text
-	l.add_theme_color_override(
-		"font_color", Color("ffd27a") if kind in ["mort", "alerte", "froid", "cloche"] else UiStyle.TXT
-	)
-	var p := PanelContainer.new()
-	p.add_theme_stylebox_override("panel", UiStyle.box(Color(0.08, 0.06, 0.06, 0.9), UiStyle.GOLD_D, 1, 6))
-	p.add_child(l)
-	_toasts.add_child(p)
-	if _toasts.get_child_count() > 5:
-		_toasts.get_child(0).queue_free()
-	get_tree().create_timer(6.0).timeout.connect(p.queue_free)
+## Fenêtre liée à un bouton du bas : la croix ✕ relâche le bouton.
+func _menu_panel_add(panel: Control, menu: String, pos: Vector2) -> Control:
+	panel.call("setup", _game)
+	panel.position = pos
+	panel.visible = false
+	root.add_child(panel)
+	_panel_toggle(menu, panel)
+	windows.add(panel, func() -> void: menu_button(menu).button_pressed = false)
+	return panel
 
 
-## Dialogue d'événement (maquette validée) : un marchand arrive.
-func _merchant_dialog() -> void:
-	var p := PanelContainer.new()
-	p.add_theme_stylebox_override("panel", UiStyle.box(UiStyle.IRON, UiStyle.GOLD, 3, 10))
-	p.position = Vector2(500, 380)
-	var v := VBoxContainer.new()
-	p.add_child(v)
-	v.add_child(UiStyle.title_label("Un marchand au village", 28))
-	var txt := Label.new()
-	txt.text = "« Le bonjour ! J'ai du fer, du sel et des remèdes.\n  Contre de l'or, ou je rachète vos surplus. »"
-	txt.add_theme_color_override("font_color", UiStyle.PARCH)
-	v.add_child(txt)
-	var row := HBoxContainer.new()
-	row.add_theme_constant_override("separation", 10)
-	v.add_child(row)
-	for b: Array in [["Commercer", true], ["Plus tard", false]]:
-		var btn := Button.new()
-		btn.text = b[0]
-		btn.custom_minimum_size = Vector2(220, 56)
-		if b[1]:
-			UiStyle.make_primary(btn)
-		var open: bool = b[1]
-		btn.pressed.connect(
-			func() -> void:
-				p.queue_free()
-				if open:
-					menu_button("Commerce").button_pressed = true
-		)
-		row.add_child(btn)
-	root.add_child(p)
+func _free_panel_add(panel: Control, pos: Vector2) -> Control:
+	panel.call("setup", _game)
+	panel.position = pos
+	panel.visible = false
+	root.add_child(panel)
+	windows.add(panel, func() -> void: panel.visible = false)
+	return panel
 
 
 func open_faction() -> void:
@@ -157,12 +103,17 @@ func open_faction() -> void:
 	ed.setup(_game.sim.faction)
 	ed.position = Vector2(300, 70)
 	root.add_child(ed)
+	windows.add(ed, ed.queue_free)
 	ed.done.connect(
 		func(_f: Faction) -> void:
 			EventBus.alert.emit("faction", "Faction : %s" % _f.name)
 			EventBus.faction_changed.emit()
 			ed.queue_free()
 	)
+
+
+func open_realm() -> void:
+	menu_button("Royaume").button_pressed = true
 
 
 func toggle_research() -> void:
@@ -195,53 +146,13 @@ func _panel_toggle(button_name: String, panel: Control) -> void:
 
 ## Un seul menu du bas ouvert à la fois.
 func _close_others(keep: String) -> void:
-	for n in ["Construire", "Récolter", "Zones", "Lutins", "Militaire", "Commerce", "Gestion"]:
+	for n: String in MENUS:
 		var b := menu_button(n)
 		if n != keep and b.toggle_mode and b.button_pressed:
 			b.button_pressed = false
 
 
-## Ressources en haut : Nourriture (total des aliments, détail déroulant), bûches, pierre, fer, or.
-func _build_resources() -> void:
-	var x := 668
-	for r: Array in [
-		["food", "Nourriture"], ["log", "Bûches"], ["stone", "Pierre"], ["iron_ore", "Fer"], ["gold", "Or"]
-	]:
-		var b := Button.new()
-		b.position = Vector2(x, 6)
-		var wide := 200 if r[0] == "food" else 140
-		b.custom_minimum_size = Vector2(wide, 50)
-		b.add_theme_font_size_override("font_size", 17)
-		root.add_child(b)
-		_res_labels[r[0]] = [b, r[1]]
-		x += wide + 8
-	_food_drop = PanelContainer.new()
-	_food_drop.position = Vector2(668, 62)
-	_food_drop.visible = false
-	root.add_child(_food_drop)
-	_res_labels["food"][0].pressed.connect(func() -> void: _food_drop.visible = not _food_drop.visible)
-
-
-func _refresh_resources() -> void:
-	if _game == null or _game.colony == null:
-		return
-	var st: Stockpile = _game.colony.stock
-	for k: String in _res_labels:
-		var n := st.food_total() if k == "food" else st.count(k)
-		_res_labels[k][0].text = "%s %d%s" % [_res_labels[k][1], n, " ▾" if k == "food" else ""]
-	if _food_drop.visible:
-		for c in _food_drop.get_children():
-			c.queue_free()
-		var l := Label.new()
-		var lines := []
-		for id: String in st.items:
-			if Stockpile._resource(id).get("category", "") == "food":
-				lines.append("%s : %d" % [Stockpile._resource(id).get("name", id), st.count(id)])
-		l.text = "\n".join(lines) if not lines.is_empty() else "Aucune nourriture"
-		_food_drop.add_child(l)
-
-
-## Mode Construire : barre des matériaux + curseur d'étage (bord droit).
+## Mode Construire : panneau par catégories + bulle quand il est réduit.
 func _setup_build(tool: BuildTool, view: WorldView) -> void:
 	tools = HudTools.new()
 	add_child(tools)
@@ -252,6 +163,7 @@ func _setup_build(tool: BuildTool, view: WorldView) -> void:
 	panel.visible = false
 	root.add_child(panel)
 	build_panel = panel
+	windows.add(panel, func() -> void: menu_button("Construire").button_pressed = false)
 	panel.collapsed.connect(func(label: String) -> void: tools.show_bubble(panel, label))
 	var btn := menu_button("Construire")
 	btn.toggle_mode = true
@@ -291,11 +203,6 @@ func _build_top() -> void:
 		b.pressed.connect(func() -> void: GameClock.set_speed(s))
 		bar.add_child(b)
 		_speed_buttons.append(b)
-	_fps_label = Label.new()
-	_fps_label.position = Vector2(18, 64)
-	_fps_label.add_theme_color_override("font_color", UiStyle.TXT_D)
-	_fps_label.visible = false  # mesure : visible seulement en débogage
-	bar.add_child(_fps_label)
 	var gear := Button.new()
 	gear.text = "⚙"
 	gear.custom_minimum_size = Vector2(56, 50)
@@ -313,13 +220,13 @@ func _build_bottom() -> void:
 	var row := HBoxContainer.new()
 	row.alignment = BoxContainer.ALIGNMENT_CENTER
 	row.set_anchors_preset(Control.PRESET_FULL_RECT)
-	row.add_theme_constant_override("separation", 12)
+	row.add_theme_constant_override("separation", 10)
 	bar.add_child(row)
-	for n in ["Construire", "Récolter", "Zones", "Lutins", "Militaire", "Commerce", "Gestion"]:
+	for n: String in MENUS:
 		var b := Button.new()
 		b.text = n
-		b.custom_minimum_size = Vector2(170, 76)
-		b.add_theme_font_size_override("font_size", 20)
+		b.custom_minimum_size = Vector2(162, 76)
+		b.add_theme_font_size_override("font_size", 19)
 		b.name = n
 		row.add_child(b)
 
@@ -330,20 +237,24 @@ func menu_button(name: String) -> Button:
 
 func _build_menu() -> void:
 	_menu_panel = PanelContainer.new()
-	_menu_panel.position = Vector2(560, 110)
+	_menu_panel.position = Vector2(560, 90)
 	_menu_panel.custom_minimum_size = Vector2(480, 0)
 	_menu_panel.visible = false
 	root.add_child(_menu_panel)
 	var v := VBoxContainer.new()
 	v.add_theme_constant_override("separation", 12)
 	_menu_panel.add_child(v)
-	v.add_child(UiStyle.title_label("Menu", 34))
+	v.add_child(UiStyle.header("Menu", 34, _close_menu))
 	for item: Array in [
-		["Reprendre", _close_menu], ["Sauvegarder", _save], ["Menu principal", _to_title], ["Quitter", _quit]
+		["Reprendre", _close_menu],
+		["Sauvegarder", _save],
+		["Paramètres", _settings],
+		["Menu principal", _to_title],
+		["Quitter", _quit]
 	]:
 		var b := Button.new()
 		b.text = item[0]
-		b.custom_minimum_size = Vector2(440, 58)
+		b.custom_minimum_size = Vector2(440, 56)
 		b.pressed.connect(item[1])
 		v.add_child(b)
 
@@ -351,7 +262,7 @@ func _build_menu() -> void:
 func _settings() -> void:
 	_menu_panel.visible = false
 	var sp := SettingsPanel.new()
-	sp.position = Vector2(520, 100)
+	sp.position = Vector2(260, 80)
 	root.add_child(sp)
 
 
@@ -362,6 +273,7 @@ func _close_menu() -> void:
 func _save() -> void:
 	SaveManager.save_game("auto")
 	_menu_panel.visible = false
+	EventBus.alert.emit("info", "Partie sauvegardée.")
 
 
 func _to_title() -> void:
@@ -391,10 +303,9 @@ func _process(_delta: float) -> void:
 	_time_label.text = "%s · jour %d" % [sname, GameClock.day() % dps + 1]
 	if _game != null and _game.sim != null:
 		_time_label.text += " · " + _game.sim.village.rank_name()
-	_fps_label.text = "%d img/s" % Engine.get_frames_per_second()
-	if Engine.get_process_frames() % 15 == 0:
-		_refresh_resources()
+	if top != null and Engine.get_process_frames() % 15 == 0:
+		top.refresh()
 	if Engine.get_process_frames() % 30 == 0:
-		for p: Control in [military_panel, dashboard, commerce_panel]:
-			if p != null and p.visible:
+		for p: Control in [military_panel, dashboard, commerce_panel, realm_panel, lutins_panel]:
+			if p != null and p.visible and p.has_method("refresh"):
 				p.call("refresh")

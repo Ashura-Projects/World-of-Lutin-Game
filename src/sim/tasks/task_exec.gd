@@ -56,7 +56,7 @@ func start_delivery(l: Lutin) -> bool:
 	if l.carrying.has("pickup"):
 		l.carrying = {}
 		return false
-	return board.colony.send(l, board.colony.store_near(l.cell), true)
+	return board.colony.send(l, board.colony.store_near(l.cell, str(l.carrying.get("id", ""))), true)
 
 
 func arrived(l: Lutin) -> void:
@@ -73,10 +73,10 @@ func arrived(l: Lutin) -> void:
 		var got := board.ground.pick(cell, int(_work.get("carry_capacity", 4)))
 		l.carrying = got
 		if not got.is_empty():
-			board.colony.send(l, board.colony.store_near(l.cell), true)
+			board.colony.send(l, board.colony.store_near(l.cell, str(got.get("id", ""))), true)
 		return
 	if not l.carrying.is_empty():
-		if board.colony.at_store(l.cell):
+		if board.colony.at_store(l.cell, str(l.carrying["id"])):
 			board.colony.stock.add(l.carrying["id"], int(l.carrying["n"]))
 			l.carrying = {}
 		return
@@ -119,6 +119,8 @@ func work(l: Lutin) -> void:
 			if a["id"] == "elder":
 				speed *= float(a.get("work_speed", 0.6))
 	speed *= float(l.trained.get(l.job, 1.0))  # formation courte d'adulte : moins efficace
+	if Realm.active != null:
+		speed *= Realm.active.work_mult()  # lois (corvée, jour de fête)
 	if t["kind"] == "craft" and t.get("recipe", "").begins_with("grind"):
 		speed *= 1.0 + Research.get_bonus("flour_speed")
 	l.add_xp(float(_work.get("xp_per_second", 1.0)) / tps, float(_work.get("xp_per_level", 100)))

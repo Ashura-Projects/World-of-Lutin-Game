@@ -71,7 +71,8 @@ func build(job: String, age_scale: float = 1.0) -> void:
 	var skin := mat(str(cfg.get("skin", "466ca0")), 0.55)
 	var nose := mat(str(cfg.get("skin_shade", "365684")), 0.5)
 	var tunic_hex := str(o.get("tunic", "5a6a48"))
-	if job == "militia" and Faction.current != null:
+	var soldier := job in ["militia", "soldier"]
+	if soldier and Faction.current != null:
 		tunic_hex = Color(Faction.current.color1).darkened(0.25).to_html(false)  # uniforme aux couleurs de la faction
 	var tunic := mat(tunic_hex, 0.85)
 	var s := 0.82 * age_scale
@@ -84,7 +85,18 @@ func build(job: String, age_scale: float = 1.0) -> void:
 	_part(leg_r, _sphere(0.07, 8), boot, Vector3(0, -0.07, -0.025), Vector3(1, 0.7, 1.35))
 	_part(leg_l, _sphere(0.07, 8), boot, Vector3(0, -0.07, -0.025), Vector3(1, 0.7, 1.35))
 	_part(body, _sphere(0.2, 12), tunic, Vector3(0, 0.32, 0), Vector3(1, 1.2, 0.9))
-	_part(body, _cyl(0.19, 0.19, 0.03, 14), mat("784c2c", 0.7), Vector3(0, 0.27, 0))
+	var belt := "784c2c"
+	if soldier and Faction.current != null:
+		belt = Color(Faction.current.color2).darkened(0.15).to_html(false)  # ceinture et écharpe : 2e couleur
+		_part(
+			body,
+			_cyl(0.205, 0.205, 0.05, 14),
+			mat(belt, 0.6, 0.2),
+			Vector3(0, 0.36, 0),
+			Vector3.ONE,
+			Vector3(0, 0, 0.6)
+		)
+	_part(body, _cyl(0.19, 0.19, 0.03, 14), mat(belt, 0.7), Vector3(0, 0.27, 0))
 	arm_r = _part(body, _cyl(0.045, 0.045, 0.18), tunic, Vector3(-0.21, 0.36, 0), Vector3.ONE, Vector3(0, 0, -0.35))
 	arm_l = _part(body, _cyl(0.045, 0.045, 0.18), tunic, Vector3(0.21, 0.36, 0), Vector3.ONE, Vector3(0, 0, 0.35))
 	_part(arm_r, _sphere(0.055, 8), skin, Vector3(0, -0.11, 0))

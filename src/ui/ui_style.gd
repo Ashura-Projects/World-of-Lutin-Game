@@ -65,3 +65,23 @@ static func title_label(text: String, size: int, color: Color = GOLD) -> Label:
 	l.add_theme_font_size_override("font_size", size)
 	l.add_theme_color_override("font_color", color)
 	return l
+
+
+## En-tête de fenêtre : titre à gauche, croix ✕ de fermeture à droite (toutes les fenêtres en ont une).
+static func header(text: String, size: int, on_close: Callable) -> HBoxContainer:
+	var h := HBoxContainer.new()
+	var t := title_label(text, size)
+	t.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	h.add_child(t)
+	h.add_child(close_button(on_close))
+	return h
+
+
+static func close_button(on_close: Callable) -> Button:
+	var x := Button.new()
+	x.text = "✕"
+	x.tooltip_text = "Fermer"
+	x.custom_minimum_size = Vector2(56, 52)
+	x.add_theme_stylebox_override("normal", box(BLOOD, GOLD, 2, 26))
+	x.pressed.connect(on_close)
+	return x

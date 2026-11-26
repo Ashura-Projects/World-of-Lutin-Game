@@ -1,7 +1,8 @@
 class_name HudTools
 extends Node
 ## Outils d'écran : bulle de menu réduit, jauge d'étage déroulante (+ / − couche par couche, numéro affiché),
-## boutons de caméra (pivoter, zoomer, incliner) en plus des gestes.
+## boutons de caméra (pivoter, zoomer, incliner) en plus des gestes, et petit joystick pour déplacer la vue.
+## Ces boutons sont « silencieux » (pas de clic sonore).
 
 var hud: Hud
 var root: Control
@@ -66,6 +67,7 @@ func _build_floor() -> void:
 	_floor_btn.position = Vector2(1472, 6)
 	_floor_btn.custom_minimum_size = Vector2(56, 50)
 	_floor_btn.pressed.connect(func() -> void: _floor_panel.visible = not _floor_panel.visible)
+	_floor_btn.set_meta("silent", true)
 	root.add_child(_floor_btn)
 	_floor_panel = PanelContainer.new()
 	_floor_panel.add_theme_stylebox_override("panel", UiStyle.box(UiStyle.IRON, UiStyle.GOLD, 2, 8))
@@ -83,6 +85,7 @@ func _build_floor() -> void:
 	plus.text = "+"
 	plus.custom_minimum_size = Vector2(130, 52)
 	plus.pressed.connect(func() -> void: set_floor(_floor_slider.value + 1))
+	plus.set_meta("silent", true)
 	v.add_child(plus)
 	_floor_slider = VSlider.new()
 	_floor_slider.min_value = 1
@@ -97,6 +100,7 @@ func _build_floor() -> void:
 	minus.text = "−"
 	minus.custom_minimum_size = Vector2(130, 52)
 	minus.pressed.connect(func() -> void: set_floor(_floor_slider.value - 1))
+	minus.set_meta("silent", true)
 	v.add_child(minus)
 	_floor_label = Label.new()
 	_floor_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -124,7 +128,7 @@ func _apply_floor(v: float) -> void:
 # --- boutons de caméra ---------------------------------------------------------------------------
 func _build_camera_buttons() -> void:
 	var col := VBoxContainer.new()
-	col.position = Vector2(1536, 160)
+	col.position = Vector2(1536, 66)
 	col.add_theme_constant_override("separation", 8)
 	root.add_child(col)
 	for b: Array in [
@@ -141,7 +145,12 @@ func _build_camera_buttons() -> void:
 		btn.custom_minimum_size = Vector2(56, 56)
 		btn.add_theme_stylebox_override("normal", UiStyle.box(Color(0.08, 0.06, 0.06, 0.75), UiStyle.GOLD_D, 2, 28))
 		btn.pressed.connect(b[2])
+		btn.set_meta("silent", true)
 		col.add_child(btn)
+	var joy := CameraJoystick.new()
+	joy.camera = camera
+	joy.position = Vector2(1468, 494)
+	root.add_child(joy)
 
 
 func _rotate(dir: int) -> void:

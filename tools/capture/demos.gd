@@ -3,6 +3,9 @@ extends RefCounted
 
 
 static func run(game: Node, action: String) -> void:
+	if is_instance_valid(game._loading):  # passer l'écran de chargement
+		game._loading.play_pressed.emit()
+		game._loading.queue_free()
 	match action:
 		"tour":
 			_tour(game)
@@ -44,12 +47,59 @@ static func run(game: Node, action: String) -> void:
 			game.hud.build_panel.show_category("furniture")
 			game.hud.tools.set_floor(6)
 			game.hud.tools._floor_panel.visible = true
+		"chargement":
+			pass
+		"soldats":
+			for i in 3:
+				game.sim.realm.enroll(game.colony.lutins[i])
+			var l: Lutin = game.colony.lutins[0]
+			game.camera.distance = 7.0
+			game.camera.focus(l.pos)
+		"recolte_menu":
+			game.hud.menu_button("Récolter").button_pressed = true
+		"fiche_ordres":
+			var l: Lutin = game.colony.lutins[0]
+			game.camera.distance = 16.0
+			game.camera.focus(l.pos)
+			game.hud.show_lutin(l)
+		"ordres":
+			var l: Lutin = game.colony.lutins[0]
+			game.camera.distance = 16.0
+			game.camera.focus(l.pos)
+			game.hud.show_lutin(l)
+			game.hud.sheet.visible = false
+		"royaume":
+			game.hud.open_realm()
+			game.hud.realm_panel.show_tab("laws")
+		"diplomatie":
+			game.hud.open_realm()
+			game.hud.realm_panel.show_tab("diplomacy")
+		"lutins":
+			game.hud.menu_button("Lutins").button_pressed = true
+		"unites":
+			var ids := []
+			for l: Lutin in game.colony.lutins:
+				ids.append(l.id)
+			game.sim.units.create("Première lance", ids[0], ids.slice(1, 4))
+			game.hud.menu_button("Militaire").button_pressed = true
+			game.hud.military_panel.show_tab("units")
+		"ressources":
+			game.hud.top.toggle_resources("")
+		"reserve":
+			game.hud.menu_button("Zones").button_pressed = true
+			game.hud.zones_panel.show_tab("stores")
+			var id: int = game.colony.stores.add_zone(
+				Shapes.rect(game.colony.stock.pos + Vector3i(3, 0, -3), game.colony.stock.pos + Vector3i(6, 0, -1))
+			)
+			game.hud.zones_panel.filter_panel.open(id)
 		"bulle":
 			recolte(game)
 			game.hud.menu_button("Récolter").button_pressed = false
 			game.hud.menu_button("Construire").button_pressed = true
 			game.hud.build_panel._choose_object("table", "Table")
-			game.colony.add_store_cells(Shapes.rect(game.colony.stock.pos + Vector3i(3, 0, -3), game.colony.stock.pos + Vector3i(6, 0, -1)))
+			game.colony.add_store_cells(
+				Shapes.rect(game.colony.stock.pos + Vector3i(3, 0, -3), game.colony.stock.pos + Vector3i(6, 0, -1))
+			)
 
 
 static func _tour(game: Node) -> void:

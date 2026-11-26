@@ -111,5 +111,10 @@ func _apply(key: Vector3i, res: Dictionary) -> void:
 		mi.mesh = m
 
 
+## Chunks encore à mailler (écran de chargement).
+func pending_count() -> int:
+	return _pending.size() + _running.size() + _results.size()
+
+
 func is_idle() -> bool:
 	return _pending.is_empty() and _running.is_empty() and _results.is_empty()
