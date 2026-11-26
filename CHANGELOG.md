@@ -1,5 +1,17 @@
 # Journal des versions
 
+## 1.0.1 — Interface plus claire (2026-11-26)
+Retours d'Ashura après le premier essai sur téléphone.
+- **Caméra** : boutons pivoter ⟲ ⟳, zoom + −, incliner ⤒ ⤓ (en plus des gestes) ; deux doigts déplacent la vue.
+- **Étage** : bouton « ▤ » dans la barre du haut → jauge déroulante avec « + » en haut, « − » en bas, numéro de couche affiché, « Tout voir ».
+- **Construire** : catégories en haut (Blocs, Sols et routes, Meubles, Décoration, Ateliers, Bâtiments), choix en dessous ;
+  choisir un élément réduit le menu en **bulle** sur le côté (toucher la bulle le rouvre) ; « ✋ Déplacer » pour bouger la caméra menu ouvert ;
+  « ↶ Annuler » annule le dernier groupe de plans ; la **Gomme** annule un plan ou démonte un objet (matériaux rendus).
+- **Récolter** : mode « ✕ Annuler » (annule les ordres dans le cercle), « ↶ Dernier ordre », menu compact ;
+  **cercles lumineux** au sol sous chaque arbre, plante, gibier ou poste de pêche ciblé.
+- **Zones** : « Réserve » / « Retirer réserve » — zones de stockage au sol (dalles dorées) ; les lutins déposent, prennent
+  les matériaux et mangent à la réserve la plus proche.
+
 ## 1.0.0 — Bac à sable complet (2026-11-26)
 Première version complète du mode **Bac à sable**.
 

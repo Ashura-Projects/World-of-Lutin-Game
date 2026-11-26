@@ -10,6 +10,8 @@ var world: VoxelWorld
 var lutins: Array[Lutin] = []
 var stock := Stockpile.new()
 var next_id: int = 1
+var store_cells: Array[Vector3i] = []  # zones de réserve définies par le joueur (dépôt et retrait)
+var stores_version: int = 0  # change à chaque modification des zones (pour la vue)
 var task_board: RefCounted = null  # TaskBoard (J4) : fournit des tâches aux lutins libres
 var structures: Structures = null  # sources de chaleur (J6)
 var heating_ok: bool = true  # faux si le bois de chauffage manque
@@ -162,12 +164,12 @@ func _decide_normal(l: Lutin, night: bool) -> void:
 	if l.state == Lutin.State.WALK and l.has_path():
 		return
 	if l.needs["hunger"] < float(_needs["hunger"]["eat_below"]) and stock.food_total() > 0:
-		if _near(l.cell, stock.pos, 2):
+		if at_store(l.cell):
 			l.needs["hunger"] = minf(100.0, l.needs["hunger"] + stock.take_best_food())
 			l.state = Lutin.State.EAT
 			l.wait_ticks = int(float(_needs.get("eat_duration_s", 3)) * GameClock.ticks_per_second())
 		else:
-			_go(l, stock.pos, "manger")
+			_go(l, store_near(l.cell), "manger", true)
 		return
 	if l.needs["sleep"] < float(_needs["sleep"]["go_to_bed_below"]) or (night and l.needs["sleep"] < 90.0):
 		if l.home.y >= 0 and not _near(l.cell, l.home, 1):
@@ -295,6 +297,38 @@ func remove_lutin(l: Lutin) -> void:
 	lutin_removed.emit(l.id)
 
 
+## Point de réserve le plus proche (chariot ou case d'une zone de réserve).
+func store_near(cell: Vector3i) -> Vector3i:
+	var best := stock.pos
+	var bd := Vector3(cell).distance_squared_to(Vector3(best))
+	for c in store_cells:
+		var d := Vector3(cell).distance_squared_to(Vector3(c))
+		if d < bd:
+			bd = d
+			best = c
+	return best
+
+
+func at_store(cell: Vector3i) -> bool:
+	return _near(cell, store_near(cell), 2)
+
+
+func add_store_cells(cells: Array) -> int:
+	var n := 0
+	for c: Vector3i in cells:
+		if not store_cells.has(c) and Pathfinder.walkable(world, c):
+			store_cells.append(c)
+			n += 1
+	stores_version += 1
+	return n
+
+
+func remove_store_cells(cells: Array) -> void:
+	for c: Vector3i in cells:
+		store_cells.erase(c)
+	stores_version += 1
+
+
 func find_lutin(id: int) -> Lutin:
 	for l in lutins:
 		if l.id == id:
@@ -306,7 +340,10 @@ func to_dict() -> Dictionary:
 	var ls := []
 	for l in lutins:
 		ls.append(l.to_dict())
-	return {"lutins": ls, "stock": stock.to_dict(), "next_id": next_id}
+	var sc := []
+	for c in store_cells:
+		sc.append([c.x, c.y, c.z])
+	return {"lutins": ls, "stock": stock.to_dict(), "next_id": next_id, "stores": sc}
 
 
 func from_dict(d: Dictionary) -> void:
@@ -318,3 +355,7 @@ func from_dict(d: Dictionary) -> void:
 		lutin_added.emit(l)
 	stock.from_dict(d.get("stock", {}))
 	next_id = int(d.get("next_id", lutins.size() + 1))
+	store_cells.clear()
+	for e: Array in d.get("stores", []):
+		store_cells.append(Vector3i(int(e[0]), int(e[1]), int(e[2])))
+	stores_version += 1

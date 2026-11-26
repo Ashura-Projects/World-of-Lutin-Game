@@ -8,6 +8,7 @@ signal changed
 enum Mode { BLOCK, LINE, FILL, WALL, ERASE, ROAD, OBJECT }
 
 var active: bool = false
+var move_only: bool = false  # « Déplacer » : le doigt bouge la caméra, sans construire
 var mode: Mode = Mode.BLOCK
 var material_id: int = 0
 var wall_height: int = 3
@@ -51,7 +52,7 @@ static func _ghost_mat(c: Color) -> StandardMaterial3D:
 
 func set_active(on: bool) -> void:
 	active = on
-	camera.pan_enabled = not on
+	camera.pan_enabled = not on or move_only
 	_cancel()
 
 
@@ -99,7 +100,7 @@ func _shape(end: Vector3i) -> Array[Vector3i]:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if not active:
+	if not active or move_only:
 		return
 	if event is InputEventScreenTouch:
 		if event.pressed:

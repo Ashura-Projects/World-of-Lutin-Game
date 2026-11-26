@@ -11,13 +11,21 @@ func _ready() -> void:
 	add_child(v)
 	v.add_child(UiStyle.title_label("World of Lutin", 36))
 	var l := Label.new()
-	l.text = "\n".join([
-		"Un projet d'Ashura.", "",
-		"Modèles, textures, musiques et sons faits pour le jeu (Blender, scripts).",
-		"Moteur : Godot Engine (licence MIT).",
-		"Police des titres : Cinzel (SIL Open Font License).",
-		"Tests : GUT (MIT).", "", "Merci d'avoir joué !",
-	])
+	l.text = (
+		"\n"
+		. join(
+			[
+				"Un projet d'Ashura.",
+				"",
+				"Modèles, textures, musiques et sons faits pour le jeu (Blender, scripts).",
+				"Moteur : Godot Engine (licence MIT).",
+				"Police des titres : Cinzel (SIL Open Font License).",
+				"Tests : GUT (MIT).",
+				"",
+				"Merci d'avoir joué !",
+			]
+		)
+	)
 	v.add_child(l)
 	var ok := Button.new()
 	ok.text = "Fermer"

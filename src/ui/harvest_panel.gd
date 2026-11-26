@@ -14,6 +14,9 @@ var _dims_label: Label
 var _preview: MeshInstance3D
 var _mode_buttons: Dictionary = {}
 var _assign_box: VBoxContainer
+var _modes_row: HBoxContainer
+var _radius_ctrls: Array = []
+var _dim_ctrls: Array = []
 
 
 func setup(g: Node) -> void:
@@ -30,13 +33,15 @@ func setup(g: Node) -> void:
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 6)
 	v.add_child(row)
+	_modes_row = row
 	for m: Array in [
 		["cut", "Couper"],
 		["dig", "Creuser"],
 		["well", "Puits"],
 		["gather", "Cueillir"],
 		["hunt", "Chasser"],
-		["fish", "Pêcher"]
+		["fish", "Pêcher"],
+		["cancel", "✕ Annuler"]
 	]:
 		var b := Button.new()
 		b.text = m[1]
@@ -49,16 +54,24 @@ func setup(g: Node) -> void:
 	var row2 := HBoxContainer.new()
 	row2.add_theme_constant_override("separation", 6)
 	v.add_child(row2)
-	row2.add_child(_btn("−", func() -> void: _adjust(-1)))
+	var modes_btn := _btn("Modes ▴", func() -> void: _modes_row.visible = not _modes_row.visible, 130)
+	row2.add_child(modes_btn)
+	var rm := _btn("−", func() -> void: _adjust(-1))
+	row2.add_child(rm)
 	_dims_label = Label.new()
-	_dims_label.custom_minimum_size = Vector2(260, 0)
+	_dims_label.custom_minimum_size = Vector2(300, 0)
 	_dims_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	row2.add_child(_dims_label)
-	row2.add_child(_btn("+", func() -> void: _adjust(1)))
+	var rp := _btn("+", func() -> void: _adjust(1))
+	row2.add_child(rp)
+	_radius_ctrls = [rm, rp]
 	for axis: Array in [["Larg", 0], ["Long", 1], ["Prof", 2]]:
 		var a: int = axis[1]
-		row2.add_child(_btn(axis[0] + "−", func() -> void: _dim(a, -1), 84))
-		row2.add_child(_btn(axis[0] + "+", func() -> void: _dim(a, 1), 84))
+		var b1 := _btn(axis[0] + "−", func() -> void: _dim(a, -1), 84)
+		var b2 := _btn(axis[0] + "+", func() -> void: _dim(a, 1), 84)
+		row2.add_child(b1)
+		row2.add_child(b2)
+		_dim_ctrls.append_array([b1, b2])
 	var row3 := HBoxContainer.new()
 	row3.add_theme_constant_override("separation", 8)
 	v.add_child(row3)
@@ -66,6 +79,7 @@ func setup(g: Node) -> void:
 	UiStyle.make_primary(ok)
 	row3.add_child(ok)
 	row3.add_child(_btn("Assigner…", _toggle_assign, 150))
+	row3.add_child(_btn("↶ Dernier ordre", _undo_last, 190))
 	_info = Label.new()
 	_info.add_theme_color_override("font_color", UiStyle.TXT_D)
 	row3.add_child(_info)
@@ -76,6 +90,8 @@ func setup(g: Node) -> void:
 	_preview.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	game.add_child(_preview)
 	_set_mode("cut")
+	_modes_row.visible = true
+	visibility_changed.connect(func() -> void: _modes_row.visible = visible)
 
 
 func _btn(t: String, cb: Callable, w: int = 56) -> Button:
@@ -89,6 +105,11 @@ func _btn(t: String, cb: Callable, w: int = 56) -> Button:
 
 func _set_mode(m: String) -> void:
 	mode = m
+	_modes_row.visible = false  # le menu se réduit : on garde seulement les réglages utiles
+	for c: Control in _radius_ctrls:
+		c.visible = m not in ["dig", "well", "fish"]
+	for c: Control in _dim_ctrls:
+		c.visible = m == "dig"
 	for k: String in _mode_buttons:
 		_mode_buttons[k].add_theme_stylebox_override("normal", UiStyle.box(UiStyle.BLOOD if k == m else UiStyle.IRON_L))
 	_refresh_labels()
@@ -117,6 +138,8 @@ func _refresh_labels() -> void:
 		_dims_label.text = "Puits 1 × 1 jusqu'à la nappe"
 	elif mode == "fish":
 		_dims_label.text = "Touchez l'eau : poste de pêche"
+	elif mode == "cancel":
+		_dims_label.text = "Annuler les ordres dans un rayon de %d" % radius
 	else:
 		_dims_label.text = "Cercle : rayon %d cases" % radius
 
@@ -174,6 +197,12 @@ func _validate() -> void:
 	match mode:
 		"dig", "well":
 			n = b.order_dig(_cells())
+		"cancel":
+			n = TaskCancel.cancel_in_circle(b, _center + Vector3i.UP, radius)
+			_info.text = "%d ordre(s) annulé(s)" % n
+			_center = Vector3i(-1, -1, -1)
+			_preview.mesh = null
+			return
 		"fish":
 			var p := _center + Vector3i.UP
 			while game.world.types.liquid[game.world.get_block(p + Vector3i.UP)] == 1:
@@ -185,6 +214,16 @@ func _validate() -> void:
 	_info.text = "%d ordre(s) ajouté(s) · %d en cours" % [n, b.tasks.size()]
 	_center = Vector3i(-1, -1, -1)
 	_preview.mesh = null
+
+
+func _undo_last() -> void:
+	var n := 0
+	for id: int in _last_ids:
+		if game.board.tasks.has(id):
+			game.board.cancel(id)
+			n += 1
+	_last_ids = []
+	_info.text = "%d ordre(s) annulé(s)" % n
 
 
 func _toggle_assign() -> void:

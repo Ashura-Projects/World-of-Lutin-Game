@@ -22,6 +22,7 @@ var exec: TaskExec
 var builds: BuildExec
 var structures: Structures = null
 var fields: Fields = null
+var batches: Array = []  # groupes de plans (pour ↶)
 
 
 func _init(w: VoxelWorld, c: Colony, f: Flora, fa: Fauna, g: GroundItems) -> void:
@@ -102,23 +103,37 @@ func add_structure(kind: String, cell: Vector3i) -> int:
 	_clear_tree(cell)
 	var d := Structures.def(kind)
 	var sid := structures.add(kind, cell)
-	return _new_task(
+	var tid := _new_task(
 		"build_struct", cell, "builder", float(d.get("build_time", 10)), {"struct_kind": kind, "struct_id": sid}
 	)
+	if tid >= 0:
+		batches.append([tid])
+	return tid
 
 
 ## Branché sur l'outil de construction : en partie, poser = plans ; gomme = annuler un plan ou démolir.
 func place_blueprints(cells: Array, block_id: int, erase: bool) -> int:
 	var n := 0
+	var batch := []
 	for p: Vector3i in cells:
 		if erase:
-			if _by_cell.has(p) and tasks[_by_cell[p]]["kind"] == "build":
-				cancel(_by_cell[p])
+			if _by_cell.has(p) and tasks[_by_cell[p]]["kind"] in ["build", "build_struct", "dig"]:
+				cancel(_by_cell[p])  # annuler un plan (bloc, objet) ou un ordre de démolition
+				n += 1
+			elif TaskCancel.remove_structure_at(self, p) or TaskCancel.remove_structure_at(self, p + Vector3i.UP):
 				n += 1
 			else:
-				n += int(add_dig(p) >= 0)
+				var id := add_dig(p)
+				if id >= 0:
+					batch.append(id)
+					n += 1
 		else:
-			n += int(add_build_block(p, block_id) >= 0)
+			var id := add_build_block(p, block_id)
+			if id >= 0:
+				batch.append(id)
+				n += 1
+	if not batch.is_empty():
+		batches.append(batch)
 	return n
 
 

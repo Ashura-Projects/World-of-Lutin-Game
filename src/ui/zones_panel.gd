@@ -1,10 +1,12 @@
 class_name ZonesPanel
 extends PanelContainer
 ## Menu Zones : champs posés case par case (tap = une case ; « Rectangle » = deux taps), culture choisie par case.
+## « Réserve » : zone de stockage où les lutins déposent et prennent les ressources (la plus proche est utilisée).
 
 var game: Node
 var crop_id: String = "wheat"
 var rect_mode: bool = false
+var zone_mode: String = "crop"  # crop, store, unstore
 var _first := Vector3i(-1, -1, -1)
 var _info: Label
 var _crop_buttons: Dictionary = {}
@@ -27,6 +29,14 @@ func setup(g: Node) -> void:
 		b.pressed.connect(func() -> void: _select(id))
 		row.add_child(b)
 		_crop_buttons[id] = b
+	for z: Array in [["store", "Réserve"], ["unstore", "Retirer réserve"]]:
+		var zb := Button.new()
+		zb.text = z[1]
+		zb.custom_minimum_size = Vector2(170, 54)
+		var zid: String = z[0]
+		zb.pressed.connect(func() -> void: _select(zid))
+		row.add_child(zb)
+		_crop_buttons[zid] = zb
 	var row2 := HBoxContainer.new()
 	row2.add_theme_constant_override("separation", 6)
 	v.add_child(row2)
@@ -47,11 +57,19 @@ func setup(g: Node) -> void:
 
 
 func _select(id: String) -> void:
-	crop_id = id
+	zone_mode = id if id in ["store", "unstore"] else "crop"
+	if zone_mode == "crop":
+		crop_id = id
 	for k: String in _crop_buttons:
 		_crop_buttons[k].add_theme_stylebox_override(
 			"normal", UiStyle.box(UiStyle.BLOOD if k == id else UiStyle.IRON_L)
 		)
+	if zone_mode != "crop":
+		_info.text = (
+			"Touchez le sol (ou 2 coins en Rectangle) : %s."
+			% ("zone de réserve" if zone_mode == "store" else "retirer la réserve")
+		)
+		return
 	var c := Fields.crop(id)
 	_info.text = (
 		"%s : semis %s, %d jours, 1 → %s"
@@ -84,6 +102,9 @@ func on_tap(screen: Vector2) -> void:
 			return
 		cells = Shapes.rect(_first, Vector3i(cell.x, _first.y, cell.z))
 		_first = Vector3i(-1, -1, -1)
+	if zone_mode != "crop":
+		_store(cells)
+		return
 	var n := 0
 	for p in cells:
 		var top := Vector3i(p.x, game.world.surface_y(p.x, p.z) - 1, p.z)
@@ -91,3 +112,15 @@ func on_tap(screen: Vector2) -> void:
 			game.fields.plan(top, crop_id)
 			n += 1
 	_info.text = "%d case(s) de %s prévue(s)." % [n, Fields.crop(crop_id).get("name", crop_id)]
+
+
+func _store(cells: Array[Vector3i]) -> void:
+	var tops: Array = []
+	for p in cells:
+		tops.append(Vector3i(p.x, game.world.surface_y(p.x, p.z), p.z))
+	if zone_mode == "store":
+		var n: int = game.colony.add_store_cells(tops)
+		_info.text = "%d case(s) de réserve ajoutée(s)." % n
+	else:
+		game.colony.remove_store_cells(tops)
+		_info.text = "Réserve retirée."

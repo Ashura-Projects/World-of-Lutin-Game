@@ -23,6 +23,8 @@ func _ready() -> void:
 
 
 var sheet: LutinSheet
+var tools: HudTools
+var build_panel: BuildPanel
 var harvest_panel: HarvestPanel
 var jobs_panel: JobsPanel
 var zones_panel: ZonesPanel
@@ -241,33 +243,27 @@ func _refresh_resources() -> void:
 
 ## Mode Construire : barre des matériaux + curseur d'étage (bord droit).
 func _setup_build(tool: BuildTool, view: WorldView) -> void:
+	tools = HudTools.new()
+	add_child(tools)
+	tools.setup(self, _game.camera, view, tool)
 	var panel := BuildPanel.new()
-	panel.setup(tool)
-	panel.position = Vector2(170, 380)
+	panel.setup(tool, _game.board)
+	panel.position = Vector2(80, 300)
 	panel.visible = false
 	root.add_child(panel)
+	build_panel = panel
+	panel.collapsed.connect(func(label: String) -> void: tools.show_bubble(panel, label))
 	var btn := menu_button("Construire")
 	btn.toggle_mode = true
 	btn.toggled.connect(
 		func(on: bool) -> void:
 			panel.visible = on
 			tool.set_active(on)
+			if not on:
+				tools.hide_bubble()
+			if on:
+				_close_others("Construire")
 	)
-	var slider := VSlider.new()
-	slider.min_value = 1
-	slider.max_value = tool.world.size.y
-	slider.value = tool.world.size.y
-	slider.step = 1
-	slider.position = Vector2(1540, 90)
-	slider.size = Vector2(50, 500)
-	slider.custom_minimum_size = Vector2(50, 500)
-	slider.value_changed.connect(
-		func(v: float) -> void:
-			var y := int(v) if v < tool.world.size.y else 9999
-			view.set_max_y(y)
-			tool.max_y = y
-	)
-	root.add_child(slider)
 
 
 func _bar(rect: Rect2) -> Panel:
@@ -298,6 +294,7 @@ func _build_top() -> void:
 	_fps_label = Label.new()
 	_fps_label.position = Vector2(18, 64)
 	_fps_label.add_theme_color_override("font_color", UiStyle.TXT_D)
+	_fps_label.visible = false  # mesure : visible seulement en débogage
 	bar.add_child(_fps_label)
 	var gear := Button.new()
 	gear.text = "⚙"

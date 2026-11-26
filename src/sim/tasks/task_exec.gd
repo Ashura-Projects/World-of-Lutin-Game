@@ -56,7 +56,7 @@ func start_delivery(l: Lutin) -> bool:
 	if l.carrying.has("pickup"):
 		l.carrying = {}
 		return false
-	return board.colony.send(l, board.colony.stock.pos, true)
+	return board.colony.send(l, board.colony.store_near(l.cell), true)
 
 
 func arrived(l: Lutin) -> void:
@@ -73,10 +73,10 @@ func arrived(l: Lutin) -> void:
 		var got := board.ground.pick(cell, int(_work.get("carry_capacity", 4)))
 		l.carrying = got
 		if not got.is_empty():
-			board.colony.send(l, board.colony.stock.pos, true)
+			board.colony.send(l, board.colony.store_near(l.cell), true)
 		return
 	if not l.carrying.is_empty():
-		if Colony._near(l.cell, board.colony.stock.pos, 2):
+		if board.colony.at_store(l.cell):
 			board.colony.stock.add(l.carrying["id"], int(l.carrying["n"]))
 			l.carrying = {}
 		return

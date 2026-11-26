@@ -52,7 +52,7 @@ func start(l: Lutin, t: Dictionary) -> bool:
 	if not has_materials(t) or not can_place(t):
 		t["blocked"] = GameClock.tick_index + 5 * GameClock.ticks_per_second()
 		return false
-	if not board.colony.send(l, board.colony.stock.pos, true):
+	if not board.colony.send(l, board.colony.store_near(l.cell), true):
 		t["blocked"] = GameClock.tick_index + 30 * GameClock.ticks_per_second()
 		return false
 	t["reserved"] = l.id

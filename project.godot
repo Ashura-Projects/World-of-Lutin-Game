@@ -5,7 +5,7 @@ config_version=5
 [application]
 
 config/name="World of Lutin"
-config/version="1.0.0"
+config/version="1.0.1"
 config/description="Construction en blocs, gestion et stratégie médiéval — projet d'Ashura."
 run/main_scene="res://src/ui/title_screen.tscn"
 config/features=PackedStringArray("4.7", "Mobile")

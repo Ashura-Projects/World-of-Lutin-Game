@@ -94,6 +94,14 @@ Settings, GameSetup), GUT 9.7.1 headless, export Android arm64 (`com.ashura.worl
 - Commerce (marchand + dialogue), guérisseur actif, Paramètres (volumes, qualité), Crédits, version 1.0.0.
 - Performance : recherches de chemin étalées sur plusieurs ticks ; tick moyen 3,5 ms (50 lutins, grande carte, CPU du cloud).
 
+## v1.0.1 (retours d'Ashura sur téléphone)
+- Fait : boutons caméra, jauge d'étage déroulante (+ / − / numéro de couche), menu Construire par catégories avec bulle,
+  annulation des plans / ordres de récolte / démontage, cercles lumineux sur les cibles, zones de réserve.
+- Preuves : 92 tests GUT verts (nouveau `tests/test_orders.gd`), gdlint propre, captures `build/captures/v101_*.png`.
+- Choix faits sans Ashura : la réserve reste un stock global ; une zone de réserve est un **point de dépôt/retrait**
+  supplémentaire (le plus proche est utilisé), pas un inventaire séparé. Démonter un objet rend tout son coût.
+- Non testé : sur téléphone (à faire par Ashura).
+
 ## Problèmes connus (v1.0.0)
 - **Pas testé sur le téléphone** : ni les 60 img/s, ni le tactile réel, ni le son (le cloud n'a pas de carte son).
 - Le tick reste au-dessus de 4 ms au pire (~10 ms) ; sur téléphone il peut être 1,5 à 2 fois plus lent.

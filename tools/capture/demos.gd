@@ -38,6 +38,18 @@ static func run(game: Node, action: String) -> void:
 		"construire":
 			_tour(game)
 			game.hud.menu_button("Construire").button_pressed = true
+		"menu_meubles":
+			_tour(game)
+			game.hud.menu_button("Construire").button_pressed = true
+			game.hud.build_panel.show_category("furniture")
+			game.hud.tools.set_floor(6)
+			game.hud.tools._floor_panel.visible = true
+		"bulle":
+			recolte(game)
+			game.hud.menu_button("Récolter").button_pressed = false
+			game.hud.menu_button("Construire").button_pressed = true
+			game.hud.build_panel._choose_object("table", "Table")
+			game.colony.add_store_cells(Shapes.rect(game.colony.stock.pos + Vector3i(3, 0, -3), game.colony.stock.pos + Vector3i(6, 0, -1)))
 
 
 static func _tour(game: Node) -> void:

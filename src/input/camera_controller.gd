@@ -101,7 +101,8 @@ func _two_finger() -> void:
 		var ang0 := (b0 - a0).angle()
 		var ang1 := (b1 - a1).angle()
 		yaw -= wrapf(ang1 - ang0, -PI, PI) * float(_cfg.get("rotate_speed", 1.0))
-		var mid_dy := ((a1 + b1) - (a0 + b0)).y * 0.5
-		pitch += mid_dy * 0.01 * float(_cfg.get("tilt_speed", 0.25))
+		# glisser à 2 doigts : déplacer la caméra (même en mode construction) ; l'inclinaison passe par les boutons
+		var mid := ((a1 + b1) - (a0 + b0)) * 0.5
+		pan_screen(mid)
 		_apply()
 	_last_two = pts
