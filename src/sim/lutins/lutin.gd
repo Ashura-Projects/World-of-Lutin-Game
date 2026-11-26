@@ -23,6 +23,11 @@ var task_id: int = -1
 var carrying: Dictionary = {}  # {"id": ressource, "n": quantité}
 var home := Vector3i(-1, -1, -1)  # tente ou lit attribué
 var mobilized: bool = false
+var weapon: String = ""  # arme prise en réserve pendant la mobilisation
+var combat_xp: float = 0.0
+var kills: Dictionary = {}  # espèce -> nombre abattu
+var hiding: bool = false
+var attack_cool: int = 0
 
 
 func place_at(c: Vector3i) -> void:
@@ -114,7 +119,10 @@ func from_dict(d: Dictionary) -> void:
 	jobs_known = d.get("jobs", {})
 	for k: String in jobs_known:
 		jobs_known[k] = {"level": int(jobs_known[k]["level"]), "xp": float(jobs_known[k]["xp"])}
-	aptitudes = d.get("apt", aptitudes)
+	aptitudes = {}
+	var apt: Dictionary = d.get("apt", {})
+	for k: String in apt:
+		aptitudes[k] = int(apt[k])
 	needs = d["needs"]
 	hp = float(d.get("hp", 50))
 	var p: Array = d["pos"]
@@ -132,3 +140,10 @@ func from_dict(d: Dictionary) -> void:
 	var h: Array = d.get("home", [-1, -1, -1])
 	home = Vector3i(int(h[0]), int(h[1]), int(h[2]))
 	mobilized = bool(d.get("mob", false))
+	weapon = str(d.get("weapon", ""))
+	combat_xp = float(d.get("cxp", 0.0))
+	kills = {}
+	var ks: Dictionary = d.get("kills", {})
+	for k: String in ks:
+		kills[k] = int(ks[k])
+	hiding = bool(d.get("hiding", false))

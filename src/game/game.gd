@@ -24,6 +24,8 @@ var plans_view: PlansView
 var fields: Fields
 var production: Production
 var fields_view: FieldsView
+var sim: GameSim
+var _autosave_ticks: int = 0
 var _gen_task: int = -1
 var _loading: Label
 
@@ -56,30 +58,21 @@ func _process(_delta: float) -> void:
 
 
 func _on_world_ready() -> void:
-	colony = Colony.new(world)
-	flora = Flora.new()
-	fauna = Fauna.new(world)
-	ground = GroundItems.new()
-	board = TaskBoard.new(world, colony, flora, fauna, ground)
-	structures = Structures.new()
-	board.structures = structures
-	colony.structures = structures
-	fields = Fields.new()
-	board.fields = fields
-	production = Production.new(board, fields)
-	for pair: Array in [
-		["world", world], ["colony", colony], ["flora", flora], ["fauna", fauna], ["ground", ground], ["tasks", board]
-	]:
-		SaveManager.register(pair[0], pair[1])
+	sim = GameSim.new(world)
+	colony = sim.colony
+	flora = sim.flora
+	fauna = sim.fauna
+	ground = sim.ground
+	board = sim.board
+	structures = sim.structures
+	fields = sim.fields
+	production = sim.production
+	sim.register_saves()
 	var loaded := GameSetup.load_slot != "" and SaveManager.load_game(GameSetup.load_slot)
 	if not loaded:
-		var c := _start_spot()
-		flora.load_from_generator(generator)
-		colony.spawn_start(c, GameSetup.lutin_count)
-		colony.auto_assign_jobs()
-		fauna.populate(["deer", "boar"], c)
+		sim.new_game(generator, _start_spot(), GameSetup.lutin_count)
 	EventBus.tick.connect(_on_tick)
-	EventBus.day_changed.connect(func(_d: int) -> void: production.daily())
+	EventBus.day_changed.connect(func(_d: int) -> void: sim.daily())
 	world_view = WorldView.new()
 	add_child(world_view)
 	world_view.setup(world)
@@ -123,15 +116,18 @@ func _on_world_ready() -> void:
 
 
 func _on_tick(_i: int) -> void:
-	colony.tick()
-	if GameClock.tick_index % GameClock.ticks_per_second() == 0:
-		production.plan()
-		colony.heating_ok = not production.fire_out
-	if GameClock.tick_index % 2 == 0:
-		var cells := []
-		for l in colony.lutins:
-			cells.append(l.cell)
-		fauna.tick(cells)
+	sim.tick()
+	_autosave_ticks += 1
+	if _autosave_ticks >= int(DataRegistry.get_table("time").get("autosave_s", 300)) * GameClock.ticks_per_second():
+		_autosave_ticks = 0
+		SaveManager.save_game("auto")
+
+
+## Sauvegarde quand l'appli passe en arrière-plan ou se ferme (téléphone).
+func _notification(what: int) -> void:
+	if what in [NOTIFICATION_APPLICATION_PAUSED, NOTIFICATION_WM_CLOSE_REQUEST, NOTIFICATION_WM_GO_BACK_REQUEST]:
+		if sim != null:
+			SaveManager.save_game("auto")
 
 
 ## Point de départ : case de plaine sèche la plus proche du centre de la carte.
@@ -166,5 +162,5 @@ func _on_tap(screen: Vector2) -> void:
 
 
 func _exit_tree() -> void:
-	for k in ["world", "colony", "flora", "fauna", "ground", "structures", "production", "tasks"]:
-		SaveManager.unregister(k)
+	if sim != null:
+		sim.unregister_saves()

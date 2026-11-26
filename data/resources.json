@@ -320,6 +320,12 @@
       "name": "Or",
       "category": "currency",
       "stack": 999
+    },
+    {
+      "id": "spear",
+      "name": "Lance",
+      "category": "weapon",
+      "stack": 5
     }
   ]
 }

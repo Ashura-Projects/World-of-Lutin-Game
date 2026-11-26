@@ -1,0 +1,55 @@
+{
+  "_doc": "Objectifs facultatifs proposés au fil de la partie. kind : stock (ressource ≥ n), built (bâtiments de ce type ≥ n), pop (lutins ≥ n), kills (prédateurs abattus ≥ n), tower (hauteur construite ≥ n), winter (passer un hiver sans mort).",
+  "objectives": [
+    {
+      "id": "tents",
+      "name": "Monter une tente par lutin",
+      "kind": "homes"
+    },
+    {
+      "id": "logs50",
+      "name": "Rentrer 50 bûches",
+      "kind": "stock",
+      "res": "log",
+      "n": 50
+    },
+    {
+      "id": "fire",
+      "name": "Allumer un feu de camp",
+      "kind": "built",
+      "what": "campfire",
+      "n": 1
+    },
+    {
+      "id": "bread20",
+      "name": "Avoir 20 pains en réserve",
+      "kind": "stock",
+      "res": "bread",
+      "n": 20
+    },
+    {
+      "id": "wolf",
+      "name": "Abattre un loup",
+      "kind": "kills",
+      "what": "wolf",
+      "n": 1
+    },
+    {
+      "id": "tower20",
+      "name": "Construire une tour de 20 blocs",
+      "kind": "tower",
+      "n": 20
+    },
+    {
+      "id": "winter",
+      "name": "Passer un hiver sans perdre de lutin",
+      "kind": "winter"
+    },
+    {
+      "id": "pop12",
+      "name": "Atteindre 12 lutins",
+      "kind": "pop",
+      "n": 12
+    }
+  ]
+}

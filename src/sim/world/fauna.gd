@@ -98,8 +98,8 @@ func tick(colony_cells: Array) -> void:
 			else:
 				a["pos"] += to.normalized() * step
 			continue
-		if a["wait"] > 0:
-			continue
+		if a["wait"] > 0 or int(a.get("prey", -1)) != -1:
+			continue  # un prédateur en chasse suit sa proie (Combat)
 		# fuite si un lutin approche (cerf), sinon errance
 		var flee := float(d.get("flee_radius", 0))
 		var dest: Vector3i = a["cell"] + Vector3i(Rng.randi_range(-6, 6), 0, Rng.randi_range(-6, 6))

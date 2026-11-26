@@ -65,6 +65,19 @@
     "alert_bell": {
       "mobilize": "les adultes prennent l'arme en réserve et vont au point de rassemblement",
       "hide": "tous courent à l'abri le plus proche (tente, maison)"
+    },
+    "_doc2": "Mobilisation : arme prise en réserve (fusil, sinon lance, sinon mains nues). Portée de détection des ennemis : engage_radius.",
+    "engage_radius": 16,
+    "weapon_priority": [
+      "flintlock",
+      "spear"
+    ],
+    "self_potion_below": 0.5,
+    "death_removes": true,
+    "unarmed": {
+      "attack": 3,
+      "reach": 1.0,
+      "every_s": 1.2
     }
   },
   "movement": {

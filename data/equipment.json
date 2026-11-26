@@ -20,7 +20,8 @@
           "beam": 1
         },
         "work": 25
-      }
+      },
+      "every_s": 1.6
     },
     {
       "id": "short_sword",
@@ -53,7 +54,8 @@
         },
         "work": 40
       },
-      "ammo": "shot"
+      "ammo": "shot",
+      "every_s": 3.0
     },
     {
       "id": "shot",

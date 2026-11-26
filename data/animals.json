@@ -82,7 +82,9 @@
         "hide": 1
       },
       "xp": 15,
-      "respawn_days": 15
+      "respawn_days": 15,
+      "aggro_radius": 10,
+      "flee_hp_ratio": 0.25
     },
     {
       "id": "bear",
@@ -107,7 +109,8 @@
         "hide": 3
       },
       "xp": 60,
-      "respawn_days": 30
+      "respawn_days": 30,
+      "aggro_radius": 5
     }
   ]
 }

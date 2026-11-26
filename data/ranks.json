@@ -1,0 +1,31 @@
+{
+  "_doc": "Rangs du village (Phase 1) : conditions minimales. Chaque rang débloque la suite.",
+  "ranks": [
+    {
+      "id": "camp",
+      "name": "Campement",
+      "pop": 0,
+      "buildings": 0
+    },
+    {
+      "id": "hamlet",
+      "name": "Hameau",
+      "pop": 6,
+      "buildings": 4
+    },
+    {
+      "id": "village",
+      "name": "Village",
+      "pop": 12,
+      "buildings": 10,
+      "rooms": 2
+    },
+    {
+      "id": "borough",
+      "name": "Bourg",
+      "pop": 25,
+      "buildings": 25,
+      "rooms": 6
+    }
+  ]
+}

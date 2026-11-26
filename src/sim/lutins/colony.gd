@@ -4,6 +4,7 @@ extends RefCounted
 ## Logique pure (sans nœud) : un appel à tick() = un tick de simulation.
 
 signal lutin_added(l: Lutin)
+signal lutin_removed(id: int)
 
 var world: VoxelWorld
 var lutins: Array[Lutin] = []
@@ -12,6 +13,7 @@ var next_id: int = 1
 var task_board: RefCounted = null  # TaskBoard (J4) : fournit des tâches aux lutins libres
 var structures: Structures = null  # sources de chaleur (J6)
 var heating_ok: bool = true  # faux si le bois de chauffage manque
+var combat: RefCounted = null  # Combat (J7) : mobilisation, cachette
 var _pop: Dictionary
 var _move: Dictionary
 var _needs: Dictionary
@@ -87,6 +89,17 @@ func _update_needs(l: Lutin, tpd: float) -> void:
 
 
 func _decide(l: Lutin, night: bool) -> void:
+	if l.mobilized:
+		return  # la mobilisation (Combat) dirige le lutin
+	if l.hiding:
+		if l.state == Lutin.State.WALK and l.has_path():
+			return
+		var shelter := l.home if l.home.y >= 0 else stock.pos
+		if not _near(l.cell, shelter, 1):
+			_go(l, shelter, "abri", true)
+		else:
+			l.state = Lutin.State.SLEEP
+		return
 	if l.state == Lutin.State.WORK:
 		var urgent: bool = l.needs["hunger"] < float(_needs["hunger"]["critical"]) * 2.0 or l.needs["sleep"] < 15.0
 		if not urgent:
@@ -195,6 +208,18 @@ func auto_assign_jobs() -> void:
 			break
 		if change_job(lutins[i], job):
 			i += 1
+
+
+func remove_lutin(l: Lutin) -> void:
+	if task_board != null:
+		task_board.call("release", l)
+	if l.weapon != "":
+		stock.add(l.weapon, 1)
+	var tool = DataRegistry.find("jobs", "jobs", l.job).get("tool")
+	if tool != null:
+		stock.add(str(tool), 1)
+	lutins.erase(l)
+	lutin_removed.emit(l.id)
 
 
 func find_lutin(id: int) -> Lutin:

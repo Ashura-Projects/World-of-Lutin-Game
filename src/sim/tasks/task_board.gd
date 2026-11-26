@@ -293,6 +293,7 @@ func from_dict(d: Dictionary) -> void:
 		e["cell"] = Vector3i(int(c[0]), int(c[1]), int(c[2]))
 		e["id"] = int(e["id"])
 		e["reserved"] = -1
+		e["blocked"] = int(e.get("blocked", 0))
 		e["target"] = int(e.get("target", -1))
 		e.erase("phase")
 		if e.has("block"):
