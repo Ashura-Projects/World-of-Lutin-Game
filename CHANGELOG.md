@@ -15,6 +15,7 @@ Retours d'Ashura sur la 1.0.1.
   boutons caméra et étage sans bruit de clic.
 - **Musique** : 7 morceaux médiévaux et apaisants de Kevin MacLeod (CC BY 4.0, voir Crédits) ; playlist dans
   Paramètres (toutes en boucle, aléatoire, un seul morceau, cocher ses morceaux).
+- L'application s'appelle maintenant **World of Lutins**.
 - **Logo** de l'application, **fond d'accueil** et **écran de chargement** (barre, phrases drôles, bouton Jouer).
 - Corrections : l'XP de combat, les liens de famille, la faction, la recherche et le commerce sont maintenant bien
   sauvegardés ; plus de prénoms en double au départ.

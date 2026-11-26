@@ -1,4 +1,4 @@
-# World of Lutin
+# World of Lutins
 
 Jeu mobile Android de construction en blocs, gestion et stratégie médiéval-fantastique.
 L'esprit de *Castle Story*, amélioré : économie, métiers, agriculture, saisons, puis royaume, guerres et diplomatie.

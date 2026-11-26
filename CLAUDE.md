@@ -1,4 +1,4 @@
-# CLAUDE.md — Règles du projet « World of Lutin »
+# CLAUDE.md — Règles du projet « World of Lutins »
 
 Jeu mobile Android de **construction en blocs, gestion et stratégie** médiéval-fantastique.
 Base : l'esprit de *Castle Story* (petites créatures à qui on donne des ordres, construction bloc par bloc),

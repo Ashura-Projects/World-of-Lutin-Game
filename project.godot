@@ -1,10 +1,10 @@
-; Fichier de configuration du projet Godot (World of Lutin).
+; Fichier de configuration du projet Godot (World of Lutins).
 
 config_version=5
 
 [application]
 
-config/name="World of Lutin"
+config/name="World of Lutins"
 config/version="1.1.0"
 config/description="Construction en blocs, gestion et stratégie médiéval — projet d'Ashura."
 run/main_scene="res://src/ui/title_screen.tscn"

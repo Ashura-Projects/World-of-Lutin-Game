@@ -1,4 +1,4 @@
-# STYLE VALIDÉ — World of Lutin
+# STYLE VALIDÉ — World of Lutins
 
 Validé par Ashura le 2026-11-26. **Référence figée** pour tous les assets du jeu (CLAUDE.md §5). Planches : `docs/style/`.
 Scripts de référence (modèles, couleurs, poses) : `tools/style/` — le jeu réutilise les mêmes formes et couleurs.

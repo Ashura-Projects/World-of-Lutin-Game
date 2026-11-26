@@ -9,7 +9,7 @@ func _ready() -> void:
 	var v := VBoxContainer.new()
 	v.add_theme_constant_override("separation", 10)
 	add_child(v)
-	v.add_child(UiStyle.header("World of Lutin", 36, queue_free))
+	v.add_child(UiStyle.header("World of Lutins", 36, queue_free))
 	var l := Label.new()
 	l.text = (
 		"\n"

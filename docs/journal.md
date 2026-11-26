@@ -116,8 +116,8 @@ Settings, GameSetup), GUT 9.7.1 headless, export Android arm64 (`com.ashura.worl
     améliore les prix du marchand ;
   - un soldat est un métier sans tâche civile ; 2 places sans garnison, puis 1 par lit de garnison ;
   - le stock reste commun, les réserves décident seulement où déposer et prendre chaque ressource ;
-  - le nom affiché sur le logo et le fond est « World of Lutins » ; le nom de l'appli reste « World of Lutin »
-    (à confirmer par Ashura).
+  - nom de l'appli : « World of Lutins » (comme le logo), validé par Ashura ; l'identifiant Android ne change pas
+    (com.ashura.worldoflutin) pour garder les sauvegardes et installer par-dessus.
 - Non testé : sur téléphone.
 
 ## Problèmes connus (v1.0.0)
