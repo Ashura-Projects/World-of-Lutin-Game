@@ -1,6 +1,6 @@
 class_name LutinModel
-extends Node3D
-## Modèle du lutin (variante A « Bouille », peau bleu sombre) construit à partir de primitives, comme les planches validées.
+## Modèle du lutin (variante A « Bouille », peau bleu sombre),
+## construit à partir de primitives comme les planches validées.
 
 var body: Node3D
 var arm_r: MeshInstance3D
