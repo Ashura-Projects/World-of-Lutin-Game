@@ -1,0 +1,12 @@
+{
+  "_doc": "Caméra libre tactile : glisser = déplacer, pincer = zoom, 2 doigts tournent = pivoter, 2 doigts verticaux = incliner.",
+  "distance": [6, 140],
+  "default_distance": 40,
+  "pitch_deg": [25, 85],
+  "default_pitch_deg": 50,
+  "pan_speed": 1.0,
+  "rotate_speed": 1.0,
+  "tilt_speed": 0.25,
+  "zoom_wheel_factor": 1.12,
+  "fov": 45
+}

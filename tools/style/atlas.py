@@ -20,7 +20,7 @@ TILES = [
     "bedrock", "grass_top", "grass_side", "dirt", "fertile_soil", "sand", "clay", "stone",
     "iron_ore", "coal_ore", "snow", "snow_side", "water", "wood_top", "wood_side", "plank",
     "cobble", "cut_stone", "brick", "thatch_top", "thatch_side", "dirt_packed", "ice", "leaves",
-    "gravel", "deep_stone",
+    "gravel", "deep_stone", "beam", "road_stone", "field_wet",
 ]
 
 PALETTES = {
@@ -133,6 +133,28 @@ def make_tile(name, p, rng):
         for y in range(0, TILE, 6):
             for x in range(TILE):
                 img.putpixel((x, (y + x // 8) % TILE), shade(p["clay"], 0.88))
+    elif name == "beam":  # poutres : grosses lames verticales avec chevilles
+        for x in range(TILE):
+            for y in range(TILE):
+                f = 1 + rng.uniform(-0.05, 0.05) - (0.3 if x % 16 in (0, 15) else 0)
+                img.putpixel((x, y), shade(p["wood"], f * 1.05))
+        for cx in (8, 24):
+            for cy in (5, 26):
+                img.putpixel((cx, cy), shade(p["wood"], 0.5))
+    elif name == "road_stone":  # pavés réguliers
+        noise_fill(img, shade(p["mortar"], 0.8), 0.04, rng)
+        for gy in range(4):
+            for gx in range(4):
+                f = rng.uniform(0.85, 1.1)
+                ox = 4 if gy % 2 else 0
+                for y in range(gy * 8 + 1, gy * 8 + 7):
+                    for x in range(gx * 8 + 1, gx * 8 + 7):
+                        img.putpixel(((x + ox) % TILE, y), shade(p["cobble"], f + rng.uniform(-0.03, 0.03)))
+    elif name == "field_wet":
+        noise_fill(img, shade(p["fertile"], 0.85), 0.1, rng)
+        for y in range(2, TILE, 6):
+            for x in range(TILE):
+                img.putpixel((x, y), shade(p["fertile"], 0.55))
     elif name == "gravel":
         noise_fill(img, shade(p["stone"], 0.8), 0.06, rng)
         for _ in range(70):

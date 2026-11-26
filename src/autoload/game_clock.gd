@@ -25,8 +25,11 @@ func configure() -> void:
 	_max_ticks_per_frame = int(t.get("max_ticks_per_frame", 8))
 
 
-func reset() -> void:
+## Nouvelle partie : l'horloge démarre au matin (data/time.json › start_time_of_day).
+func reset(at_start_time: bool = false) -> void:
 	tick_index = 0
+	if at_start_time:
+		tick_index = int(float(DataRegistry.get_table("time").get("start_time_of_day", 0.0)) * _ticks_per_day)
 	_accumulator = 0.0
 
 

@@ -4,13 +4,31 @@
   "day_seconds": 360,
   "days_per_season": 5,
   "seasons": [
-    {"id": "spring", "name": "Printemps"},
-    {"id": "summer", "name": "Été"},
-    {"id": "autumn", "name": "Automne"},
-    {"id": "winter", "name": "Hiver"}
+    {
+      "id": "spring",
+      "name": "Printemps"
+    },
+    {
+      "id": "summer",
+      "name": "Été"
+    },
+    {
+      "id": "autumn",
+      "name": "Automne"
+    },
+    {
+      "id": "winter",
+      "name": "Hiver"
+    }
   ],
-  "speeds": [0, 1, 2, 4],
+  "speeds": [
+    0,
+    1,
+    2,
+    4
+  ],
   "dawn": 0.25,
   "dusk": 0.8,
-  "max_ticks_per_frame": 8
+  "max_ticks_per_frame": 8,
+  "start_time_of_day": 0.3
 }

@@ -1,0 +1,8 @@
+{
+  "_doc": "Ambiance (STYLE-VALIDE §8). Couleurs en hexadécimal. Le soleil suit l'heure du jour.",
+  "sky_day": "a0b0c8", "sky_dusk": "54566a", "sky_night": "1a1e2c",
+  "sun_day": "ffecce", "sun_dusk": "ffa05a", "sun_energy_day": 1.25, "sun_energy_night": 0.08,
+  "ambient_energy": 0.55,
+  "fog_density": 0.006, "fog_color_day": "aab4c4",
+  "winter_tint": "d2deff"
+}

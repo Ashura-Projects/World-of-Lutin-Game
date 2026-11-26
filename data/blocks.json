@@ -1,5 +1,5 @@
 {
-  "_doc": "Types de blocs. id numérique stable (stocké dans les chunks, 0 = air). drop = ressource obtenue en creusant. cost = ressource pour poser. hardness = secondes de travail à expérience normale. speed_mult = vitesse de marche des lutins sur ce bloc (routes).",
+  "_doc": "Types de blocs. id numérique stable (stocké dans les chunks, 0 = air). drop = ressource obtenue en creusant. cost = ressource pour poser. hardness = secondes de travail à expérience normale. speed_mult = vitesse de marche des lutins sur ce bloc (routes). tiles = tuiles de l'atlas (assets/textures/blocks_atlas.png) pour le dessus, les côtés, le dessous.",
   "blocks": [
     {
       "num": 0,
@@ -12,7 +12,12 @@
       "id": "bedrock",
       "name": "Socle",
       "solid": true,
-      "diggable": false
+      "diggable": false,
+      "tiles": {
+        "top": "bedrock",
+        "side": "bedrock",
+        "bottom": "bedrock"
+      }
     },
     {
       "num": 2,
@@ -23,7 +28,12 @@
         "dirt": 1
       },
       "hardness": 2,
-      "tool": "shovel"
+      "tool": "shovel",
+      "tiles": {
+        "top": "grass_top",
+        "side": "grass_side",
+        "bottom": "dirt"
+      }
     },
     {
       "num": 3,
@@ -34,7 +44,12 @@
         "dirt": 1
       },
       "hardness": 2,
-      "tool": "shovel"
+      "tool": "shovel",
+      "tiles": {
+        "top": "dirt",
+        "side": "dirt",
+        "bottom": "dirt"
+      }
     },
     {
       "num": 4,
@@ -46,7 +61,12 @@
       },
       "hardness": 2,
       "tool": "shovel",
-      "farmable": true
+      "farmable": true,
+      "tiles": {
+        "top": "fertile_soil",
+        "side": "dirt",
+        "bottom": "dirt"
+      }
     },
     {
       "num": 5,
@@ -57,7 +77,12 @@
         "sand": 1
       },
       "hardness": 2,
-      "tool": "shovel"
+      "tool": "shovel",
+      "tiles": {
+        "top": "sand",
+        "side": "sand",
+        "bottom": "sand"
+      }
     },
     {
       "num": 6,
@@ -68,7 +93,12 @@
         "clay": 1
       },
       "hardness": 3,
-      "tool": "shovel"
+      "tool": "shovel",
+      "tiles": {
+        "top": "clay",
+        "side": "clay",
+        "bottom": "clay"
+      }
     },
     {
       "num": 7,
@@ -79,7 +109,12 @@
         "stone": 1
       },
       "hardness": 6,
-      "tool": "pickaxe"
+      "tool": "pickaxe",
+      "tiles": {
+        "top": "stone",
+        "side": "stone",
+        "bottom": "stone"
+      }
     },
     {
       "num": 8,
@@ -90,7 +125,12 @@
         "iron_ore": 1
       },
       "hardness": 8,
-      "tool": "pickaxe"
+      "tool": "pickaxe",
+      "tiles": {
+        "top": "iron_ore",
+        "side": "iron_ore",
+        "bottom": "iron_ore"
+      }
     },
     {
       "num": 9,
@@ -101,7 +141,12 @@
         "coal": 1
       },
       "hardness": 7,
-      "tool": "pickaxe"
+      "tool": "pickaxe",
+      "tiles": {
+        "top": "coal_ore",
+        "side": "coal_ore",
+        "bottom": "coal_ore"
+      }
     },
     {
       "num": 10,
@@ -110,7 +155,12 @@
       "solid": true,
       "drop": {},
       "hardness": 1,
-      "tool": "shovel"
+      "tool": "shovel",
+      "tiles": {
+        "top": "snow",
+        "side": "snow_side",
+        "bottom": "dirt"
+      }
     },
     {
       "num": 11,
@@ -118,7 +168,12 @@
       "name": "Eau",
       "solid": false,
       "liquid": true,
-      "diggable": false
+      "diggable": false,
+      "tiles": {
+        "top": "water",
+        "side": "water",
+        "bottom": "water"
+      }
     },
     {
       "num": 12,
@@ -129,7 +184,12 @@
         "stone": 1
       },
       "hardness": 3,
-      "tool": "shovel"
+      "tool": "shovel",
+      "tiles": {
+        "top": "gravel",
+        "side": "gravel",
+        "bottom": "gravel"
+      }
     },
     {
       "num": 13,
@@ -140,7 +200,12 @@
         "stone": 1
       },
       "hardness": 9,
-      "tool": "pickaxe"
+      "tool": "pickaxe",
+      "tiles": {
+        "top": "deep_stone",
+        "side": "deep_stone",
+        "bottom": "deep_stone"
+      }
     },
     {
       "num": 20,
@@ -150,7 +215,12 @@
       "cost": {
         "log": 1
       },
-      "build_time": 2
+      "build_time": 2,
+      "tiles": {
+        "top": "wood_top",
+        "side": "wood_side",
+        "bottom": "wood_top"
+      }
     },
     {
       "num": 21,
@@ -160,7 +230,12 @@
       "cost": {
         "plank": 2
       },
-      "build_time": 2
+      "build_time": 2,
+      "tiles": {
+        "top": "plank",
+        "side": "plank",
+        "bottom": "plank"
+      }
     },
     {
       "num": 22,
@@ -170,7 +245,12 @@
       "cost": {
         "stone": 1
       },
-      "build_time": 3
+      "build_time": 3,
+      "tiles": {
+        "top": "cobble",
+        "side": "cobble",
+        "bottom": "cobble"
+      }
     },
     {
       "num": 23,
@@ -180,7 +260,12 @@
       "cost": {
         "cut_stone": 1
       },
-      "build_time": 3
+      "build_time": 3,
+      "tiles": {
+        "top": "cut_stone",
+        "side": "cut_stone",
+        "bottom": "cut_stone"
+      }
     },
     {
       "num": 24,
@@ -190,7 +275,12 @@
       "cost": {
         "brick": 2
       },
-      "build_time": 3
+      "build_time": 3,
+      "tiles": {
+        "top": "brick",
+        "side": "brick",
+        "bottom": "brick"
+      }
     },
     {
       "num": 25,
@@ -200,7 +290,12 @@
       "cost": {
         "straw": 3
       },
-      "build_time": 1
+      "build_time": 1,
+      "tiles": {
+        "top": "thatch_top",
+        "side": "thatch_side",
+        "bottom": "thatch_top"
+      }
     },
     {
       "num": 26,
@@ -210,7 +305,12 @@
       "cost": {
         "dirt": 1
       },
-      "build_time": 1
+      "build_time": 1,
+      "tiles": {
+        "top": "dirt_packed",
+        "side": "dirt_packed",
+        "bottom": "dirt_packed"
+      }
     },
     {
       "num": 27,
@@ -220,7 +320,12 @@
       "cost": {
         "beam": 1
       },
-      "build_time": 2
+      "build_time": 2,
+      "tiles": {
+        "top": "beam",
+        "side": "beam",
+        "bottom": "beam"
+      }
     },
     {
       "num": 28,
@@ -231,7 +336,12 @@
       "cost": {},
       "build_time": 1,
       "tool": "hoe",
-      "_note": "posée comme une construction sur terre/herbe : le fermier la laboure ; la culture est choisie par case (crops.json)"
+      "_note": "posée comme une construction sur terre/herbe : le fermier la laboure ; la culture est choisie par case (crops.json)",
+      "tiles": {
+        "top": "field_wet",
+        "side": "dirt",
+        "bottom": "dirt"
+      }
     },
     {
       "num": 29,
@@ -244,7 +354,12 @@
       },
       "build_time": 1,
       "speed_mult": 1.3,
-      "_note": "remplace le bloc du dessus du sol (posé à plat, comme un champ)"
+      "_note": "remplace le bloc du dessus du sol (posé à plat, comme un champ)",
+      "tiles": {
+        "top": "dirt_packed",
+        "side": "dirt",
+        "bottom": "dirt"
+      }
     },
     {
       "num": 30,
@@ -256,7 +371,12 @@
         "stone": 1
       },
       "build_time": 2,
-      "speed_mult": 1.6
+      "speed_mult": 1.6,
+      "tiles": {
+        "top": "road_stone",
+        "side": "cobble",
+        "bottom": "dirt"
+      }
     }
   ]
 }
