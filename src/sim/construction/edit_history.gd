@@ -3,9 +3,9 @@ extends RefCounted
 ## Annuler / Rétablir pour la construction (chaque action = liste de [position, ancien id, nouvel id]).
 
 var world: VoxelWorld
+var max_size: int = 64
 var _undo: Array = []
 var _redo: Array = []
-var max_size: int = 64
 
 
 func _init(w: VoxelWorld) -> void:
