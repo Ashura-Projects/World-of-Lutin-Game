@@ -6,7 +6,7 @@ Titres en Cinzel (OFL, assets/fonts/), textes en DejaVu Sans (lisibilité télé
 import math
 from pathlib import Path
 
-from PIL import Image, ImageDraw, ImageFilter, ImageFont
+from PIL import Image, ImageDraw, ImageEnhance, ImageFilter, ImageFont
 
 ROOT = Path(__file__).resolve().parents[2]
 DEJAVU = "/usr/share/fonts/truetype/dejavu/"
@@ -212,7 +212,7 @@ def circle_portrait(img, path, cx, cy, r):
     d = ImageDraw.Draw(img)
     d.ellipse((cx - r - 8, cy - r - 8, cx + r + 8, cy + r + 8), fill=GOLD_D)
     d.ellipse((cx - r - 4, cy - r - 4, cx + r + 4, cy + r + 4), fill=GOLD)
-    por = Image.open(path).convert("RGB").resize((2 * r, 2 * r))
+    por = ImageEnhance.Brightness(Image.open(path).convert("RGB").resize((2 * r, 2 * r))).enhance(1.45)
     mask = Image.new("L", por.size, 0)
     ImageDraw.Draw(mask).ellipse((0, 0, 2 * r - 1, 2 * r - 1), fill=255)
     img.paste(por, (cx - r, cy - r), mask)

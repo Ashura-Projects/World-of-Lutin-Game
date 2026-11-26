@@ -1,44 +1,54 @@
-# Planches de style — à valider par Ashura
+# Planches de style — version 2
 
-Tout est rendu dans **Blender** (modèles low-poly originaux faits par script) sauf la fiche et l'interface (maquettes 2D).
-Régénérer : `tools/style/build_all.sh`.
+Rendus 3D dans **Blender** (modèles faits par script), maquettes d'interface en 2D. Régénérer : `tools/style/build_all.sh`.
 
-## a. Le Lutin — 3 propositions
-![Variantes du lutin](lutin-variantes.png)
-A « Bouille » : tête ronde, bonnet pointu, oreilles en pointe. B « Gland » : corps en œuf, grands yeux, bonnet-cupule. C « Bloc » : formes cubiques assorties au monde en blocs.
-**Question : Lutin A, B ou C ?** (je recommande **A** : lisible de loin, le bonnet change par métier)
+## Déjà validé (v1)
+- Lutin **A « Bouille »** ([planche v1](lutin-variantes.png)) · âges OK · palette **B** comme base, à rendre plus sombre.
 
-## b. Les métiers (variante A)
-![Fiches métiers](fiches-metiers.png)
-16 métiers : une couleur de bonnet + une tenue + un outil bien visible. Les 3 derniers (maître d'école, chercheur, artisan expert) sont formés, sans outil de base.
-**Question : les métiers sont-ils reconnaissables ? Un à changer ?**
+## Retours v1 pris en compte
+- Outil **seulement pendant l'action**, outils retravaillés ; chasseur au **fusil à silex**.
+- Ambiance plus sombre et réaliste (dark fantasy médiéval), **avec une vraie journée** ; ton « murim » **sans magie spectaculaire**.
+- Plaines + rivière gardées, **montagne à explorer** au fond.
+- Fiche : métiers connus (niveau + XP gardés), cloche **Mobiliser / Se cacher**. Fiche de guerrier (Phase 2).
+- Interface : ressources déroulantes, dialogues, boutons **Militaire** et **Commerce**, **engrenage**, menu principal, thème plus travaillé.
 
-## c. Les âges
+## a. Peau du lutin
+![Peaux](lutin-peaux.png)
+Bleu actuel, bleu sombre, ou vert foncé façon gobelin (design restant original).
+**Question : bleu, bleu sombre ou vert foncé ?**
+
+## b. Métiers (repos / action)
+![Métiers](fiches-metiers.png)
+Mains vides au repos ; l'outil apparaît pendant le travail.
+**Question : outils plus lisibles maintenant ? Fusil du chasseur OK ?**
+
+## c. Âges (ambiance sombre)
 ![Âges](ages.png)
-Bébé (petit, tétine), enfant (cartable, bretelles), adulte, ancien (barbe blanche, canne, peau plus pâle, dos voûté).
-**Question : tailles et signes de l'âge OK ?**
 
-## d. Fiche d'un lutin
-![Fiche personnage](fiche-personnage.png)
-Nom, âge, métier + niveau, outil, bâtiment affecté, expérience, aptitudes (savoir, force, adresse, magie), besoins (faim, sommeil, chaleur, moral).
-**Question : rien ne manque ? Style « parchemin + bois » OK ?**
-
-## e. Les blocs
+## d. Blocs
 ![Blocs](blocs.png)
-Les 18 blocs de `data/blocks.json`, une seule texture-atlas en pixel art 32×32. Palette A chaleureuse (conte), palette B plus réaliste (terreuse).
-**Question : palette A ou B ?**
+Palette B (réaliste) et nouvelle palette **C** (sombre, usée).
+**Question : B ou C ?**
 
-## f. Scène du village
+## e. Scène : jour, crépuscule, hiver
 ![Scène](scene-village.png)
-Vue plongeante du jeu : rivière, champ de blé, maison en blocs (chaume, planches, pierre taillée), mur en construction avec ses **blocs-plans bleus**, 8 lutins. En hiver : neige, rivière gelée, arbres nus.
-**Question : ambiance et lisibilité OK ? Lutins assez visibles au zoom « village » ?**
+Brume légère, soleil voilé le jour, torches au crépuscule, montagne en fond.
+**Question : ambiance OK ? Plus sombre / plus clair ?**
 
-## g. Écran principal
-![Interface](interface.png)
-Paysage 20:9 : barre du haut (saison, vitesse, population, stocks, alerte), 5 menus en bas, curseur d'étage à droite, panneau d'affectation ouvert.
-**Question : disposition OK ?**
+## f. Fiche d'un lutin
+![Fiche lutin](fiche-personnage.png)
+Métiers connus (niveau + expérience), cloche (Mobiliser / Se cacher), changement de métier.
 
-## h. Orcs (bonus, Phase 2)
+## g. Fiche d'un guerrier (Phase 2)
+![Fiche guerrier](fiche-guerrier.png)
+Grades Recrue → Soldat → Capitaine → Commandant → Général, réputation et titres, ennemis vaincus, techniques de combat.
+
+## h. Écran de jeu, menu engrenage, menu principal
+![Écran de jeu](interface.png)
+![Menu engrenage](menu-engrenage.png)
+![Menu principal](menu-principal.png)
+**Question : ce style d'interface (fer sombre, filets dorés, parchemin) te plaît ?**
+
+## i. Orcs (inchangé, v1)
 ![Orcs](orcs-apercu.png)
-A « Marmite » : ventre rond, casque-marmite, gourdin. B « Bedaine à crête » : museau, crête, épaulière de récupération, couperet.
-**Question : Orc A ou B (ou mélange) ?**
+**Question toujours ouverte : Orc A ou B ?**

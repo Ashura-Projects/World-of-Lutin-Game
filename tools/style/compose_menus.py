@@ -75,16 +75,16 @@ def ecran_jeu():
         text_r(d, (x + 220, yy), str(v), font(20, True), TXT)
         text_r(d, (x + 306, yy + 2), t, font(16), MOSS if t.startswith("+") else AMBER)
     # boîte de dialogue (événement)
-    bx0, by0, bx1, by1 = 520, 330, 1300, 600
+    bx0, by0, bx1, by1 = 560, 410, 1340, 622
     frame(d, (bx0, by0, bx1, by1), title="Un marchand au gué")
-    circle_portrait(img, R / "portrait.png", bx0 + 110, by0 + 130, 70)
-    parchment(d, (bx0 + 200, by0 + 60, bx1 - 30, by0 + 170))
-    d.multiline_text((bx0 + 216, by0 + 72),
+    circle_portrait(img, R / "portrait.png", bx0 + 105, by0 + 115, 62)
+    parchment(d, (bx0 + 200, by0 + 50, bx1 - 30, by0 + 130))
+    d.multiline_text((bx0 + 216, by0 + 60),
                      "« Le bonjour, chef ! J'ai du fer et du sel de la vallée.\n"
                      "  Contre 20 pièces d'or, ou du bois si tu préfères. »", font=font(19), fill=INK, spacing=8)
-    button(d, (bx0 + 200, by0 + 186, bx0 + 380, by0 + 244), "Commercer", True)
-    button(d, (bx0 + 395, by0 + 186, bx0 + 575, by0 + 244), "Plus tard")
-    button(d, (bx0 + 590, by0 + 186, bx1 - 30, by0 + 244), "Renvoyer")
+    button(d, (bx0 + 200, by0 + 142, bx0 + 380, by0 + 196), "Commercer", True)
+    button(d, (bx0 + 395, by0 + 142, bx0 + 575, by0 + 196), "Plus tard")
+    button(d, (bx0 + 590, by0 + 142, bx1 - 30, by0 + 196), "Renvoyer")
     return stack([header(W, "Écran de jeu (20:9)", "ressources déroulantes · dialogue d'événement · 7 menus en bas · engrenage à droite"), img])
 
 

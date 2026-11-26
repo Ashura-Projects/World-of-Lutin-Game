@@ -28,11 +28,6 @@ def fiche_lutin():
     frame(d, (60, 50, 1540, 870), title="Brindille")
     round_icon(d, 1480, 110, 30, g_croix)
     round_icon(d, 1404, 110, 30, g_cloche, fill=BLOOD)
-    # menu de la cloche ouvert : 2 choix
-    d.polygon([(1404, 144), (1394, 158), (1414, 158)], fill=GOLD)
-    frame(d, (1200, 156, 1500, 330))
-    button(d, (1222, 176, 1478, 244), "Mobiliser", sub="prendre les armes, aller au point de rassemblement")
-    button(d, (1222, 254, 1478, 316), "Se cacher", sub="courir à l'abri le plus proche")
     circle_portrait(img, R / "portrait.png", 250, 260, 150)
     lab(d, 100, 440, "Âge", "Adulte · 4 ans")
     lab(d, 100, 480, "Métier", "Bûcheron (actif)")
@@ -70,6 +65,11 @@ def fiche_lutin():
         bar(d, x1 + 335, y + 32, 170, 18, xp, STEEL)
     d.text((x1, 612), "Changer vers un métier de base : libre.\nJamais pratiqué → niveau 1 ; déjà connu → garde son niveau.",
            font=font(18), fill=TXT_D, spacing=6)
+    # menu de la cloche ouvert : 2 choix
+    d.polygon([(1404, 144), (1394, 158), (1414, 158)], fill=GOLD)
+    frame(d, (1200, 156, 1500, 330))
+    button(d, (1222, 176, 1478, 244), "Mobiliser", sub="aux armes !")
+    button(d, (1222, 254, 1478, 316), "Se cacher", sub="à l'abri")
     for i, (t, a) in enumerate((("Changer de métier", True), ("Affectation", False), ("Suivre", False), ("Historique", False))):
         button(d, (100 + i * 350, 770, 420 + i * 350, 836), t, active=a)
     return stack([header(W, "Fiche d'un lutin", "métiers connus avec niveau et expérience · cloche : mobiliser ou se cacher"), img])
@@ -98,8 +98,9 @@ def fiche_guerrier():
         text_c(d, (x + 100, 200), g, font(20, True), TXT if (cur or done) else TXT_D)
     # réputation
     d.text((x0, 260), "Réputation", font=title_font(30), fill=GOLD)
-    bar(d, x0, 310, 620, 26, 0.58, AMBER)
-    d.text((x0, 346), "Titre : « Lame du Gué » — prochain : « Rempart du Val » (580 / 1000)", font=font(20), fill=TXT)
+    bar(d, x0, 310, 560, 26, 0.58, AMBER)
+    d.text((x0, 344), "Titre : « Lame du Gué »   ·   580 / 1000", font=font(20, True), fill=TXT)
+    d.text((x0, 372), "Prochain titre : « Rempart du Val »", font=font(18), fill=TXT_D)
     # ennemis vaincus
     d.text((1130, 260), "Ennemis vaincus", font=title_font(30), fill=GOLD)
     for i, (n, v) in enumerate((("Orcs", 37), ("Chefs orcs", 2), ("Bêtes sauvages", 11))):
