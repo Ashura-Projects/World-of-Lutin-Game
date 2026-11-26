@@ -104,7 +104,9 @@ func generate() -> void:
 			if wet:
 				for y in range(top, water_y + 1):
 					world.set_raw(Vector3i(x, y, z), id_water)
-			elif not bank and mount_f < 0.25:
+			elif bank:
+				_wild(Vector3i(x, top, z), "bank")
+			elif mount_f < 0.25:
 				_flora(x, top, z, hill_f)
 	_ores()
 
@@ -119,12 +121,15 @@ func _flora(x: int, y: int, z: int, hill_f: float) -> void:
 	elif _rng.randf() * 100.0 < float(b.get("bushes_per_100", 1)):
 		bushes.append({"pos": p})
 	else:
-		for w: Dictionary in DataRegistry.get_table("crops").get("wild", []):
-			var biomes: Array = w.get("biome", [])
-			var here := "forest" if forest else ("hills" if hill_f > 0.3 else "plain")
-			if biomes.has(here) and _rng.randf() * 100.0 < float(w.get("per_100", 0)):
-				herbs.append({"pos": p, "kind": w["id"]})
-				break
+		_wild(p, "forest" if forest else ("hills" if hill_f > 0.3 else "plain"))
+
+
+## Plantes sauvages (lin, plantes médicinales, champignons, roseaux) selon le milieu.
+func _wild(p: Vector3i, here: String) -> void:
+	for w: Dictionary in DataRegistry.get_table("crops").get("wild", []):
+		if w.get("biome", []).has(here) and _rng.randf() * 100.0 < float(w.get("per_100", 0)):
+			herbs.append({"pos": p, "kind": w["id"]})
+			return
 
 
 ## Poches de minerais, gravier, argile dans la pierre (data/world.json › pockets).

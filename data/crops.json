@@ -64,6 +64,22 @@
         "potato": 5
       },
       "_use": "se mange telle quelle ou en ragoût"
+    },
+    {
+      "id": "cabbage",
+      "name": "Chou",
+      "seed": {
+        "vegetables": 1
+      },
+      "sow": [
+        "spring",
+        "summer"
+      ],
+      "grow_days": 7,
+      "yield": {
+        "vegetables": 4
+      },
+      "_use": "légumes pour les ragoûts"
     }
   ],
   "wild": [
@@ -89,6 +105,30 @@
       "per_100": 1.0,
       "gather": {
         "medicinal_herb": 2
+      },
+      "regrow_days": 8
+    },
+    {
+      "id": "mushroom",
+      "name": "Champignon",
+      "biome": [
+        "forest"
+      ],
+      "per_100": 1.5,
+      "gather": {
+        "mushroom": 2
+      },
+      "regrow_days": 6
+    },
+    {
+      "id": "reed",
+      "name": "Roseaux",
+      "biome": [
+        "bank"
+      ],
+      "per_100": 12,
+      "gather": {
+        "reed": 3
       },
       "regrow_days": 8
     }

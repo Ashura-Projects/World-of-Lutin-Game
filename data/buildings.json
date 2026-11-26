@@ -109,7 +109,8 @@
       "build_time": 15,
       "tags": [
         "workstation"
-      ]
+      ],
+      "available_from_start": true
     },
     {
       "id": "oven",
@@ -129,7 +130,8 @@
       "build_time": 15,
       "tags": [
         "workstation"
-      ]
+      ],
+      "available_from_start": true
     },
     {
       "id": "spinning_wheel",
@@ -148,7 +150,8 @@
       "tags": [
         "workstation"
       ],
-      "staff": 1
+      "staff": 1,
+      "available_from_start": true
     },
     {
       "id": "loom",
@@ -168,7 +171,8 @@
       "tags": [
         "workstation"
       ],
-      "staff": 1
+      "staff": 1,
+      "available_from_start": true
     },
     {
       "id": "herbalist",
@@ -195,21 +199,21 @@
     },
     {
       "id": "bed",
-      "name": "Lit",
+      "name": "Lit de paille",
       "size": [
         1,
         1,
         1
       ],
       "cost": {
-        "plank": 2,
-        "straw": 2
+        "straw": 4,
+        "log": 1
       },
       "sleeps": 1,
       "tags": [
         "bed"
       ],
-      "build_time": 6,
+      "build_time": 5,
       "available_from_start": true,
       "object": true
     },
@@ -228,7 +232,7 @@
       "tags": [
         "hearth"
       ],
-      "build_time": 8,
+      "build_time": 5,
       "available_from_start": true,
       "object": true
     },
@@ -241,7 +245,7 @@
         1
       ],
       "cost": {
-        "plank": 2
+        "table_item": 1
       },
       "tags": [
         "table"
@@ -259,7 +263,7 @@
         1
       ],
       "cost": {
-        "plank": 2
+        "shelf_item": 1
       },
       "tags": [
         "shelf"
@@ -277,7 +281,7 @@
         2
       ],
       "cost": {
-        "plank": 2
+        "door_item": 1
       },
       "tags": [
         "door"
@@ -301,7 +305,7 @@
       "tags": [
         "light"
       ],
-      "build_time": 2,
+      "build_time": 5,
       "available_from_start": true,
       "object": true,
       "light": true
@@ -345,7 +349,8 @@
       "build_time": 15,
       "tags": [
         "workstation"
-      ]
+      ],
+      "available_from_start": true
     },
     {
       "id": "furnace",
@@ -365,7 +370,8 @@
       "build_time": 15,
       "tags": [
         "workstation"
-      ]
+      ],
+      "available_from_start": true
     },
     {
       "id": "anvil",
@@ -385,7 +391,8 @@
       "build_time": 8,
       "tags": [
         "workstation"
-      ]
+      ],
+      "available_from_start": true
     },
     {
       "id": "leatherworks",
@@ -405,7 +412,8 @@
       "build_time": 12,
       "tags": [
         "workstation"
-      ]
+      ],
+      "available_from_start": true
     },
     {
       "id": "cooking_hearth",
@@ -510,6 +518,336 @@
       "available_from_start": true,
       "tags": [
         "graveyard"
+      ]
+    },
+    {
+      "id": "glassworks",
+      "name": "Verrerie",
+      "size": [
+        2,
+        2,
+        2
+      ],
+      "cost": {
+        "stone": 10,
+        "clay": 4,
+        "plank": 4
+      },
+      "station": "glassworks",
+      "staff": 1,
+      "job": "glassblower",
+      "build_time": 18,
+      "tags": [
+        "workstation"
+      ],
+      "available_from_start": true
+    },
+    {
+      "id": "cabinetmaker",
+      "name": "Atelier d'ébéniste",
+      "size": [
+        2,
+        2,
+        2
+      ],
+      "cost": {
+        "plank": 10,
+        "beam": 3,
+        "log": 4
+      },
+      "station": "cabinetmaker",
+      "staff": 2,
+      "job": "cabinetmaker",
+      "build_time": 18,
+      "tags": [
+        "workstation"
+      ],
+      "available_from_start": true
+    },
+    {
+      "id": "tailor",
+      "name": "Atelier de couture",
+      "size": [
+        2,
+        2,
+        2
+      ],
+      "cost": {
+        "plank": 6,
+        "cloth": 2
+      },
+      "station": "tailor",
+      "staff": 1,
+      "job": "weaver",
+      "build_time": 15,
+      "tags": [
+        "workstation"
+      ],
+      "available_from_start": true
+    },
+    {
+      "id": "dye_vat",
+      "name": "Cuve de teinture",
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "cost": {
+        "plank": 3,
+        "pottery": 1
+      },
+      "station": "dye_vat",
+      "staff": 1,
+      "job": "weaver",
+      "build_time": 8,
+      "tags": [
+        "workstation"
+      ],
+      "available_from_start": true
+    },
+    {
+      "id": "wood_bed",
+      "name": "Lit en bois",
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "cost": {
+        "bed_item": 1
+      },
+      "build_time": 5,
+      "available_from_start": true,
+      "object": true,
+      "sleeps": 1,
+      "tags": [
+        "bed",
+        "decor"
+      ],
+      "mood": 2
+    },
+    {
+      "id": "chair",
+      "name": "Chaise",
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "cost": {
+        "chair_item": 1
+      },
+      "build_time": 5,
+      "available_from_start": true,
+      "object": true,
+      "tags": [
+        "seat",
+        "decor"
+      ]
+    },
+    {
+      "id": "bench",
+      "name": "Banc",
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "cost": {
+        "bench_item": 1
+      },
+      "build_time": 5,
+      "available_from_start": true,
+      "object": true,
+      "tags": [
+        "seat"
+      ]
+    },
+    {
+      "id": "chest",
+      "name": "Coffre",
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "cost": {
+        "chest_item": 1
+      },
+      "build_time": 5,
+      "available_from_start": true,
+      "object": true,
+      "tags": [
+        "storage"
+      ]
+    },
+    {
+      "id": "wardrobe",
+      "name": "Armoire",
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "cost": {
+        "wardrobe_item": 1
+      },
+      "build_time": 5,
+      "available_from_start": true,
+      "object": true,
+      "tags": [
+        "storage",
+        "decor"
+      ]
+    },
+    {
+      "id": "barrel",
+      "name": "Tonneau",
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "cost": {
+        "barrel_item": 1
+      },
+      "build_time": 5,
+      "available_from_start": true,
+      "object": true,
+      "tags": [
+        "storage",
+        "decor"
+      ]
+    },
+    {
+      "id": "crate",
+      "name": "Caisse",
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "cost": {
+        "crate_item": 1
+      },
+      "build_time": 5,
+      "available_from_start": true,
+      "object": true,
+      "tags": [
+        "storage"
+      ]
+    },
+    {
+      "id": "lantern",
+      "name": "Lanterne",
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "cost": {
+        "lantern_item": 1
+      },
+      "build_time": 5,
+      "available_from_start": true,
+      "object": true,
+      "tags": [
+        "light",
+        "decor"
+      ],
+      "light": true
+    },
+    {
+      "id": "banner_wall",
+      "name": "Fanion mural",
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "cost": {
+        "banner_item": 1
+      },
+      "build_time": 5,
+      "available_from_start": true,
+      "object": true,
+      "tags": [
+        "decor"
+      ],
+      "on_wall": true
+    },
+    {
+      "id": "banner_pole",
+      "name": "Fanion sur poteau",
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "cost": {
+        "banner_item": 1,
+        "log": 1
+      },
+      "build_time": 5,
+      "available_from_start": true,
+      "object": true,
+      "tags": [
+        "decor"
+      ]
+    },
+    {
+      "id": "carpet",
+      "name": "Tapis",
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "cost": {
+        "carpet_item": 1
+      },
+      "build_time": 5,
+      "available_from_start": true,
+      "object": true,
+      "tags": [
+        "decor"
+      ]
+    },
+    {
+      "id": "flowerpot",
+      "name": "Pot de fleurs",
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "cost": {
+        "flowerpot_item": 1
+      },
+      "build_time": 5,
+      "available_from_start": true,
+      "object": true,
+      "tags": [
+        "decor"
+      ]
+    },
+    {
+      "id": "weapon_rack",
+      "name": "Râtelier d'armes",
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "cost": {
+        "weapon_rack_item": 1
+      },
+      "build_time": 5,
+      "available_from_start": true,
+      "object": true,
+      "tags": [
+        "decor"
       ]
     }
   ]

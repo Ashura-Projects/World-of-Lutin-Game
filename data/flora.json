@@ -33,6 +33,12 @@
     },
     "medicinal_herb": {
       "work": 3
+    },
+    "mushroom": {
+      "work": 2
+    },
+    "reed": {
+      "work": 3
     }
   },
   "fishing": {

@@ -83,5 +83,10 @@
   "detector": {
     "max_cells": 600,
     "_doc": "Une pièce = air fermé (murs + toit), au plus max_cells cases. Les portes ferment la pièce."
+  },
+  "decor": {
+    "mood_per_item": 2,
+    "max_items": 8,
+    "_doc": "Chaque objet « decor » d'une pièce habitée donne du moral (jusqu'à max_items)."
   }
 }

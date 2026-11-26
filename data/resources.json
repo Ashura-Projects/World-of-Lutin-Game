@@ -1,5 +1,5 @@
 {
-  "_doc": "Ressources Phase 1. stack = quantité max par case ; nutrition pour la nourriture. Un seul bois : la bûche (log), quel que soit l'arbre ; elle se transforme en planches ou poutres. La « Nourriture » affichée en haut = somme des ressources de catégorie food.",
+  "_doc": "Ressources. Catégories : raw, food (nutrition), processed, tool, weapon, furniture (meubles à poser), medicine, currency. La « Nourriture » affichée = somme des food.",
   "resources": [
     {
       "id": "log",
@@ -326,6 +326,212 @@
       "name": "Lance",
       "category": "weapon",
       "stack": 5
+    },
+    {
+      "id": "mushroom",
+      "name": "Champignon",
+      "category": "food",
+      "stack": 40,
+      "nutrition": 8
+    },
+    {
+      "id": "gold_ore",
+      "name": "Minerai d'or",
+      "category": "raw",
+      "stack": 20
+    },
+    {
+      "id": "glass",
+      "name": "Verre",
+      "category": "processed",
+      "stack": 40
+    },
+    {
+      "id": "vial",
+      "name": "Fiole",
+      "category": "processed",
+      "stack": 20
+    },
+    {
+      "id": "bottle",
+      "name": "Bouteille",
+      "category": "processed",
+      "stack": 20
+    },
+    {
+      "id": "nails",
+      "name": "Clous",
+      "category": "processed",
+      "stack": 100
+    },
+    {
+      "id": "iron_bar",
+      "name": "Barre de fer",
+      "category": "processed",
+      "stack": 20
+    },
+    {
+      "id": "rope",
+      "name": "Corde",
+      "category": "processed",
+      "stack": 20
+    },
+    {
+      "id": "dye_red",
+      "name": "Teinture rouge",
+      "category": "processed",
+      "stack": 20
+    },
+    {
+      "id": "dye_blue",
+      "name": "Teinture bleue",
+      "category": "processed",
+      "stack": 20
+    },
+    {
+      "id": "dye_yellow",
+      "name": "Teinture jaune",
+      "category": "processed",
+      "stack": 20
+    },
+    {
+      "id": "candle",
+      "name": "Bougie",
+      "category": "processed",
+      "stack": 20
+    },
+    {
+      "id": "tallow",
+      "name": "Suif",
+      "category": "processed",
+      "stack": 20
+    },
+    {
+      "id": "pottery",
+      "name": "Poterie",
+      "category": "processed",
+      "stack": 20
+    },
+    {
+      "id": "roof_tile",
+      "name": "Tuiles",
+      "category": "processed",
+      "stack": 40
+    },
+    {
+      "id": "charcoal",
+      "name": "Charbon de bois",
+      "category": "processed",
+      "stack": 40
+    },
+    {
+      "id": "bed_item",
+      "name": "Lit en bois",
+      "category": "furniture",
+      "stack": 10
+    },
+    {
+      "id": "table_item",
+      "name": "Table",
+      "category": "furniture",
+      "stack": 10
+    },
+    {
+      "id": "chair_item",
+      "name": "Chaise",
+      "category": "furniture",
+      "stack": 10
+    },
+    {
+      "id": "bench_item",
+      "name": "Banc",
+      "category": "furniture",
+      "stack": 10
+    },
+    {
+      "id": "chest_item",
+      "name": "Coffre",
+      "category": "furniture",
+      "stack": 10
+    },
+    {
+      "id": "wardrobe_item",
+      "name": "Armoire",
+      "category": "furniture",
+      "stack": 10
+    },
+    {
+      "id": "shelf_item",
+      "name": "Étagère",
+      "category": "furniture",
+      "stack": 10
+    },
+    {
+      "id": "door_item",
+      "name": "Porte",
+      "category": "furniture",
+      "stack": 10
+    },
+    {
+      "id": "barrel_item",
+      "name": "Tonneau",
+      "category": "furniture",
+      "stack": 10
+    },
+    {
+      "id": "crate_item",
+      "name": "Caisse",
+      "category": "furniture",
+      "stack": 10
+    },
+    {
+      "id": "lantern_item",
+      "name": "Lanterne",
+      "category": "furniture",
+      "stack": 10
+    },
+    {
+      "id": "banner_item",
+      "name": "Fanion",
+      "category": "furniture",
+      "stack": 10
+    },
+    {
+      "id": "carpet_item",
+      "name": "Tapis",
+      "category": "furniture",
+      "stack": 10
+    },
+    {
+      "id": "flowerpot_item",
+      "name": "Pot de fleurs",
+      "category": "furniture",
+      "stack": 10
+    },
+    {
+      "id": "weapon_rack_item",
+      "name": "Râtelier d'armes",
+      "category": "furniture",
+      "stack": 10
+    },
+    {
+      "id": "grilled_fish",
+      "name": "Poisson grillé",
+      "category": "food",
+      "stack": 20,
+      "nutrition": 25
+    },
+    {
+      "id": "blowpipe",
+      "name": "Canne de verrier",
+      "category": "tool",
+      "stack": 20
+    },
+    {
+      "id": "plane",
+      "name": "Rabot",
+      "category": "tool",
+      "stack": 20
     }
   ]
 }

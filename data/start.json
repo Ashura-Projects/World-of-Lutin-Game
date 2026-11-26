@@ -28,7 +28,11 @@
       "basket": 1,
       "flintlock": 1,
       "fishing_rod": 1,
-      "spear": 2
+      "spear": 2,
+      "plank": 10,
+      "nails": 10,
+      "straw": 8,
+      "vegetables": 6
     }
   },
   "_cart_note": "6 peaux = 2 tentes : les autres viennent de la chasse (choix fait sans Ashura, à valider)",

@@ -129,6 +129,22 @@
       ]
     },
     {
+      "id": "glassblower",
+      "name": "Verrier",
+      "tool": "blowpipe",
+      "tasks": [
+        "craft:glass"
+      ]
+    },
+    {
+      "id": "cabinetmaker",
+      "name": "Ébéniste",
+      "tool": "plane",
+      "tasks": [
+        "craft:furniture"
+      ]
+    },
+    {
       "id": "miller",
       "name": "Meunier",
       "tool": "flail",

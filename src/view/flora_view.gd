@@ -94,24 +94,90 @@ func bind(f: Flora) -> void:
 
 static func herb_mesh(kind: String) -> Mesh:
 	var st := SurfaceTool.new()
-	for i in 3:
-		var c := CylinderMesh.new()
-		c.top_radius = 0.0
-		c.bottom_radius = 0.06
-		c.height = 0.45
-		c.radial_segments = 4
-		c.rings = 1
-		st.append_from(
-			c,
-			0,
-			Transform3D(
-				Basis(Vector3.UP, i * 2.1).rotated(Vector3.RIGHT, 0.2),
-				Vector3(0.15 * cos(i * 2.1), 0.22, 0.15 * sin(i * 2.1))
-			)
-		)
+	var color := Color("9fb870")
+	match kind:
+		"mushroom":  # pieds clairs + chapeaux bruns
+			for i in 3:
+				var off := Vector3(0.18 * cos(i * 2.1), 0, 0.18 * sin(i * 2.1))
+				var stem := CylinderMesh.new()
+				stem.top_radius = 0.035
+				stem.bottom_radius = 0.045
+				stem.height = 0.14
+				stem.radial_segments = 6
+				st.append_from(stem, 0, Transform3D(Basis(), off + Vector3(0, 0.07, 0)))
+				var cap := SphereMesh.new()
+				cap.radius = 0.1
+				cap.height = 0.1
+				cap.radial_segments = 8
+				cap.rings = 3
+				st.append_from(cap, 0, Transform3D(Basis(), off + Vector3(0, 0.15, 0)))
+			color = Color("8a5a3a")
+		"reed":
+			for i in 6:
+				var c := CylinderMesh.new()
+				c.top_radius = 0.015
+				c.bottom_radius = 0.02
+				c.height = 0.9
+				c.radial_segments = 4
+				st.append_from(
+					c,
+					0,
+					Transform3D(Basis(Vector3.RIGHT, 0.08 * (i % 3 - 1)), Vector3(0.15 * cos(i), 0.45, 0.15 * sin(i)))
+				)
+				var head := CylinderMesh.new()
+				head.top_radius = 0.035
+				head.bottom_radius = 0.035
+				head.height = 0.15
+				head.radial_segments = 5
+				st.append_from(head, 0, Transform3D(Basis(), Vector3(0.15 * cos(i), 0.92, 0.15 * sin(i))))
+			color = Color("7a8a4a")
+		_:
+			for i in 3:
+				var c := CylinderMesh.new()
+				c.top_radius = 0.0
+				c.bottom_radius = 0.06
+				c.height = 0.45
+				c.radial_segments = 4
+				c.rings = 1
+				st.append_from(
+					c,
+					0,
+					Transform3D(
+						Basis(Vector3.UP, i * 2.1).rotated(Vector3.RIGHT, 0.2),
+						Vector3(0.15 * cos(i * 2.1), 0.22, 0.15 * sin(i * 2.1))
+					)
+				)
+			color = Color("6f8fc8") if kind == "wild_flax" else Color("9fb870")
 	st.generate_normals()
 	var m := st.commit()
-	m.surface_set_material(0, _mat(Color("6f8fc8") if kind == "wild_flax" else Color("9fb870")))
+	m.surface_set_material(0, _mat(color))
+	return m
+
+
+## Buisson garni de baies rouges (prêt à cueillir).
+static func berry_bush_mesh() -> Mesh:
+	var st := SurfaceTool.new()
+	var s := SphereMesh.new()
+	s.radius = 0.35
+	s.height = 0.55
+	s.radial_segments = 7
+	s.rings = 4
+	st.append_from(s, 0, Transform3D())
+	st.generate_normals()
+	var m := st.commit()
+	m.surface_set_material(0, _mat(Color("44703a")))
+	var st2 := SurfaceTool.new()
+	for i in 8:
+		var b := SphereMesh.new()
+		b.radius = 0.055
+		b.height = 0.11
+		b.radial_segments = 5
+		b.rings = 3
+		var a := i * 0.8
+		st2.append_from(b, 0, Transform3D(Basis(), Vector3(0.3 * cos(a), 0.1 + 0.08 * (i % 3), 0.3 * sin(a))))
+	st2.generate_normals()
+	m.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, st2.commit_to_arrays())
+	m.surface_set_material(1, _mat(Color("a01e3a")))
 	return m
 
 
@@ -121,9 +187,13 @@ func refresh() -> void:
 	for p: Vector3i in _flora.trees:
 		trees.append({"pos": p, "kind": _flora.trees[p]})
 	var bushes := []
+	var bare := []
 	for p: Vector3i in _flora.bushes:
 		if _flora.bush_ready(p, GameClock.day()):
 			bushes.append({"pos": p})
+		else:
+			bare.append(p)
+	show_items("buisson_nu", bush_mesh(), bare)
 	for k: String in ["pin", "chene", "bouleau"]:
 		if not trees.any(func(t: Dictionary) -> bool: return t["kind"] == k):
 			show_items(k, tree_mesh(k), [])
@@ -131,7 +201,7 @@ func refresh() -> void:
 	var herbs := {}
 	for p: Vector3i in _flora.herbs:
 		herbs.get_or_add(_flora.herbs[p], []).append(p)
-	for k: String in ["wild_flax", "medicinal_herb"]:
+	for k: String in ["wild_flax", "medicinal_herb", "mushroom", "reed"]:
 		show_items(k, herb_mesh(k), herbs.get(k, []))
 
 
@@ -144,4 +214,4 @@ func show_flora(trees: Array, bushes: Array) -> void:
 	var bp := []
 	for b: Dictionary in bushes:
 		bp.append(b["pos"])
-	show_items("buisson", bush_mesh(), bp)
+	show_items("buisson", berry_bush_mesh(), bp)

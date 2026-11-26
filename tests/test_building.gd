@@ -53,6 +53,7 @@ func test_tente_montee_et_attribuee() -> void:
 func test_maison_batie_et_habitee() -> void:
 	c.stock.add("plank", 200)
 	c.stock.add("straw", 20)
+	c.stock.add("door_item", 1)
 	var plank := w.types.num("plank_block")
 	var x0 := 10
 	var z0 := 10

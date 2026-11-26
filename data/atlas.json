@@ -118,6 +118,10 @@
   "field_wet": [
    4,
    3
+  ],
+  "gold_ore": [
+   5,
+   3
   ]
  },
  "_doc": "Disposition de assets/textures/blocks_atlas.png (généré par tools/style/atlas.py, palette B validée)."

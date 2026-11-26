@@ -208,6 +208,22 @@
       }
     },
     {
+      "num": 14,
+      "id": "gold_ore",
+      "name": "Minerai d'or",
+      "solid": true,
+      "drop": {
+        "gold_ore": 1
+      },
+      "hardness": 10,
+      "tool": "pickaxe",
+      "tiles": {
+        "top": "gold_ore",
+        "side": "gold_ore",
+        "bottom": "gold_ore"
+      }
+    },
+    {
       "num": 20,
       "id": "wood_block",
       "name": "Rondins",

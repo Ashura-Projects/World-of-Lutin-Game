@@ -12,6 +12,8 @@ static func run(game: Node, action: String) -> void:
 			game.camera.focus(l.pos)
 			game.lutins_view.selected_id = l.id
 			game.hud.show_lutin(l)
+		"nature":
+			nature(game)
 		"vue_large":
 			vue_large(game)
 		"recherche":
@@ -152,3 +154,17 @@ static func vue_large(game: Node) -> void:
 	game.camera.distance = 120.0
 	game.camera.pitch = deg_to_rad(55)
 	game.camera.focus(Vector3(game.world.size.x / 2.0, 30, game.world.size.z / 2.0))
+
+
+static func nature(game: Node) -> void:
+	var c: Vector3i = game.colony.stock.pos
+	var best := c
+	var bd := 1e9
+	for p: Vector3i in game.flora.herbs:
+		if game.flora.herbs[p] in ["mushroom", "reed"]:
+			var d := Vector3(p).distance_to(Vector3(c))
+			if d < bd:
+				bd = d
+				best = p
+	game.camera.distance = 9.0
+	game.camera.focus(Vector3(best))

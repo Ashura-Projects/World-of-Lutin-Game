@@ -164,7 +164,7 @@
         "fishing_rod": 1
       },
       "work": 10,
-      "name": "Canne à pêche"
+      "name": "Canne à pêche (lin)"
     },
     {
       "id": "tan_leather",
@@ -194,7 +194,7 @@
     },
     {
       "id": "sew_clothes",
-      "station": "loom",
+      "station": "tailor",
       "job": "weaver",
       "in": {
         "cloth": 2,
@@ -262,7 +262,8 @@
       "job": "smith",
       "in": {
         "iron_ingot": 2,
-        "plank": 1
+        "plank": 1,
+        "iron_bar": 1
       },
       "out": {
         "flintlock": 1
@@ -316,7 +317,8 @@
       "job": "healer",
       "in": {
         "medicinal_herb": 3,
-        "water": 1
+        "water": 1,
+        "vial": 1
       },
       "out": {
         "healing_potion": 1
@@ -335,7 +337,648 @@
         "mortar": 1
       },
       "work": 10,
-      "name": "Mortier"
+      "name": "Mortier et pilon"
+    },
+    {
+      "id": "make_charcoal",
+      "name": "Charbon de bois",
+      "station": "kiln",
+      "job": "stonemason",
+      "in": {
+        "log": 3
+      },
+      "out": {
+        "charcoal": 2
+      },
+      "work": 20
+    },
+    {
+      "id": "fire_tiles",
+      "name": "Tuiles",
+      "station": "kiln",
+      "job": "stonemason",
+      "in": {
+        "clay": 2,
+        "charcoal": 1
+      },
+      "out": {
+        "roof_tile": 4
+      },
+      "work": 20
+    },
+    {
+      "id": "make_pottery",
+      "name": "Poterie",
+      "station": "kiln",
+      "job": "stonemason",
+      "in": {
+        "clay": 2
+      },
+      "out": {
+        "pottery": 1
+      },
+      "work": 15
+    },
+    {
+      "id": "melt_glass",
+      "name": "Verre",
+      "station": "glassworks",
+      "job": "glassblower",
+      "in": {
+        "sand": 3,
+        "coal": 1
+      },
+      "out": {
+        "glass": 2
+      },
+      "work": 20
+    },
+    {
+      "id": "melt_glass_charcoal",
+      "name": "Verre (charbon de bois)",
+      "station": "glassworks",
+      "job": "glassblower",
+      "in": {
+        "sand": 3,
+        "charcoal": 1
+      },
+      "out": {
+        "glass": 2
+      },
+      "work": 20
+    },
+    {
+      "id": "blow_vial",
+      "name": "Fioles",
+      "station": "glassworks",
+      "job": "glassblower",
+      "in": {
+        "glass": 1
+      },
+      "out": {
+        "vial": 2
+      },
+      "work": 10
+    },
+    {
+      "id": "blow_bottle",
+      "name": "Bouteille",
+      "station": "glassworks",
+      "job": "glassblower",
+      "in": {
+        "glass": 2
+      },
+      "out": {
+        "bottle": 1
+      },
+      "work": 12
+    },
+    {
+      "id": "smelt_iron_charcoal",
+      "name": "Lingot de fer (charbon de bois)",
+      "station": "furnace",
+      "job": "smith",
+      "in": {
+        "iron_ore": 2,
+        "charcoal": 2
+      },
+      "out": {
+        "iron_ingot": 1
+      },
+      "work": 25
+    },
+    {
+      "id": "smelt_gold",
+      "name": "Or (pièces)",
+      "station": "furnace",
+      "job": "smith",
+      "in": {
+        "gold_ore": 2,
+        "coal": 1
+      },
+      "out": {
+        "gold": 10
+      },
+      "work": 30
+    },
+    {
+      "id": "forge_nails",
+      "name": "Clous",
+      "station": "anvil",
+      "job": "smith",
+      "in": {
+        "iron_ingot": 1
+      },
+      "out": {
+        "nails": 10
+      },
+      "work": 10
+    },
+    {
+      "id": "forge_bar",
+      "name": "Barre de fer",
+      "station": "anvil",
+      "job": "smith",
+      "in": {
+        "iron_ingot": 1
+      },
+      "out": {
+        "iron_bar": 2
+      },
+      "work": 10
+    },
+    {
+      "id": "forge_shovel",
+      "name": "Pelle",
+      "station": "anvil",
+      "job": "smith",
+      "in": {
+        "iron_ingot": 1,
+        "plank": 1
+      },
+      "out": {
+        "shovel": 1
+      },
+      "work": 20
+    },
+    {
+      "id": "forge_hoe",
+      "name": "Houe",
+      "station": "anvil",
+      "job": "smith",
+      "in": {
+        "iron_ingot": 1,
+        "plank": 1
+      },
+      "out": {
+        "hoe": 1
+      },
+      "work": 20
+    },
+    {
+      "id": "forge_saw",
+      "name": "Scie",
+      "station": "anvil",
+      "job": "smith",
+      "in": {
+        "iron_ingot": 1,
+        "plank": 1
+      },
+      "out": {
+        "saw": 1
+      },
+      "work": 20
+    },
+    {
+      "id": "forge_chisel",
+      "name": "Ciseau",
+      "station": "anvil",
+      "job": "smith",
+      "in": {
+        "iron_ingot": 1,
+        "plank": 1
+      },
+      "out": {
+        "chisel": 1
+      },
+      "work": 20
+    },
+    {
+      "id": "forge_tongs",
+      "name": "Pinces",
+      "station": "anvil",
+      "job": "smith",
+      "in": {
+        "iron_ingot": 1,
+        "plank": 1
+      },
+      "out": {
+        "tongs": 1
+      },
+      "work": 20
+    },
+    {
+      "id": "forge_ladle",
+      "name": "Louche",
+      "station": "anvil",
+      "job": "smith",
+      "in": {
+        "iron_ingot": 1,
+        "plank": 1
+      },
+      "out": {
+        "ladle": 1
+      },
+      "work": 20
+    },
+    {
+      "id": "forge_scraper",
+      "name": "Grattoir",
+      "station": "anvil",
+      "job": "smith",
+      "in": {
+        "iron_ingot": 1,
+        "plank": 1
+      },
+      "out": {
+        "scraper": 1
+      },
+      "work": 20
+    },
+    {
+      "id": "forge_flail",
+      "name": "Fléau",
+      "station": "anvil",
+      "job": "smith",
+      "in": {
+        "iron_ingot": 1,
+        "plank": 1
+      },
+      "out": {
+        "flail": 1
+      },
+      "work": 20
+    },
+    {
+      "id": "forge_spear",
+      "name": "Lance",
+      "station": "anvil",
+      "job": "smith",
+      "in": {
+        "iron_ingot": 1,
+        "beam": 1
+      },
+      "out": {
+        "spear": 1
+      },
+      "work": 25
+    },
+    {
+      "id": "make_fishing_rod",
+      "name": "Canne à pêche",
+      "station": "sawbench",
+      "job": "carpenter",
+      "in": {
+        "plank": 1,
+        "rope": 1
+      },
+      "out": {
+        "fishing_rod": 1
+      },
+      "work": 10
+    },
+    {
+      "id": "make_rope",
+      "name": "Corde",
+      "station": "spinning_wheel",
+      "job": "weaver",
+      "in": {
+        "flax": 3
+      },
+      "out": {
+        "rope": 1
+      },
+      "work": 12
+    },
+    {
+      "id": "render_tallow",
+      "name": "Suif",
+      "station": "leatherworks",
+      "job": "tanner",
+      "in": {
+        "meat": 2
+      },
+      "out": {
+        "tallow": 1
+      },
+      "work": 10
+    },
+    {
+      "id": "dye_red",
+      "name": "Teinture rouge",
+      "station": "dye_vat",
+      "job": "weaver",
+      "in": {
+        "berries": 3,
+        "water": 1
+      },
+      "out": {
+        "dye_red": 2
+      },
+      "work": 10
+    },
+    {
+      "id": "dye_blue",
+      "name": "Teinture bleue",
+      "station": "dye_vat",
+      "job": "weaver",
+      "in": {
+        "flax_seed": 2,
+        "water": 1
+      },
+      "out": {
+        "dye_blue": 2
+      },
+      "work": 10
+    },
+    {
+      "id": "dye_yellow",
+      "name": "Teinture jaune",
+      "station": "dye_vat",
+      "job": "weaver",
+      "in": {
+        "straw": 3,
+        "water": 1
+      },
+      "out": {
+        "dye_yellow": 2
+      },
+      "work": 10
+    },
+    {
+      "id": "cook_potato_stew",
+      "name": "Ragoût de pommes de terre",
+      "station": "hearth",
+      "job": "cook",
+      "in": {
+        "potato": 3,
+        "mushroom": 1,
+        "water": 1
+      },
+      "out": {
+        "stew": 2
+      },
+      "work": 15
+    },
+    {
+      "id": "grill_fish",
+      "name": "Poisson grillé",
+      "station": "hearth",
+      "job": "cook",
+      "in": {
+        "fish": 2,
+        "log": 1
+      },
+      "out": {
+        "grilled_fish": 2
+      },
+      "work": 10
+    },
+    {
+      "id": "make_candle",
+      "name": "Bougie",
+      "station": "leatherworks",
+      "job": "tanner",
+      "in": {
+        "tallow": 1,
+        "linen": 1
+      },
+      "out": {
+        "candle": 2
+      },
+      "work": 8
+    },
+    {
+      "id": "make_bed",
+      "name": "Lit en bois",
+      "station": "cabinetmaker",
+      "job": "cabinetmaker",
+      "in": {
+        "plank": 4,
+        "nails": 2,
+        "cloth": 1
+      },
+      "out": {
+        "bed_item": 1
+      },
+      "work": 25
+    },
+    {
+      "id": "make_table",
+      "name": "Table",
+      "station": "cabinetmaker",
+      "job": "cabinetmaker",
+      "in": {
+        "plank": 3,
+        "nails": 2
+      },
+      "out": {
+        "table_item": 1
+      },
+      "work": 15
+    },
+    {
+      "id": "make_chair",
+      "name": "Chaise",
+      "station": "cabinetmaker",
+      "job": "cabinetmaker",
+      "in": {
+        "plank": 2,
+        "nails": 1
+      },
+      "out": {
+        "chair_item": 1
+      },
+      "work": 10
+    },
+    {
+      "id": "make_bench",
+      "name": "Banc",
+      "station": "cabinetmaker",
+      "job": "cabinetmaker",
+      "in": {
+        "plank": 2,
+        "nails": 1
+      },
+      "out": {
+        "bench_item": 1
+      },
+      "work": 10
+    },
+    {
+      "id": "make_chest",
+      "name": "Coffre",
+      "station": "cabinetmaker",
+      "job": "cabinetmaker",
+      "in": {
+        "plank": 3,
+        "nails": 2,
+        "iron_bar": 1
+      },
+      "out": {
+        "chest_item": 1
+      },
+      "work": 18
+    },
+    {
+      "id": "make_wardrobe",
+      "name": "Armoire",
+      "station": "cabinetmaker",
+      "job": "cabinetmaker",
+      "in": {
+        "plank": 5,
+        "nails": 3
+      },
+      "out": {
+        "wardrobe_item": 1
+      },
+      "work": 25
+    },
+    {
+      "id": "make_shelf",
+      "name": "Étagère",
+      "station": "cabinetmaker",
+      "job": "cabinetmaker",
+      "in": {
+        "plank": 2,
+        "nails": 1
+      },
+      "out": {
+        "shelf_item": 1
+      },
+      "work": 10
+    },
+    {
+      "id": "make_door",
+      "name": "Porte",
+      "station": "cabinetmaker",
+      "job": "cabinetmaker",
+      "in": {
+        "plank": 3,
+        "nails": 2
+      },
+      "out": {
+        "door_item": 1
+      },
+      "work": 15
+    },
+    {
+      "id": "make_barrel",
+      "name": "Tonneau",
+      "station": "cabinetmaker",
+      "job": "cabinetmaker",
+      "in": {
+        "plank": 3,
+        "iron_bar": 1
+      },
+      "out": {
+        "barrel_item": 1
+      },
+      "work": 18
+    },
+    {
+      "id": "make_crate",
+      "name": "Caisse",
+      "station": "cabinetmaker",
+      "job": "cabinetmaker",
+      "in": {
+        "plank": 2,
+        "nails": 2
+      },
+      "out": {
+        "crate_item": 1
+      },
+      "work": 8
+    },
+    {
+      "id": "make_weapon_rack",
+      "name": "Râtelier d'armes",
+      "station": "cabinetmaker",
+      "job": "cabinetmaker",
+      "in": {
+        "plank": 2,
+        "beam": 1,
+        "nails": 2
+      },
+      "out": {
+        "weapon_rack_item": 1
+      },
+      "work": 15
+    },
+    {
+      "id": "make_lantern",
+      "name": "Lanterne",
+      "station": "anvil",
+      "job": "smith",
+      "in": {
+        "iron_bar": 1,
+        "glass": 1,
+        "candle": 1
+      },
+      "out": {
+        "lantern_item": 1
+      },
+      "work": 15
+    },
+    {
+      "id": "make_banner",
+      "name": "Fanion aux couleurs",
+      "station": "loom",
+      "job": "weaver",
+      "in": {
+        "cloth": 1,
+        "dye_red": 1,
+        "dye_blue": 1
+      },
+      "out": {
+        "banner_item": 1
+      },
+      "work": 15
+    },
+    {
+      "id": "make_carpet",
+      "name": "Tapis",
+      "station": "loom",
+      "job": "weaver",
+      "in": {
+        "cloth": 2,
+        "dye_red": 1
+      },
+      "out": {
+        "carpet_item": 1
+      },
+      "work": 20
+    },
+    {
+      "id": "make_flowerpot",
+      "name": "Pot de fleurs",
+      "station": "kiln",
+      "job": "stonemason",
+      "in": {
+        "clay": 1
+      },
+      "out": {
+        "flowerpot_item": 1
+      },
+      "work": 8
+    },
+    {
+      "id": "forge_blowpipe",
+      "name": "Canne de verrier",
+      "station": "anvil",
+      "job": "smith",
+      "in": {
+        "iron_ingot": 1,
+        "plank": 1
+      },
+      "out": {
+        "blowpipe": 1
+      },
+      "work": 20
+    },
+    {
+      "id": "forge_plane",
+      "name": "Rabot",
+      "station": "anvil",
+      "job": "smith",
+      "in": {
+        "iron_ingot": 1,
+        "plank": 1
+      },
+      "out": {
+        "plane": 1
+      },
+      "work": 20
     }
   ]
 }
