@@ -1,0 +1,13 @@
+{
+  "_doc": "Une pièce = volume d'air fermé (murs + toit). Type = première règle satisfaite par priorité décroissante.",
+  "room_types": [
+    {"id": "kitchen",   "name": "Cuisine",     "priority": 50, "requires": ["hearth"],           "bonus": {"cooking_speed": 0.2}},
+    {"id": "workshop",  "name": "Atelier",     "priority": 40, "requires_any_tag": "workstation", "bonus": {"crafting_speed": 0.15}},
+    {"id": "house",     "name": "Maison",      "priority": 30, "requires": ["bed"], "max_beds": 3, "bonus": {"mood": 8}},
+    {"id": "dormitory", "name": "Dortoir",     "priority": 25, "requires": ["bed"], "min_beds": 4, "bonus": {"mood": 3}},
+    {"id": "hall",      "name": "Salle commune","priority": 20, "requires": ["table"],           "bonus": {"mood": 5}},
+    {"id": "storeroom", "name": "Réserve",     "priority": 10, "requires": ["shelf"],            "bonus": {"spoil_rate": -0.5}},
+    {"id": "empty",     "name": "Pièce vide",  "priority": 0,  "requires": [],                   "bonus": {}}
+  ],
+  "warmth_sources": ["hearth", "oven", "furnace"]
+}

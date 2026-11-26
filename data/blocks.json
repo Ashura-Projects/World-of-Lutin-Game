@@ -1,0 +1,24 @@
+{
+  "_doc": "Types de blocs. id numérique stable (stocké dans les chunks, 0 = air). drop = ressource obtenue en creusant. cost = ressource pour poser. hardness = secondes de travail à expérience normale.",
+  "blocks": [
+    {"num": 0,  "id": "air",          "name": "Air",             "solid": false},
+    {"num": 1,  "id": "bedrock",      "name": "Socle",           "solid": true, "diggable": false},
+    {"num": 2,  "id": "grass",        "name": "Herbe",           "solid": true, "drop": {"dirt": 1},    "hardness": 2, "tool": "shovel"},
+    {"num": 3,  "id": "dirt",         "name": "Terre",           "solid": true, "drop": {"dirt": 1},    "hardness": 2, "tool": "shovel"},
+    {"num": 4,  "id": "fertile_soil", "name": "Terre fertile",   "solid": true, "drop": {"dirt": 1},    "hardness": 2, "tool": "shovel", "farmable": true},
+    {"num": 5,  "id": "sand",         "name": "Sable",           "solid": true, "drop": {"sand": 1},    "hardness": 2, "tool": "shovel"},
+    {"num": 6,  "id": "clay",         "name": "Argile",          "solid": true, "drop": {"clay": 1},    "hardness": 3, "tool": "shovel"},
+    {"num": 7,  "id": "stone",        "name": "Pierre",          "solid": true, "drop": {"stone": 1},   "hardness": 6, "tool": "pickaxe"},
+    {"num": 8,  "id": "iron_ore",     "name": "Minerai de fer",  "solid": true, "drop": {"iron_ore": 1},"hardness": 8, "tool": "pickaxe"},
+    {"num": 9,  "id": "coal_ore",     "name": "Charbon",         "solid": true, "drop": {"coal": 1},    "hardness": 7, "tool": "pickaxe"},
+    {"num": 10, "id": "snow",         "name": "Neige",           "solid": true, "drop": {},             "hardness": 1, "tool": "shovel"},
+    {"num": 11, "id": "water",        "name": "Eau",             "solid": false, "liquid": true, "diggable": false},
+    {"num": 20, "id": "wood_block",   "name": "Bloc de bois",    "solid": true, "cost": {"wood": 1},      "build_time": 2},
+    {"num": 21, "id": "plank_block",  "name": "Planches",        "solid": true, "cost": {"plank": 2},     "build_time": 2},
+    {"num": 22, "id": "stone_block",  "name": "Pierre brute",    "solid": true, "cost": {"stone": 1},     "build_time": 3},
+    {"num": 23, "id": "cut_stone_block","name": "Pierre taillée","solid": true, "cost": {"cut_stone": 1}, "build_time": 3},
+    {"num": 24, "id": "brick_block",  "name": "Briques",         "solid": true, "cost": {"brick": 2},     "build_time": 3},
+    {"num": 25, "id": "thatch_block", "name": "Chaume",          "solid": true, "cost": {"reed": 2},      "build_time": 1},
+    {"num": 26, "id": "dirt_block",   "name": "Terre tassée",    "solid": true, "cost": {"dirt": 1},      "build_time": 1}
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "_doc": "Proposition : le métier est donné par l'outil porté. tool = ressource à prendre en réserve (null = sans outil).",
+  "jobs": [
+    {"id": "hauler",       "name": "Porteur",            "tool": null,          "tasks": ["haul"]},
+    {"id": "builder",      "name": "Bâtisseur",          "tool": "hammer",      "tasks": ["build", "demolish", "haul"]},
+    {"id": "woodcutter",   "name": "Bûcheron",           "tool": "axe",         "tasks": ["cut_tree", "plant_tree"]},
+    {"id": "miner",        "name": "Mineur",             "tool": "pickaxe",     "tasks": ["dig_hard"]},
+    {"id": "digger",       "name": "Terrassier",         "tool": "shovel",      "tasks": ["dig_soft"]},
+    {"id": "gatherer",     "name": "Cueilleur",          "tool": "basket",      "tasks": ["gather"]},
+    {"id": "fisher",       "name": "Pêcheur",            "tool": "fishing_rod", "tasks": ["fish"]},
+    {"id": "hunter",       "name": "Chasseur",           "tool": "bow",         "tasks": ["hunt", "butcher"]},
+    {"id": "farmer",       "name": "Fermier",            "tool": "hoe",         "tasks": ["sow", "harvest"]},
+    {"id": "carpenter",    "name": "Menuisier",          "tool": "saw",         "tasks": ["craft:carpentry"]},
+    {"id": "stonemason",   "name": "Tailleur de pierre", "tool": "chisel",      "tasks": ["craft:masonry"]},
+    {"id": "smith",        "name": "Forgeron",           "tool": "tongs",       "tasks": ["craft:smithing"]},
+    {"id": "cook",         "name": "Cuisinier",          "tool": "ladle",       "tasks": ["craft:cooking"]}
+  ]
+}
