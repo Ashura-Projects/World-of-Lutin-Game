@@ -4,9 +4,9 @@ Reprise : lire ce fichier, puis `prompts/03-reprise-et-corrections.md`.
 
 | Jalon | État | Preuves |
 |---|---|---|
-| J0 — Fondations | en cours | |
-| J1 — Le monde en blocs | à faire | |
-| J2 — Construire au doigt | à faire | |
+| J0 — Fondations | **fait** | 10 tests verts ; build GitHub Actions vert (tests + APK) ; `docs/captures/titre.jpg` |
+| J1 — Le monde en blocs | **fait** (perf téléphone non mesurée) | même graine = même monde (test) ; 256×256 : génération 2,4 s, maillage 2,4 s, pire chunk 5,2 ms, 376 k triangles (CPU cloud) ; `monde_128.jpg` |
+| J2 — Construire au doigt | **fait** | rayon DDA + face, ligne/remplir/mur/gomme, annuler/rétablir, curseur d'étage ; test « tour creuse de 10 + escalier » ; `construire.jpg` |
 | J3 — Les Lutins | à faire | |
 | J4 — Récolte & métiers | à faire | |
 | J5 — Les lutins bâtissent | à faire | |
@@ -28,3 +28,14 @@ Settings, GameSetup), GUT 9.7.1 headless, export Android arm64 (`com.ashura.worl
 
 ## Problèmes connus
 - Le travail est poussé sur la branche de session `ccr-a284deb7-1npond` ; la fusion dans `main` (qui publie l'APK) attend l'accord d'Ashura.
+
+## J1 — Le monde en blocs
+- Chunks 16³ (1 octet/bloc), `VoxelWorld` (vérité), `WorldGenerator` (FastNoiseLite seedé : plaine, rivière, lac, collines, montagne, couches, poches de minerais),
+  `ChunkMesher` (faces visibles, tampon 18³, thread `WorkerThreadPool`), arbres/buissons en `MultiMeshInstance3D`, `CameraController` tactile, `SkyLight`.
+- Outils : `tools/capture/capture.gd` (captures réelles sous Xvfb), `tools/bench/bench_world.tscn` (mesures).
+- Non testé : 60 img/s sur le Xiaomi (la capture cloud tourne en rendu logiciel, ~8 img/s, non représentatif).
+
+## J2 — Construire au doigt
+- `VoxelRaycast` (DDA), `Shapes` (ligne, rectangle, mur, boîte de creusage), `EditHistory` (annuler/rétablir), `BuildTool` (1 doigt = construire,
+  2 doigts = caméra, aperçu bleu / rouge pour la gomme), `BuildPanel`, curseur d'étage.
+- Mode créatif : pose instantanée. Au J5, `BuildTool.place_handler` transformera les poses en plans pour les bâtisseurs.

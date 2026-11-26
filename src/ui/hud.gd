@@ -24,6 +24,38 @@ func _ready() -> void:
 
 func bind_game(game: Node) -> void:
 	_game = game
+	_setup_build(game.build_tool, game.world_view)
+
+
+## Mode Construire : barre des matériaux + curseur d'étage (bord droit).
+func _setup_build(tool: BuildTool, view: WorldView) -> void:
+	var panel := BuildPanel.new()
+	panel.setup(tool)
+	panel.position = Vector2(170, 470)
+	panel.visible = false
+	root.add_child(panel)
+	var btn := menu_button("Construire")
+	btn.toggle_mode = true
+	btn.toggled.connect(
+		func(on: bool) -> void:
+			panel.visible = on
+			tool.set_active(on)
+	)
+	var slider := VSlider.new()
+	slider.min_value = 1
+	slider.max_value = tool.world.size.y
+	slider.value = tool.world.size.y
+	slider.step = 1
+	slider.position = Vector2(1540, 90)
+	slider.size = Vector2(50, 500)
+	slider.custom_minimum_size = Vector2(50, 500)
+	slider.value_changed.connect(
+		func(v: float) -> void:
+			var y := int(v) if v < tool.world.size.y else 9999
+			view.set_max_y(y)
+			tool.max_y = y
+	)
+	root.add_child(slider)
 
 
 func _bar(rect: Rect2) -> Panel:

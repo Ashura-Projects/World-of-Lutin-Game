@@ -8,6 +8,7 @@ var flora_view: FloraView
 var camera: CameraController
 var sky: SkyLight
 var hud: Hud
+var build_tool: BuildTool
 var _gen_task: int = -1
 var _loading: Label
 
@@ -54,6 +55,9 @@ func _on_world_ready() -> void:
 	var c := Vector3(world.size.x / 2.0, 0, world.size.z / 2.0)
 	c.y = world.surface_y(int(c.x), int(c.z))
 	camera.focus(c)
+	build_tool = BuildTool.new()
+	add_child(build_tool)
+	build_tool.setup(world, camera)
 	_loading.queue_free()
 	hud.bind_game(self)
 	GameClock.running = true
