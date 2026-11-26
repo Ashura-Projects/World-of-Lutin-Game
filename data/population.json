@@ -1,0 +1,14 @@
+{
+  "_doc": "Cycle de vie. Durées en jours de jeu (1 année = 20 jours).",
+  "ages": [
+    {"id": "baby",  "name": "Bébé",    "from_day": 0,   "works": false, "school": false},
+    {"id": "child", "name": "Enfant",  "from_day": 10,  "works": false, "school": true},
+    {"id": "adult", "name": "Adulte",  "from_day": 60,  "works": true,  "school": false},
+    {"id": "elder", "name": "Ancien",  "from_day": 400, "works": true,  "school": false, "work_speed": 0.6}
+  ],
+  "birth": {
+    "requires": ["couple_in_same_house", "free_bed", "food_stock_days>=5", "village_mood>=50"],
+    "chance_per_day": 0.08
+  },
+  "death_of_old_age": "A_VALIDER"
+}

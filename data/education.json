@@ -1,0 +1,21 @@
+{
+  "_doc": "École (enfants) et centres de formation (adultes). Aptitudes 0-100. phase = phase de développement où le centre arrive.",
+  "aptitudes": ["knowledge", "strength", "dexterity", "magic"],
+  "school": {
+    "building": "school", "staff_job": "teacher", "seats": 8,
+    "courses": [
+      {"id": "letters",  "name": "Lettres et calcul", "gives": {"knowledge": 2}},
+      {"id": "crafts",   "name": "Travaux manuels",   "gives": {"dexterity": 2}},
+      {"id": "games",    "name": "Jeux et lutte",     "gives": {"strength": 2}},
+      {"id": "mysteries","name": "Mystères",          "gives": {"magic": 2}, "phase": 2}
+    ],
+    "_note": "gains par jour d'école"
+  },
+  "training_centers": [
+    {"id": "library",        "name": "Bibliothèque",   "trains": "researcher", "requires": {"knowledge": 50}, "days": 10, "phase": 1},
+    {"id": "master_workshop","name": "Atelier de maître","trains": "master_artisan", "requires": {"dexterity": 50}, "days": 10, "phase": 1},
+    {"id": "barracks",       "name": "Caserne",        "trains": "soldier",    "requires": {"strength": 40},  "days": 8,  "phase": 2},
+    {"id": "mage_tower",     "name": "Tour des mages", "trains": "mage",       "requires": {"magic": 60},     "days": 15, "phase": 2}
+  ],
+  "adult_without_school_penalty": 0.5
+}

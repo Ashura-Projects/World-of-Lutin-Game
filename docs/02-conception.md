@@ -18,12 +18,43 @@
 - Fiche : nom, **métier**, niveau d'expérience du métier, besoins.
 - **Besoins** : faim, sommeil, chaleur (hiver), moral. Moral bas → travail lent ; très bas → il quitte le village.
 - **Déplacement** : marche, monte une marche d'**1 bloc**, ne saute pas plus ; escaliers, échelles et ponts à construire pour le reste.
-- Nouveaux lutins : arrivent si le village est attractif (nourriture, lits libres, moral) **[À VALIDER : ou bien naissances ?]**.
+- **Les lutins naissent** (validé) : voir §2b.
+
+## 2b. Cycle de vie
+- **Naissance** : un couple de lutins adultes dans une **maison** avec un lit libre, village nourri et moral correct → chance de naissance (`data/population.json`).
+- **Âges** : bébé → **enfant** → adulte → ancien. Un enfant ne travaille pas : il joue, mange et **va à l'école**.
+- Ce que l'enfant apprend décide de ce qu'il pourra devenir (§3b).
+- **[À VALIDER]** Les anciens meurent-ils de vieillesse (cimetière, héritage de savoir) ou restent-ils indéfiniment ?
 
 ## 3. Métiers
-- **Proposition** : le métier dépend de **l'outil** que le lutin porte (hache = bûcheron, pioche = mineur…). Pour changer de métier, on lui donne un autre outil depuis la réserve. Les outils se fabriquent → l'économie contrôle la main-d'œuvre. **[À VALIDER]**
-- Métiers Phase 1 : voir `data/jobs.json` — porteur (sans outil), bûcheron, mineur, bâtisseur, cueilleur, pêcheur, chasseur, fermier, menuisier, tailleur de pierre, forgeron, boulanger/cuisinier.
+- **Validé** : le métier de base dépend de **l'outil** porté (hache = bûcheron, pioche = mineur…). Les outils se fabriquent → l'économie contrôle la main-d'œuvre.
+- Métiers de base : voir `data/jobs.json` — porteur (sans outil), bûcheron, mineur, bâtisseur, cueilleur, pêcheur, chasseur, fermier, menuisier, tailleur de pierre, forgeron, cuisinier.
 - Les lutins gagnent de l'**expérience** dans leur métier → travaillent plus vite.
+
+### Panneau d'affectation (gestion automatisée)
+- Chaque **bâtiment de travail** (atelier, scierie, ferme, mine, cuisine, école…) a des **postes** (nombre de places).
+- **Panneau d'affectation** : liste des bâtiments × lutins, on **attribue un lutin à un bâtiment** d'un tap (ou glisser-déposer).
+- Un lutin affecté : récupère **automatiquement** l'outil adapté en réserve, travaille dans ce bâtiment en priorité, y retourne chaque jour.
+- Mode « auto » par bâtiment : le jeu remplit les postes vides avec les lutins libres les plus compétents.
+- Les lutins non affectés font les tâches générales (porter, récolter les zones désignées, bâtir).
+- Alertes : « Scierie : 1 poste vide », « Pas de hache en réserve pour le bûcheron affecté ».
+
+## 3b. Éducation, formation et recherche
+- **École** (bâtiment, avec un **maître** affecté) : les enfants y vont le jour ; ils accumulent des **aptitudes** (savoir, force, adresse, magie) selon les cours choisis.
+- À l'âge adulte, les aptitudes ouvrent l'accès aux **centres de formation** :
+  | Centre | Forme des | Rôle |
+  |---|---|---|
+  | **Bibliothèque / académie** | **Chercheurs** | produisent des points de recherche → débloquent les **technologies** |
+  | **Atelier de maître** | Artisans experts | recettes avancées, meilleure qualité |
+  | **Caserne** *(Phase 2)* | **Soldats** (guerrier, archer) | défense, guerre |
+  | **Tour des mages** *(Phase 2)* | **Mages** | **[À VALIDER : que fait la magie ?]** (soin, protection des remparts, météo, combat…) |
+- Les métiers spécialisés ne s'obtiennent **que par l'éducation** (pas par un simple outil).
+- Un adulte non formé peut suivre une formation courte (moins efficace qu'un enfant éduqué).
+
+### Technologies (Phase 1 : arbre court)
+- Les chercheurs accumulent des points ; le joueur choisit la prochaine technologie (`data/technologies.json`).
+- Exemples : charrue (rendement agricole), moulin (farine plus rapide), maçonnerie (pierre taillée, tours), fours à briques, fer forgé (outils durables), écriture (école améliorée).
+- Phase 2 : technologies militaires et magiques.
 
 ## 4. Récolte (même logique que Castle Story)
 - Le joueur **désigne** : arbres à couper (tap ou zone), blocs à creuser (zone en 3D), buissons à cueillir.
@@ -67,14 +98,13 @@
 # PHASE 2 — MODE AVENTURE ROYALE (à détailler après la Phase 1)
 - Départ avec **3 à 4 lutins**, un roi/une reine lutin à protéger.
 - **Orcs** rouges grassouillets : camps sur la carte, raids nocturnes, sièges avec béliers et échelles.
-- Combat : métiers guerrier / archer (outil = arme), ordres de groupe, défense par étages, créneaux.
+- Combat : **soldats** (guerrier, archer) et **mages** formés à la caserne / tour des mages (§3b), ordres de groupe, défense par étages, créneaux.
 - **Destruction et effondrement** des blocs non soutenus (sièges spectaculaires).
 - **Carte régionale** : autres royaumes lutins (IA), tribus orques, provinces à prendre.
 - **Diplomatie** : émissaires, alliances, tributs, commerce, déclarations de guerre.
 - But de partie : unifier la région / devenir Haut-Roi. **[À VALIDER]**
 
 ## Questions ouvertes
-1. Métier = outil porté (comme proposé) : OK ?
-2. Nouveaux lutins : arrivées ou naissances ?
-3. Nom définitif du jeu.
-4. Carte aléatoire, ou aussi des cartes dessinées à la main ?
+1. Que fait la magie des mages (soin, protection, météo, combat…) ?
+2. Les anciens meurent-ils de vieillesse ?
+3. Carte aléatoire, ou aussi des cartes dessinées à la main ?

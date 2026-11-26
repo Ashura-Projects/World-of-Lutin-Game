@@ -1,0 +1,13 @@
+{
+  "_doc": "Arbre de technologies Phase 1 (court). cost = points de recherche produits par les chercheurs.",
+  "technologies": [
+    {"id": "writing",   "name": "Écriture",        "cost": 30,  "requires": [],          "effect": {"school_gain": 0.25}},
+    {"id": "plough",    "name": "Charrue",         "cost": 40,  "requires": [],          "effect": {"crop_yield": 0.3}},
+    {"id": "masonry",   "name": "Maçonnerie",      "cost": 50,  "requires": [],          "unlocks": ["mason_bench", "cut_stone_block"]},
+    {"id": "kilns",     "name": "Fours à briques", "cost": 60,  "requires": ["masonry"], "unlocks": ["kiln", "brick_block"]},
+    {"id": "mill",      "name": "Moulin",          "cost": 70,  "requires": ["plough"],  "effect": {"flour_speed": 0.5}},
+    {"id": "iron_work", "name": "Fer forgé",       "cost": 80,  "requires": ["kilns"],   "effect": {"tool_durability": 0.5}},
+    {"id": "weaving",   "name": "Tissage",         "cost": 50,  "requires": [],          "unlocks": ["loom"]},
+    {"id": "academy",   "name": "Académie",        "cost": 120, "requires": ["writing", "masonry"], "effect": {"research_speed": 0.3}}
+  ]
+}

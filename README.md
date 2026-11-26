@@ -14,13 +14,13 @@ Projet personnel d'**Ashura**, développé dans le cloud avec Claude Code (Godot
 | `CLAUDE.md` | Règles que Claude Code suit automatiquement |
 | `docs/01-vision.md` | Pitch, modes, piliers |
 | `docs/02-conception.md` | Toutes les mécaniques (source de vérité) |
-| `docs/03-feuille-de-route.md` | Jalons J0 → J12 avec critères de réussite |
+| `docs/03-feuille-de-route.md` | Jalons J0 → J14 avec critères de réussite |
 | `docs/04-architecture.md` | Code, moteur de blocs, navigation 3D |
 | `docs/05-outils-et-assets.md` | Outils cloud, skills, sources d'assets |
 | `docs/06-direction-artistique.md` | Style, Lutins, Orcs, caméra |
 | `docs/07-interface-mobile.md` | Gestes, pose de blocs au doigt |
 | `docs/decisions/` | Décisions techniques (ADR) |
-| `data/*.json` | Blocs, ressources, recettes, métiers, pièces |
+| `data/*.json` | Blocs, ressources, recettes, métiers, pièces, population, éducation, technologies |
 | `prompts/bibliotheque-prompts.md` | Prompts prêts à copier |
 | `.claude/commands/` | `/jalon`, `/verifier`, `/point` |
 
