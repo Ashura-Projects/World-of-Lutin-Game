@@ -120,8 +120,9 @@ func _predators(tps: float) -> void:
 				a["cool"] = int(float(d.get("attack_every_s", 1.5)) * tps)
 				if not prey.mobilized and prey.attack_cool == 0:
 					_strike(prey, a, tps)  # il se défend
-		elif a["path_i"] >= a["path"].size() or int(GameClock.tick_index) % int(tps * 2.0) == a["id"] % int(tps * 2.0):
-			a["path"] = Pathfinder.find(colony.world, a["cell"], prey.cell, 800, true)
+		elif int(GameClock.tick_index) >= int(a.get("repath_at", 0)):
+			a["repath_at"] = int(GameClock.tick_index) + int(tps * 1.5)  # pas plus d'une recherche toutes les 1,5 s
+			a["path"] = Pathfinder.find(colony.world, a["cell"], prey.cell, 600, true)
 			a["path_i"] = 1
 			a["wait"] = 0
 
@@ -148,7 +149,7 @@ func _militia(l: Lutin, tps: float) -> void:
 			bd = dd
 			target = a
 	if target.is_empty():
-		if not Colony._near(l.cell, colony.stock.pos, 3) and not l.has_path():
+		if not Colony._near(l.cell, colony.stock.pos, 3) and not l.has_path() and not l.pending_path:
 			colony.send(l, colony.stock.pos, true)  # point de rassemblement
 		return
 	var ws := _weapon_stats(l)
@@ -158,7 +159,7 @@ func _militia(l: Lutin, tps: float) -> void:
 		l.state = Lutin.State.WORK
 		if l.attack_cool == 0:
 			_strike(l, target, tps)
-	elif not l.has_path() or int(GameClock.tick_index) % int(tps) == l.id % int(tps):
+	elif not l.pending_path and (not l.has_path() or int(GameClock.tick_index) % int(tps * 2) == l.id % int(tps * 2)):
 		colony.send(l, target["cell"], true)
 
 

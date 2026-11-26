@@ -54,8 +54,6 @@ func start(l: Lutin, t: Dictionary) -> bool:
 	t["reserved"] = l.id
 	t["phase"] = "fetch"
 	l.task_id = t["id"]
-	if not l.has_path():
-		arrived(l, t)
 	return true
 
 
@@ -73,9 +71,6 @@ func arrived(l: Lutin, t: Dictionary) -> void:
 			_refund(l, t)
 			t["blocked"] = GameClock.tick_index + 30 * GameClock.ticks_per_second()
 			board.release(l)
-			return
-		if not l.has_path():
-			l.state = Lutin.State.WORK
 		return
 	l.state = Lutin.State.WORK
 

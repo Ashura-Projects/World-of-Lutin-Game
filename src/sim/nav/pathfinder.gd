@@ -1,5 +1,7 @@
 class_name Pathfinder
 extends RefCounted
+
+static var last_visited: int = 0  # nœuds explorés par la dernière recherche (budget par tick)
 ## A* sur la grille de blocs. Case marchable = air (et pas d'eau) avec un bloc solide dessous.
 ## Déplacements : 4 voisins horizontaux, en montant ou descendant d'1 bloc max (le lutin fait 1 bloc de haut).
 
@@ -38,8 +40,7 @@ static func neighbors(world: VoxelWorld, p: Vector3i) -> Array[Vector3i]:
 
 ## Coût d'un pas : les routes accélèrent (speed_mult du bloc sous les pieds).
 static func step_cost(world: VoxelWorld, q: Vector3i) -> float:
-	var under := DataRegistry.block(world.get_block(q + Vector3i.DOWN))
-	return 1.0 / float(under.get("speed_mult", 1.0))
+	return 1.0 / world.types.speed[world.get_block(q + Vector3i.DOWN)]
 
 
 ## Chemin de `from` à `to` (inclus). Vide si impossible. `near` : accepte d'arriver à côté de la cible.
@@ -59,6 +60,7 @@ static func find(
 		var cur: Vector3i = _pop(open_heap)[2]
 		visited += 1
 		if cur == to or (near and _adjacent(cur, to, reach_up)):
+			last_visited = visited
 			return _rebuild(came, cur)
 		for nb in neighbors(world, cur):
 			var ng: float = g[cur] + step_cost(world, nb)
@@ -67,6 +69,7 @@ static func find(
 				came[nb] = cur
 				counter += 1
 				_push(open_heap, [ng + _h(nb, to), counter, nb])
+	last_visited = visited
 	return empty
 
 

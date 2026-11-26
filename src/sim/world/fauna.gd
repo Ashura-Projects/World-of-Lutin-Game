@@ -82,6 +82,7 @@ func damage(id: int, amount: float) -> bool:
 
 func tick(colony_cells: Array) -> void:
 	var tps := float(GameClock.ticks_per_second())
+	var searches := 2  # recherches de chemin max par tick (performance)
 	for a in animals:
 		var d := def(a["kind"])
 		if a["wait"] > 0:
@@ -98,8 +99,9 @@ func tick(colony_cells: Array) -> void:
 			else:
 				a["pos"] += to.normalized() * step
 			continue
-		if a["wait"] > 0 or int(a.get("prey", -1)) != -1:
+		if a["wait"] > 0 or int(a.get("prey", -1)) != -1 or searches <= 0:
 			continue  # un prédateur en chasse suit sa proie (Combat)
+		searches -= 1
 		# fuite si un lutin approche (cerf), sinon errance
 		var flee := float(d.get("flee_radius", 0))
 		var dest: Vector3i = a["cell"] + Vector3i(Rng.randi_range(-6, 6), 0, Rng.randi_range(-6, 6))
@@ -110,7 +112,7 @@ func tick(colony_cells: Array) -> void:
 				break
 		dest = Pathfinder.snap(world, Vector3i(dest.x, world.surface_y(dest.x, dest.z), dest.z))
 		if dest.y >= 0:
-			a["path"] = Pathfinder.find(world, a["cell"], dest, 600)
+			a["path"] = Pathfinder.find(world, a["cell"], dest, 150)
 			a["path_i"] = 1
 		a["wait"] = Rng.randi_range(2, 8) * GameClock.ticks_per_second()
 

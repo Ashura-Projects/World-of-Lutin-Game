@@ -30,6 +30,7 @@ var hiding: bool = false
 var attack_cool: int = 0
 var trained: Dictionary = {}  # métier formé -> efficacité (1.0 enfant éduqué, 0.5 formation courte d'adulte)
 var parents: Array = []
+var pending_path: bool = false  # une recherche de chemin est en cours (non sauvegardé)
 
 
 func place_at(c: Vector3i) -> void:

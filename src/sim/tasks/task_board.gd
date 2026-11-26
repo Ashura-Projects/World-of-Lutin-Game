@@ -257,6 +257,22 @@ func while_walking(l: Lutin) -> void:
 	exec.while_walking(l)
 
 
+## Chemin impossible : la tâche est mise de côté 30 s, le lutin est libéré (matériaux rendus).
+func path_failed(l: Lutin) -> void:
+	if l.carrying.has("pickup"):
+		var c: Array = l.carrying["pickup"]
+		free_pile(Vector3i(int(c[0]), int(c[1]), int(c[2])))
+		l.carrying = {}
+	var t: Dictionary = tasks.get(l.task_id, {})
+	if not t.is_empty():
+		t["blocked"] = GameClock.tick_index + 30 * GameClock.ticks_per_second()
+		if l.carrying.has("build"):
+			builds._refund(l, t)
+	elif l.carrying.has("build"):
+		l.carrying = {}
+	release(l)
+
+
 func reserve_pile(cell: Vector3i, l: Lutin) -> bool:
 	if _haul_reserved.has(cell):
 		return false

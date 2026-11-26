@@ -12,6 +12,8 @@ static func run(game: Node, action: String) -> void:
 			game.camera.focus(l.pos)
 			game.lutins_view.selected_id = l.id
 			game.hud.show_lutin(l)
+		"vue_large":
+			vue_large(game)
 		"recherche":
 			recherche(game)
 		"loups":
@@ -144,3 +146,9 @@ static func recherche(game: Node) -> void:
 	game.camera.distance = 18.0
 	game.camera.focus(Vector3(c))
 	game.hud.toggle_research()
+
+
+static func vue_large(game: Node) -> void:
+	game.camera.distance = 120.0
+	game.camera.pitch = deg_to_rad(55)
+	game.camera.focus(Vector3(game.world.size.x / 2.0, 30, game.world.size.z / 2.0))

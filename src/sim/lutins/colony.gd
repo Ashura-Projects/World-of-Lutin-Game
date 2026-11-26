@@ -18,8 +18,8 @@ var education: RefCounted = null  # Education (J8) : école des enfants
 var _pop: Dictionary
 var _move: Dictionary
 var _needs: Dictionary
-var _path_budget: int = 0
-var _goals: Dictionary = {}  # id lutin -> [case visée, raison]
+var prof_search: int = 0  # mesure (outil de bench)
+var _searches: Dictionary = {}  # id lutin -> PathSearch en cours
 
 
 func _init(w: VoxelWorld) -> void:
@@ -61,13 +61,44 @@ func spawn_start(center: Vector3i, n: int) -> void:
 
 
 func tick() -> void:
-	_path_budget = int(_move.get("paths_per_tick", 3))
 	var tpd := float(GameClock.ticks_per_day())
 	var night := GameClock.is_night()
+	var t0 := Time.get_ticks_usec()
+	_run_searches()
+	prof_search += Time.get_ticks_usec() - t0
 	for l in lutins:
 		_update_needs(l, tpd)
+		if l.pending_path and not l.mobilized:
+			continue  # attend son chemin
 		_decide(l, night)
 		_act(l)
+
+
+## Fait avancer les recherches de chemin avec un budget fixe de nœuds par tick.
+func _run_searches() -> void:
+	var budget := int(_move.get("path_nodes_per_tick", 250))
+	for id: int in _searches.keys():
+		if budget <= 0:
+			break
+		var s: PathSearch = _searches[id]
+		budget -= s.step(budget)
+		if s.status == PathSearch.Status.RUNNING:
+			continue
+		_searches.erase(id)
+		var l := find_lutin(id)
+		if l == null:
+			continue
+		l.pending_path = false
+		if s.status == PathSearch.Status.FAILED:
+			l.state = Lutin.State.IDLE
+			if task_board != null:
+				task_board.call("path_failed", l)
+			continue
+		l.set_path(s.path)
+		if not l.has_path():  # déjà sur place
+			l.state = Lutin.State.IDLE
+			if task_board != null:
+				task_board.call("arrived", l)
 
 
 func _update_needs(l: Lutin, tpd: float) -> void:
@@ -198,13 +229,11 @@ func _child_day(l: Lutin) -> void:
 
 ## Demande un chemin (budget limité par tick). Renvoie false si le chemin est impossible.
 func _go(l: Lutin, target: Vector3i, _why: String, near: bool = false, reach_up: int = 1) -> bool:
-	if _path_budget <= 0:
-		return true  # on réessaiera au prochain tick
-	_path_budget -= 1
-	var p := Pathfinder.find(world, l.cell, target, int(_move.get("path_max_nodes", 20000)), near, reach_up)
-	if p.is_empty():
-		return false
-	l.set_path(p)
+	_searches[l.id] = PathSearch.new(world, l.cell, target, int(_move.get("path_max_nodes", 3000)), near, reach_up)
+	l.pending_path = true
+	l.path = []
+	l.path_i = 0
+	l.state = Lutin.State.WALK
 	return true
 
 
@@ -254,6 +283,7 @@ func auto_assign_jobs() -> void:
 
 
 func remove_lutin(l: Lutin) -> void:
+	_searches.erase(l.id)
 	if task_board != null:
 		task_board.call("release", l)
 	if l.weapon != "":

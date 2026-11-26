@@ -30,8 +30,6 @@ func start(l: Lutin, t: Dictionary) -> bool:
 		return false
 	t["reserved"] = l.id
 	l.task_id = t["id"]
-	if not l.has_path():
-		arrived(l)
 	return true
 
 
@@ -51,8 +49,6 @@ func start_haul(l: Lutin) -> bool:
 		board.free_pile(best)
 		return false
 	l.carrying = {"pickup": [best.x, best.y, best.z]}
-	if not l.has_path():
-		arrived(l)
 	return true
 
 

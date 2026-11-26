@@ -89,13 +89,15 @@
     "_doc": "Déplacement : blocs par seconde (× speed_mult des routes). Monte/descend 1 bloc au maximum.",
     "walk_speed": 2.2,
     "max_step": 1,
-    "path_max_nodes": 20000,
+    "path_max_nodes": 3000,
     "paths_per_tick": 3,
     "wander_radius": 10,
     "idle_wait_s": [
       2,
       6
-    ]
+    ],
+    "path_nodes_per_tick": 100,
+    "_budget_doc": "Budget de recherche de chemin (A*) : nœuds max par recherche et par tick de simulation (performance mobile)."
   },
   "needs": {
     "_doc": "Besoins 0-100 (100 = comblé). Pertes par jour de jeu.",
