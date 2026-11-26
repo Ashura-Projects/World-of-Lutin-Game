@@ -12,6 +12,7 @@ func _ready() -> void:
 	theme = UiStyle.make_theme()
 	GameSetup.reset_defaults()
 	_build()
+	Audio.start_music()
 
 
 func _build() -> void:

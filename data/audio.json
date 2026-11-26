@@ -1,0 +1,14 @@
+{
+  "_doc": "Son : musiques (jour / nuit), ambiances selon ce que regarde la caméra (rayon et zoom), bruitages. Volumes en dB.",
+  "music_day": ["matin_au_village", "chemin_des_lutins"],
+  "music_night": ["veillee"],
+  "music_db": -8,
+  "ambience_db": -6,
+  "sfx_db": -4,
+  "listen_radius": 14,
+  "zoom_near": 8,
+  "zoom_far": 90,
+  "work_sound_every_s": 1.1,
+  "work_sounds": {"cut": "hache", "dig": "pioche", "build": "marteau", "build_struct": "marteau", "craft": "scie", "till": "pelle", "harvest": "pelle"},
+  "howl_chance_per_s_night": 0.01
+}

@@ -197,6 +197,7 @@ func _hunt(l: Lutin, t: Dictionary, tps: float) -> void:
 	if float(t["progress"]) >= float(w.get("reload_s", 6)) * 0.5:
 		t["progress"] = 0.0
 		t["shots"] = int(t.get("shots", 0)) + 1
+		EventBus.sfx.emit("fusil", l.pos)
 		var cell: Vector3i = a["cell"]
 		var drop: Dictionary = board.fauna.def(a["kind"]).get("drop", {})
 		if board.fauna.damage(a["id"], float(w.get("attack", 18))):

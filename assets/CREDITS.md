@@ -10,3 +10,4 @@ Aucun asset externe : tout est **fabriqué par script** pour ce projet.
 ## Jeu
 - `assets/ui/title_bg.jpg`, `assets/ui/icon.png` : rendus Blender faits pour ce projet (`tools/style/`).
 - Outil de tests **GUT 9.7.1** (`addons/gut/`, licence MIT, non inclus dans l'APK).
+- **Musiques, ambiances et bruitages** (`assets/audio/`) : générés par synthèse pour ce projet (`tools/audio/generate_audio.py`), aucun échantillon externe.

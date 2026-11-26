@@ -117,6 +117,7 @@ func _predators(tps: float) -> void:
 			a["path"] = []
 			if a["cool"] == 0:
 				prey.hp -= float(d.get("damage", 5))
+				EventBus.sfx.emit("ours" if a["kind"] == "bear" else "loup", a["pos"])
 				a["cool"] = int(float(d.get("attack_every_s", 1.5)) * tps)
 				if not prey.mobilized and prey.attack_cool == 0:
 					_strike(prey, a, tps)  # il se défend
@@ -169,6 +170,7 @@ func _strike(l: Lutin, a: Dictionary, tps: float) -> void:
 	l.attack_cool = int(float(ws["every"]) * tps)
 	var cell: Vector3i = a["cell"]
 	var kind: String = a["kind"]
+	EventBus.sfx.emit("fusil" if l.weapon == "flintlock" else "marteau", l.pos)
 	if fauna.damage(a["id"], float(ws["attack"])):
 		l.kills[kind] = int(l.kills.get(kind, 0)) + 1
 		l.combat_xp += float(fauna.def(kind).get("xp", 10))

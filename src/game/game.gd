@@ -26,6 +26,7 @@ var production: Production
 var fields_view: FieldsView
 var sim: GameSim
 var _autosave_ticks: int = 0
+var sound: SoundDirector
 var _gen_task: int = -1
 var _loading: Label
 
@@ -110,6 +111,9 @@ func _on_world_ready() -> void:
 	build_tool.place_handler = board.place_blueprints  # en partie : poser = plans pour les bâtisseurs
 	build_tool.structure_handler = func(kind: String, cell: Vector3i) -> bool:
 		return board.add_structure(kind, cell) >= 0
+	sound = SoundDirector.new()
+	add_child(sound)
+	sound.setup(self)
 	_loading.queue_free()
 	hud.bind_game(self)
 	GameClock.running = true
@@ -162,5 +166,7 @@ func _on_tap(screen: Vector2) -> void:
 
 
 func _exit_tree() -> void:
+	Audio.stop_all()
+	Audio.world_root = null
 	if sim != null:
 		sim.unregister_saves()
