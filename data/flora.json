@@ -1,0 +1,45 @@
+{
+  "_doc": "Végétation récoltable. work = secondes de travail (x1). Un seul bois : la bûche.",
+  "trees": {
+    "pin": {
+      "drop": {
+        "log": 4
+      },
+      "work": 8
+    },
+    "chene": {
+      "drop": {
+        "log": 5
+      },
+      "work": 10
+    },
+    "bouleau": {
+      "drop": {
+        "log": 3
+      },
+      "work": 7
+    }
+  },
+  "bush": {
+    "drop": {
+      "berries": 3
+    },
+    "work": 3,
+    "regrow_days": 6
+  },
+  "wild": {
+    "wild_flax": {
+      "work": 3
+    },
+    "medicinal_herb": {
+      "work": 3
+    }
+  },
+  "fishing": {
+    "work": 12,
+    "drop": {
+      "fish": 1
+    }
+  },
+  "tree_regrow": false
+}

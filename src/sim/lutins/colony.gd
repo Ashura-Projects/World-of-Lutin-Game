@@ -74,6 +74,12 @@ func _update_needs(l: Lutin, tpd: float) -> void:
 
 
 func _decide(l: Lutin, night: bool) -> void:
+	if l.state == Lutin.State.WORK:
+		var urgent: bool = l.needs["hunger"] < float(_needs["hunger"]["critical"]) * 2.0 or l.needs["sleep"] < 15.0
+		if not urgent:
+			return
+		if task_board != null:
+			task_board.call("release", l)
 	if l.state == Lutin.State.SLEEP:
 		if l.needs["sleep"] >= float(_needs["sleep"]["wake_above"]) and not night:
 			l.state = Lutin.State.IDLE
@@ -113,10 +119,14 @@ func _act(l: Lutin) -> void:
 		l.wait_ticks -= 1
 		if l.wait_ticks == 0 and l.state == Lutin.State.EAT:
 			l.state = Lutin.State.IDLE
+	if l.state == Lutin.State.WORK and task_board != null:
+		task_board.call("work", l)
 	if l.state == Lutin.State.WALK:
+		if task_board != null and l.task_id >= 0:
+			task_board.call("while_walking", l)
 		var under := DataRegistry.block(world.get_block(l.cell + Vector3i.DOWN))
 		var speed := float(_move.get("walk_speed", 2.2)) * float(under.get("speed_mult", 1.0))
-		if l.walk(speed / GameClock.ticks_per_second()):
+		if l.state == Lutin.State.WALK and l.walk(speed / GameClock.ticks_per_second()):
 			l.state = Lutin.State.IDLE
 			if task_board != null:
 				task_board.call("arrived", l)
@@ -142,6 +152,36 @@ func send(l: Lutin, target: Vector3i, near: bool = false) -> bool:
 static func _near(a: Vector3i, b: Vector3i, r: int) -> bool:
 	var d := (a - b).abs()
 	return d.x <= r and d.z <= r and d.y <= 1
+
+
+## Changer de métier : l'outil du nouveau métier est pris dans la réserve, l'ancien y retourne.
+## Renvoie false s'il n'y a pas l'outil en réserve.
+func change_job(l: Lutin, job: String) -> bool:
+	if job == l.job:
+		return true
+	var new_tool = DataRegistry.find("jobs", "jobs", job).get("tool")
+	if new_tool != null and stock.count(str(new_tool)) <= 0:
+		return false
+	var old_tool = DataRegistry.find("jobs", "jobs", l.job).get("tool")
+	if old_tool != null:
+		stock.add(str(old_tool), 1)
+	if new_tool != null:
+		stock.take(str(new_tool), 1)
+	if task_board != null:
+		task_board.call("release", l)
+	l.set_job(job)
+	return true
+
+
+## Mode auto du départ : les outils du chariot vont aux premiers lutins (data/start.json › auto_jobs).
+func auto_assign_jobs() -> void:
+	var order: Array = DataRegistry.get_table("start").get("auto_jobs", [])
+	var i := 0
+	for job: String in order:
+		if i >= lutins.size():
+			break
+		if change_job(lutins[i], job):
+			i += 1
 
 
 func find_lutin(id: int) -> Lutin:

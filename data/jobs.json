@@ -193,5 +193,13 @@
         "craft:potions"
       ]
     }
-  ]
+  ],
+  "work": {
+    "_doc": "Travail : XP gagnée par seconde de travail, XP par niveau (× niveau), bonus de vitesse par niveau au-delà du 1, charge portée.",
+    "xp_per_second": 1.0,
+    "xp_per_level": 100,
+    "speed_per_level": 0.1,
+    "carry_capacity": 4,
+    "haul_any_idle": true
+  }
 }

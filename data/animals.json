@@ -19,7 +19,9 @@
         "meat": 6,
         "hide": 2
       },
-      "respawn_days": 10
+      "respawn_days": 10,
+      "speed": 1.4,
+      "flee_radius": 6
     },
     {
       "id": "boar",
@@ -40,7 +42,9 @@
         "meat": 8,
         "hide": 1
       },
-      "respawn_days": 12
+      "respawn_days": 12,
+      "speed": 1.1,
+      "flee_radius": 0
     },
     {
       "id": "fish",
