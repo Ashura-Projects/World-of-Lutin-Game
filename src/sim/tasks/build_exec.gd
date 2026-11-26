@@ -10,8 +10,13 @@ func _init(b: TaskBoard) -> void:
 
 
 static func cost_of(t: Dictionary) -> Dictionary:
-	if t["kind"] == "build":
-		return DataRegistry.block(int(t["block"])).get("cost", {})
+	match t["kind"]:
+		"build":
+			return DataRegistry.block(int(t["block"])).get("cost", {})
+		"sow":
+			return Fields.crop(t["crop"]).get("seed", {})
+		"craft":
+			return Production.recipe(t["recipe"]).get("in", {})
 	return Structures.def(t["struct_kind"]).get("cost", {})
 
 
@@ -99,7 +104,16 @@ func _refund(l: Lutin, t: Dictionary) -> void:
 
 
 func complete(l: Lutin, t: Dictionary) -> void:
-	if t["kind"] == "build":
+	if t["kind"] == "sow":
+		if board.fields != null:
+			board.fields.set_state(t["cell"], "sown")
+	elif t["kind"] == "craft":
+		var r := Production.recipe(t["recipe"])
+		for k: String in r.get("out", {}):
+			board.colony.stock.add(k, int(r["out"][k]))
+		if t.has("order"):
+			t["order"]["done"] = int(t["order"]["done"]) + 1
+	elif t["kind"] == "build":
 		if not can_place(t):
 			t["progress"] = 0.0
 			return

@@ -94,7 +94,9 @@
     },
     "warmth": {
       "loss_per_day_winter": 60,
-      "recover_near_fire_per_day": 200
+      "recover_near_fire_per_day": 200,
+      "heated_radius": 5,
+      "cold_mood_penalty": 20
     },
     "mood": {
       "base": 70

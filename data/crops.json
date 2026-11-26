@@ -95,5 +95,11 @@
   ],
   "winter_growth": false,
   "fertile_multiplier": 1.3,
-  "farmer_level_bonus": 0.05
+  "farmer_level_bonus": 0.05,
+  "field": {
+    "_doc": "Labourer une case (houe) la change en case de champ ; on y sème la culture choisie (1 semence de la réserve).",
+    "till_work": 2,
+    "sow_work": 2,
+    "harvest_work": 3
+  }
 }

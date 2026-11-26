@@ -5,6 +5,9 @@ extends RefCounted
 
 signal tasks_changed
 
+## Tâches où l'on va d'abord chercher des matériaux à la réserve.
+const FETCH_KINDS := ["build", "build_struct", "sow", "craft"]
+
 var world: VoxelWorld
 var colony: Colony
 var flora: Flora
@@ -18,6 +21,7 @@ var _work: Dictionary
 var exec: TaskExec
 var builds: BuildExec
 var structures: Structures = null
+var fields: Fields = null
 
 
 func _init(w: VoxelWorld, c: Colony, f: Flora, fa: Fauna, g: GroundItems) -> void:
@@ -224,12 +228,16 @@ func assign(l: Lutin) -> bool:
 		if t["reserved"] != -1 or int(t["blocked"]) > now or not _can_do(l, t):
 			continue
 		var d := Vector3(t["cell"]).distance_squared_to(Vector3(l.cell))
-		d += float(t["cell"].y) * 16.0 if t["kind"] == "build" else -float(t["cell"].y) * 4.0  # bâtir de bas en haut
+		d += (
+			float(t["cell"].y) * 16.0
+			if t["kind"] == "build"
+			else (-float(t["cell"].y) * 4.0 if t["kind"] == "dig" else 0.0)
+		)
 		if d < best_d:
 			best_d = d
 			best = t
 	if not best.is_empty():
-		if best["kind"] in ["build", "build_struct"]:
+		if best["kind"] in FETCH_KINDS:
 			return builds.start(l, best)
 		return exec.start(l, best)
 	if l.job == "hauler" or bool(_work.get("haul_any_idle", true)):
@@ -268,6 +276,7 @@ func to_dict() -> Dictionary:
 	var out := []
 	for t: Dictionary in tasks.values():
 		var e := t.duplicate()
+		e.erase("order")
 		var c: Vector3i = t["cell"]
 		e["cell"] = [c.x, c.y, c.z]
 		e["reserved"] = -1
@@ -288,6 +297,9 @@ func from_dict(d: Dictionary) -> void:
 		e.erase("phase")
 		if e.has("block"):
 			e["block"] = int(e["block"])
+		e.erase("order")
+		if e["kind"] == "craft":
+			continue  # les commandes recréent leurs tâches
 		if e.has("struct_id"):
 			e["struct_id"] = int(e["struct_id"])
 		tasks[e["id"]] = e

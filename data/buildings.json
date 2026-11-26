@@ -38,7 +38,11 @@
       "build_time": 6,
       "tags": [
         "hearth"
-      ]
+      ],
+      "fuel_per_day": {
+        "log": 1
+      },
+      "_fuel_doc": "l'hiver seulement"
     },
     {
       "id": "stockpile",
@@ -61,7 +65,10 @@
       },
       "station": "well",
       "_note": "le puits doit être creusé jusqu'à la nappe (world.water_table)",
-      "build_time": 15
+      "build_time": 12,
+      "staff": 1,
+      "job": "hauler",
+      "available_from_start": true
     },
     {
       "id": "sawbench",
@@ -79,7 +86,9 @@
       "build_time": 10,
       "tags": [
         "workstation"
-      ]
+      ],
+      "staff": 1,
+      "job": "carpenter"
     },
     {
       "id": "mill",
@@ -97,7 +106,10 @@
       "station": "mill",
       "staff": 1,
       "job": "miller",
-      "build_time": 15
+      "build_time": 15,
+      "tags": [
+        "workstation"
+      ]
     },
     {
       "id": "oven",
@@ -114,7 +126,10 @@
       "station": "oven",
       "staff": 1,
       "job": "baker",
-      "build_time": 15
+      "build_time": 15,
+      "tags": [
+        "workstation"
+      ]
     },
     {
       "id": "spinning_wheel",
@@ -129,7 +144,11 @@
       },
       "station": "spinning_wheel",
       "job": "weaver",
-      "build_time": 15
+      "build_time": 15,
+      "tags": [
+        "workstation"
+      ],
+      "staff": 1
     },
     {
       "id": "loom",
@@ -145,7 +164,11 @@
       },
       "station": "loom",
       "job": "weaver",
-      "build_time": 15
+      "build_time": 15,
+      "tags": [
+        "workstation"
+      ],
+      "staff": 1
     },
     {
       "id": "herbalist",
@@ -163,7 +186,10 @@
       "staff": 1,
       "job": "healer",
       "heals_in_bed": true,
-      "build_time": 15
+      "build_time": 15,
+      "tags": [
+        "workstation"
+      ]
     },
     {
       "id": "bed",
@@ -277,6 +303,128 @@
       "available_from_start": true,
       "object": true,
       "light": true
+    },
+    {
+      "id": "mason_bench",
+      "name": "Établi de tailleur",
+      "size": [
+        2,
+        1,
+        1
+      ],
+      "cost": {
+        "log": 2,
+        "stone": 4
+      },
+      "station": "mason_bench",
+      "staff": 1,
+      "job": "stonemason",
+      "build_time": 10,
+      "tags": [
+        "workstation"
+      ],
+      "available_from_start": true
+    },
+    {
+      "id": "kiln",
+      "name": "Four à briques",
+      "size": [
+        2,
+        2,
+        2
+      ],
+      "cost": {
+        "stone": 10,
+        "clay": 6
+      },
+      "station": "kiln",
+      "staff": 1,
+      "job": "stonemason",
+      "build_time": 15,
+      "tags": [
+        "workstation"
+      ]
+    },
+    {
+      "id": "furnace",
+      "name": "Fourneau",
+      "size": [
+        2,
+        2,
+        2
+      ],
+      "cost": {
+        "stone": 12,
+        "clay": 4
+      },
+      "station": "furnace",
+      "staff": 1,
+      "job": "smith",
+      "build_time": 15,
+      "tags": [
+        "workstation"
+      ]
+    },
+    {
+      "id": "anvil",
+      "name": "Enclume",
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "cost": {
+        "iron_ingot": 2,
+        "log": 1
+      },
+      "station": "anvil",
+      "staff": 1,
+      "job": "smith",
+      "build_time": 8,
+      "tags": [
+        "workstation"
+      ]
+    },
+    {
+      "id": "leatherworks",
+      "name": "Tannerie",
+      "size": [
+        2,
+        2,
+        2
+      ],
+      "cost": {
+        "plank": 6,
+        "beam": 2
+      },
+      "station": "leatherworks",
+      "staff": 1,
+      "job": "tanner",
+      "build_time": 12,
+      "tags": [
+        "workstation"
+      ]
+    },
+    {
+      "id": "cooking_hearth",
+      "name": "Âtre de cuisine",
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "cost": {
+        "stone": 6
+      },
+      "station": "hearth",
+      "staff": 1,
+      "job": "cook",
+      "build_time": 8,
+      "warmth": 2,
+      "tags": [
+        "hearth"
+      ],
+      "available_from_start": true
     }
   ]
 }

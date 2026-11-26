@@ -65,7 +65,7 @@ func start_delivery(l: Lutin) -> bool:
 
 func arrived(l: Lutin) -> void:
 	var bt := _task(l)
-	if not bt.is_empty() and bt["kind"] in ["build", "build_struct"]:
+	if not bt.is_empty() and bt["kind"] in TaskBoard.FETCH_KINDS:
 		board.builds.arrived(l, bt)
 		return
 	if l.carrying.has("build"):
@@ -87,7 +87,7 @@ func arrived(l: Lutin) -> void:
 	var t := _task(l)
 	if t.is_empty():
 		return
-	if t["kind"] in ["build", "build_struct"]:
+	if t["kind"] in TaskBoard.FETCH_KINDS:
 		board.builds.arrived(l, t)
 		return
 	l.state = Lutin.State.WORK
@@ -131,10 +131,24 @@ func work(l: Lutin) -> void:
 func _complete(l: Lutin, t: Dictionary) -> void:
 	var cell: Vector3i = t["cell"]
 	match t["kind"]:
-		"build", "build_struct":
+		"build", "build_struct", "sow", "craft":
 			board.builds.complete(l, t)
 			if t["kind"] == "build" and board.world.get_block(cell) != int(t["block"]):
 				return  # pas encore posable (quelqu'un dans la case)
+		"till":
+			var w := board.world
+			if board.fields != null and board.fields.plots.has(cell):
+				board.fields.plots[cell]["fertile"] = w.get_block(cell) == w.types.num("fertile_soil")
+			w.set_block(cell, w.types.num("field_plot"))
+			if board.fields != null:
+				board.fields.set_state(cell, "tilled")
+		"harvest":
+			if board.fields != null and board.fields.plots.has(cell):
+				var p: Dictionary = board.fields.plots[cell]
+				board.ground.drop(
+					l.cell, Fields.harvest_yield(p["crop"], bool(p.get("fertile", false)), l.job_level("farmer"))
+				)
+				board.fields.set_state(cell, "tilled")
 		"cut":
 			var kind := board.flora.remove_tree(cell)
 			board.ground.drop(cell, DataRegistry.get_table("flora")["trees"].get(kind, {}).get("drop", {"log": 3}))

@@ -10,6 +10,8 @@ var lutins: Array[Lutin] = []
 var stock := Stockpile.new()
 var next_id: int = 1
 var task_board: RefCounted = null  # TaskBoard (J4) : fournit des tâches aux lutins libres
+var structures: Structures = null  # sources de chaleur (J6)
+var heating_ok: bool = true  # faux si le bois de chauffage manque
 var _pop: Dictionary
 var _move: Dictionary
 var _needs: Dictionary
@@ -71,6 +73,17 @@ func _update_needs(l: Lutin, tpd: float) -> void:
 		l.needs["sleep"] = minf(100.0, l.needs["sleep"] + float(_needs["sleep"]["recover_per_day"]) / tpd)
 	else:
 		l.needs["sleep"] = maxf(0.0, l.needs["sleep"] - float(_needs["sleep"]["loss_per_day"]) / tpd)
+	# l'hiver, on a froid loin d'un feu (ou si le bois manque)
+	var seasons: Array = DataRegistry.get_table("time").get("seasons", [])
+	var winter: bool = not seasons.is_empty() and seasons[GameClock.season_index()]["id"] == "winter"
+	var wcfg: Dictionary = _needs.get("warmth", {})
+	var warm := (
+		structures != null and heating_ok and structures.warmth_near(l.cell, float(wcfg.get("heated_radius", 5))) > 0.0
+	)
+	if warm or not winter:
+		l.needs["warmth"] = minf(100.0, l.needs["warmth"] + float(wcfg.get("recover_near_fire_per_day", 200)) / tpd)
+	else:
+		l.needs["warmth"] = maxf(0.0, l.needs["warmth"] - float(wcfg.get("loss_per_day_winter", 60)) / tpd)
 
 
 func _decide(l: Lutin, night: bool) -> void:
