@@ -28,4 +28,4 @@ Projet personnel d'**Ashura**, développé dans le cloud avec Claude Code (Godot
 ## Démarrer
 1. Dépôt : `Ashura-Projects/World-of-Lutin-Game` (dossier déjà en place).
 2. Ouvrir Claude Code sur ce dépôt.
-3. Coller `prompts/01-planches-de-style.md`, valider le style, puis `prompts/02-sandbox-complet.md`.
+3. Coller : « Lis prompts/00-passation.md et exécute-le. »
