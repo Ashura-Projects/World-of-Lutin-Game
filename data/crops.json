@@ -1,0 +1,86 @@
+{
+  "_doc": "Cultures. Champs posés case par case comme des constructions (block field_plot). 1 saison = 5 jours. Rendements par case, inspirés du médiéval (≈ 1 grain semé pour 3-4 récoltés). Multipliés par fertilité (terre fertile ×1.3) et niveau du fermier (+5 %/niveau).",
+  "crops": [
+    {
+      "id": "wheat",
+      "name": "Blé",
+      "seed": {
+        "wheat": 1
+      },
+      "sow": [
+        "spring"
+      ],
+      "grow_days": 9,
+      "yield": {
+        "wheat": 3,
+        "straw": 2
+      },
+      "_use": "moulin → farine → four → pain ; paille → chaume, litières"
+    },
+    {
+      "id": "barley",
+      "name": "Orge",
+      "seed": {
+        "barley": 1
+      },
+      "sow": [
+        "spring",
+        "summer"
+      ],
+      "grow_days": 6,
+      "yield": {
+        "barley": 3,
+        "straw": 2
+      },
+      "_use": "farine, plus rapide mais moins nourrissant"
+    },
+    {
+      "id": "flax",
+      "name": "Lin",
+      "seed": {
+        "flax_seed": 1
+      },
+      "sow": [
+        "spring"
+      ],
+      "grow_days": 8,
+      "yield": {
+        "flax": 2,
+        "flax_seed": 1
+      },
+      "_use": "rouet → fil → métier à tisser → tissu"
+    },
+    {
+      "id": "potato",
+      "name": "Pomme de terre",
+      "seed": {
+        "potato": 1
+      },
+      "sow": [
+        "spring"
+      ],
+      "grow_days": 8,
+      "yield": {
+        "potato": 5
+      },
+      "_use": "se mange telle quelle ou en ragoût"
+    }
+  ],
+  "wild": [
+    {
+      "id": "wild_flax",
+      "name": "Lin sauvage",
+      "biome": [
+        "plain"
+      ],
+      "per_100": 1.5,
+      "gather": {
+        "flax": 1,
+        "flax_seed": 1
+      }
+    }
+  ],
+  "winter_growth": false,
+  "fertile_multiplier": 1.3,
+  "farmer_level_bonus": 0.05
+}

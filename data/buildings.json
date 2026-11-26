@@ -1,0 +1,133 @@
+{
+  "_doc": "Constructions de départ et ateliers. cost = matériaux apportés par les porteurs ; bâties par les bâtisseurs. Tente = 1 lutin.",
+  "buildings": [
+    {
+      "id": "tent",
+      "name": "Tente",
+      "size": [
+        2,
+        2,
+        2
+      ],
+      "cost": {
+        "hide": 3,
+        "log": 2
+      },
+      "sleeps": 1,
+      "warmth": 1,
+      "available_from_start": true
+    },
+    {
+      "id": "campfire",
+      "name": "Feu de camp",
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "cost": {
+        "log": 2,
+        "stone": 3
+      },
+      "warmth": 2,
+      "available_from_start": true
+    },
+    {
+      "id": "stockpile",
+      "name": "Zone de réserve",
+      "zone": true,
+      "available_from_start": true
+    },
+    {
+      "id": "well",
+      "name": "Puits",
+      "size": [
+        1,
+        1,
+        "dig_to_water_table"
+      ],
+      "cost": {
+        "stone": 6,
+        "beam": 2
+      },
+      "station": "well",
+      "_note": "le puits doit être creusé jusqu'à la nappe (world.water_table)"
+    },
+    {
+      "id": "sawbench",
+      "name": "Établi de menuisier",
+      "size": [
+        2,
+        1,
+        1
+      ],
+      "cost": {
+        "log": 3
+      },
+      "station": "sawbench",
+      "available_from_start": true
+    },
+    {
+      "id": "mill",
+      "name": "Moulin",
+      "size": [
+        3,
+        3,
+        4
+      ],
+      "cost": {
+        "beam": 6,
+        "plank": 8,
+        "stone": 10
+      },
+      "station": "mill",
+      "staff": 1,
+      "job": "miller"
+    },
+    {
+      "id": "oven",
+      "name": "Four à pain",
+      "size": [
+        2,
+        2,
+        2
+      ],
+      "cost": {
+        "stone": 12,
+        "clay": 4
+      },
+      "station": "oven",
+      "staff": 1,
+      "job": "baker"
+    },
+    {
+      "id": "spinning_wheel",
+      "name": "Rouet",
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "cost": {
+        "plank": 3
+      },
+      "station": "spinning_wheel",
+      "job": "weaver"
+    },
+    {
+      "id": "loom",
+      "name": "Métier à tisser",
+      "size": [
+        2,
+        1,
+        2
+      ],
+      "cost": {
+        "plank": 4,
+        "beam": 2
+      },
+      "station": "loom",
+      "job": "weaver"
+    }
+  ]
+}

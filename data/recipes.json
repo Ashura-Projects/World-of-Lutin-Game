@@ -1,20 +1,291 @@
 {
-  "_doc": "Recettes. work = secondes à expérience normale (x1). job = métier qui fabrique.",
+  "_doc": "Recettes. work = secondes à expérience normale (x1). job = métier qui fabrique. Les tiges de céréales donnent la paille directement à la récolte (voir crops.json).",
   "recipes": [
-    {"id": "saw_planks",   "station": "sawbench",    "job": "carpenter",  "in": {"wood": 1},                  "out": {"plank": 2},      "work": 8},
-    {"id": "cut_stone",    "station": "mason_bench", "job": "stonemason", "in": {"stone": 1},                 "out": {"cut_stone": 1},  "work": 10},
-    {"id": "fire_bricks",  "station": "kiln",        "job": "stonemason", "in": {"clay": 2, "coal": 1},       "out": {"brick": 4},      "work": 20},
-    {"id": "grind_flour",  "station": "quern",       "job": "cook",       "in": {"wheat": 4},                 "out": {"flour": 2},      "work": 10},
-    {"id": "bake_bread",   "station": "oven",        "job": "cook",       "in": {"flour": 2, "wood": 1},      "out": {"bread": 3},      "work": 15},
-    {"id": "cook_stew",    "station": "hearth",      "job": "cook",       "in": {"vegetables": 2, "meat": 1}, "out": {"stew": 2},       "work": 15},
-    {"id": "smelt_iron",   "station": "furnace",     "job": "smith",      "in": {"iron_ore": 2, "coal": 1},   "out": {"iron_ingot": 1}, "work": 25},
-    {"id": "forge_axe",    "station": "anvil",       "job": "smith",      "in": {"iron_ingot": 1, "plank": 1},"out": {"axe": 1},        "work": 20},
-    {"id": "forge_pickaxe","station": "anvil",       "job": "smith",      "in": {"iron_ingot": 1, "plank": 1},"out": {"pickaxe": 1},    "work": 20},
-    {"id": "forge_hammer", "station": "anvil",       "job": "smith",      "in": {"iron_ingot": 1, "plank": 1},"out": {"hammer": 1},     "work": 20},
-    {"id": "make_basket",  "station": "sawbench",    "job": "carpenter",  "in": {"reed": 4},                  "out": {"basket": 1},     "work": 10},
-    {"id": "make_rod",     "station": "sawbench",    "job": "carpenter",  "in": {"plank": 1, "flax": 1},      "out": {"fishing_rod": 1},"work": 10},
-    {"id": "tan_leather",  "station": "tannery",     "job": "carpenter",  "in": {"hide": 2},                  "out": {"leather": 1},    "work": 20},
-    {"id": "weave_cloth",  "station": "loom",        "job": "carpenter",  "in": {"flax": 3},                  "out": {"cloth": 1},      "work": 20},
-    {"id": "sew_clothes",  "station": "loom",        "job": "carpenter",  "in": {"cloth": 2, "leather": 1},   "out": {"clothes": 1},    "work": 25}
+    {
+      "id": "saw_planks",
+      "station": "sawbench",
+      "job": "carpenter",
+      "in": {
+        "log": 1
+      },
+      "out": {
+        "plank": 2
+      },
+      "work": 8
+    },
+    {
+      "id": "cut_stone",
+      "station": "mason_bench",
+      "job": "stonemason",
+      "in": {
+        "stone": 1
+      },
+      "out": {
+        "cut_stone": 1
+      },
+      "work": 10
+    },
+    {
+      "id": "fire_bricks",
+      "station": "kiln",
+      "job": "stonemason",
+      "in": {
+        "clay": 2,
+        "coal": 1
+      },
+      "out": {
+        "brick": 4
+      },
+      "work": 20
+    },
+    {
+      "id": "grind_flour",
+      "station": "mill",
+      "job": "miller",
+      "in": {
+        "wheat": 4
+      },
+      "out": {
+        "flour": 3
+      },
+      "work": 10
+    },
+    {
+      "id": "bake_bread",
+      "station": "oven",
+      "job": "baker",
+      "in": {
+        "flour": 2,
+        "water": 1,
+        "log": 1
+      },
+      "out": {
+        "bread": 4
+      },
+      "work": 15
+    },
+    {
+      "id": "cook_stew",
+      "station": "hearth",
+      "job": "cook",
+      "in": {
+        "vegetables": 2,
+        "meat": 1
+      },
+      "out": {
+        "stew": 2
+      },
+      "work": 15
+    },
+    {
+      "id": "smelt_iron",
+      "station": "furnace",
+      "job": "smith",
+      "in": {
+        "iron_ore": 2,
+        "coal": 1
+      },
+      "out": {
+        "iron_ingot": 1
+      },
+      "work": 25
+    },
+    {
+      "id": "forge_axe",
+      "station": "anvil",
+      "job": "smith",
+      "in": {
+        "iron_ingot": 1,
+        "plank": 1
+      },
+      "out": {
+        "axe": 1
+      },
+      "work": 20
+    },
+    {
+      "id": "forge_pickaxe",
+      "station": "anvil",
+      "job": "smith",
+      "in": {
+        "iron_ingot": 1,
+        "plank": 1
+      },
+      "out": {
+        "pickaxe": 1
+      },
+      "work": 20
+    },
+    {
+      "id": "forge_hammer",
+      "station": "anvil",
+      "job": "smith",
+      "in": {
+        "iron_ingot": 1,
+        "plank": 1
+      },
+      "out": {
+        "hammer": 1
+      },
+      "work": 20
+    },
+    {
+      "id": "make_basket",
+      "station": "sawbench",
+      "job": "carpenter",
+      "in": {
+        "reed": 4
+      },
+      "out": {
+        "basket": 1
+      },
+      "work": 10
+    },
+    {
+      "id": "make_rod",
+      "station": "sawbench",
+      "job": "carpenter",
+      "in": {
+        "plank": 1,
+        "flax": 1
+      },
+      "out": {
+        "fishing_rod": 1
+      },
+      "work": 10
+    },
+    {
+      "id": "tan_leather",
+      "station": "leatherworks",
+      "job": "tanner",
+      "in": {
+        "hide": 2
+      },
+      "out": {
+        "leather": 1
+      },
+      "work": 20
+    },
+    {
+      "id": "weave_cloth",
+      "station": "loom",
+      "job": "weaver",
+      "in": {
+        "linen": 3
+      },
+      "out": {
+        "cloth": 1
+      },
+      "work": 20
+    },
+    {
+      "id": "sew_clothes",
+      "station": "loom",
+      "job": "weaver",
+      "in": {
+        "cloth": 2,
+        "leather": 1
+      },
+      "out": {
+        "clothes": 1
+      },
+      "work": 25
+    },
+    {
+      "id": "hew_beam",
+      "station": "sawbench",
+      "job": "carpenter",
+      "in": {
+        "log": 1
+      },
+      "out": {
+        "beam": 1
+      },
+      "work": 10
+    },
+    {
+      "id": "spin_linen",
+      "station": "spinning_wheel",
+      "job": "weaver",
+      "in": {
+        "flax": 2
+      },
+      "out": {
+        "linen": 2
+      },
+      "work": 12
+    },
+    {
+      "id": "grind_barley",
+      "station": "mill",
+      "job": "miller",
+      "in": {
+        "barley": 4
+      },
+      "out": {
+        "flour": 2
+      },
+      "work": 10
+    },
+    {
+      "id": "draw_water",
+      "station": "well",
+      "job": "hauler",
+      "in": {},
+      "out": {
+        "water": 1
+      },
+      "work": 4
+    },
+    {
+      "id": "forge_flintlock",
+      "station": "anvil",
+      "job": "smith",
+      "in": {
+        "iron_ingot": 2,
+        "plank": 1
+      },
+      "out": {
+        "flintlock": 1
+      },
+      "work": 40
+    },
+    {
+      "id": "make_shuttle",
+      "station": "sawbench",
+      "job": "carpenter",
+      "in": {
+        "plank": 1
+      },
+      "out": {
+        "shuttle": 1
+      },
+      "work": 8
+    },
+    {
+      "id": "make_bread_peel",
+      "station": "sawbench",
+      "job": "carpenter",
+      "in": {
+        "plank": 1
+      },
+      "out": {
+        "bread_peel": 1
+      },
+      "work": 8
+    },
+    {
+      "id": "make_flail",
+      "station": "sawbench",
+      "job": "carpenter",
+      "in": {
+        "plank": 1,
+        "linen": 1
+      },
+      "out": {
+        "flail": 1
+      },
+      "work": 8
+    }
   ]
 }

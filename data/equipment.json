@@ -1,0 +1,194 @@
+{
+  "_doc": "PHASE 2 — équipement des soldats. Un soldat équipe 1 arme + 1 armure (+ 1 uniforme aux couleurs du village). Fabriqué dans des ateliers dédiés. Valeurs de départ à équilibrer.",
+  "slots": [
+    "weapon",
+    "armor",
+    "uniform"
+  ],
+  "weapons": [
+    {
+      "id": "spear",
+      "name": "Lance",
+      "attack": 8,
+      "reach": 2,
+      "speed": 1.0,
+      "recipe": {
+        "station": "armory",
+        "job": "smith",
+        "in": {
+          "iron_ingot": 1,
+          "beam": 1
+        },
+        "work": 25
+      }
+    },
+    {
+      "id": "short_sword",
+      "name": "Épée courte",
+      "attack": 10,
+      "reach": 1,
+      "speed": 1.2,
+      "recipe": {
+        "station": "armory",
+        "job": "smith",
+        "in": {
+          "iron_ingot": 2,
+          "leather": 1
+        },
+        "work": 35
+      }
+    },
+    {
+      "id": "flintlock",
+      "name": "Fusil à silex",
+      "attack": 18,
+      "range": 12,
+      "reload_s": 6,
+      "recipe": {
+        "station": "gunsmith",
+        "job": "smith",
+        "in": {
+          "iron_ingot": 2,
+          "plank": 1
+        },
+        "work": 40
+      },
+      "ammo": "shot"
+    },
+    {
+      "id": "shot",
+      "name": "Balles et poudre",
+      "ammo": true,
+      "recipe": {
+        "station": "gunsmith",
+        "job": "smith",
+        "in": {
+          "iron_ingot": 1,
+          "coal": 1
+        },
+        "out": 10,
+        "work": 15
+      }
+    }
+  ],
+  "armors": [
+    {
+      "id": "cloth_armor",
+      "name": "Gambison (tissu matelassé)",
+      "defense": 3,
+      "speed_mult": 1.0,
+      "recipe": {
+        "station": "tailor",
+        "job": "weaver",
+        "in": {
+          "cloth": 4,
+          "linen": 2
+        },
+        "work": 30
+      }
+    },
+    {
+      "id": "leather_armor",
+      "name": "Armure de cuir",
+      "defense": 5,
+      "speed_mult": 0.95,
+      "recipe": {
+        "station": "leatherworks",
+        "job": "tanner",
+        "in": {
+          "leather": 4
+        },
+        "work": 35
+      }
+    },
+    {
+      "id": "iron_armor",
+      "name": "Armure de fer",
+      "defense": 9,
+      "speed_mult": 0.85,
+      "recipe": {
+        "station": "armory",
+        "job": "smith",
+        "in": {
+          "iron_ingot": 5,
+          "leather": 1
+        },
+        "work": 60
+      }
+    }
+  ],
+  "uniforms": [
+    {
+      "id": "uniform",
+      "name": "Uniforme du village",
+      "morale": 5,
+      "color": "choisie par le joueur",
+      "recipe": {
+        "station": "tailor",
+        "job": "weaver",
+        "in": {
+          "cloth": 3
+        },
+        "work": 20
+      }
+    }
+  ],
+  "workshops": [
+    {
+      "id": "armory",
+      "name": "Armurerie",
+      "cost": {
+        "cut_stone": 10,
+        "beam": 4,
+        "iron_ingot": 2
+      },
+      "job": "smith",
+      "makes": [
+        "spear",
+        "short_sword",
+        "iron_armor"
+      ]
+    },
+    {
+      "id": "gunsmith",
+      "name": "Atelier d'arquebusier",
+      "cost": {
+        "cut_stone": 8,
+        "plank": 6,
+        "iron_ingot": 3
+      },
+      "job": "smith",
+      "makes": [
+        "flintlock",
+        "shot"
+      ]
+    },
+    {
+      "id": "leatherworks",
+      "name": "Tannerie-sellerie",
+      "cost": {
+        "plank": 6,
+        "beam": 2
+      },
+      "job": "tanner",
+      "makes": [
+        "leather",
+        "leather_armor"
+      ]
+    },
+    {
+      "id": "tailor",
+      "name": "Atelier de couture",
+      "cost": {
+        "plank": 6,
+        "cloth": 2
+      },
+      "job": "weaver",
+      "makes": [
+        "cloth_armor",
+        "uniform",
+        "clothes"
+      ]
+    }
+  ]
+}

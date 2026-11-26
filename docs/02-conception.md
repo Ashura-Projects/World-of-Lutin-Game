@@ -5,16 +5,22 @@
 # PHASE 1 — MODE BAC À SABLE
 
 ## 1. Le monde
-- Monde en **blocs de 1 unité**. Carte MVP : 128 × 128 × 48 de haut (256 × 256 ensuite).
-- Génération procédurale seedée, terre ferme : **plaines, forêts, rivière, lac, montagne, collines**, gisements dans la roche.
-- Blocs naturels : herbe, terre, terre fertile, sable, argile, pierre, minerai de fer, charbon, eau (fixe), neige (sommets).
+- Monde en **blocs de 1 unité**. **Validé : grande carte** pour bâtir librement (châteaux comme petites maisons) :
+  **256 × 256 × 64** par défaut, 128 × 128 au choix (`data/world.json`). **[À VALIDER : tenue des 60 FPS à mesurer au J1]**
+- **Carte vierge** au départ : aucune construction, juste le chariot des lutins.
+- Génération seedée : **grande plaine**, **forêts**, **rivière** (et lac), **collines** riches en minerais, **montagne à explorer**.
+- **Couches comme Minecraft** : herbe → terre (2-4) → pierre → roche profonde → socle. Poches de gravier, d'argile (près de l'eau),
+  de **charbon** et de **fer** dans la pierre. On creuse **bloc par bloc** : trous, galeries, mines, **puits** (jusqu'à la nappe d'eau).
+- Ordres de minage : bloc par bloc ou **par cube de 4 blocs**. **[À VALIDER : 2×2 à plat, ou cube 4×4×4 ?]**
+- Blocs naturels : herbe, terre, terre fertile, sable, gravier, argile, pierre, roche profonde, minerai de fer, charbon, eau (fixe), neige (sommets).
 - Tout bloc naturel peut être **creusé** (récolte) sauf l'eau et le socle du fond.
-- **Végétation** (objets, pas des blocs) : arbres (chêne, pin, bouleau), buissons à baies, roseaux.
-- **Faune** : cerfs, sangliers (chasse), poissons dans la rivière/lac (pêche).
+- **Végétation** (objets, pas des blocs) : arbres (plusieurs espèces pour le décor), buissons à baies, roseaux, **lin sauvage**.
+- **Un seul bois** : la **bûche**, quel que soit l'arbre. Elle se transforme en **planches** ou en **poutres**, matériaux des blocs.
+- **Faune** : **cerfs** et **sangliers** (viande + **peaux**), poissons dans la rivière/lac (pêche). `data/animals.json`.
 - **Temps** : 1 jour = 6 min à x1 ; 4 saisons × 5 jours. L'hiver : pas de culture, neige, besoin de bois de chauffe.
 
 ## 2. Les Lutins
-- Petites créatures **bleues**, environ 1 bloc de haut. Départ : **6 lutins** + un chariot de vivres et d'outils.
+- Petites créatures **bleues**, environ 1 bloc de haut. Départ : **2 à 10 lutins, réglable avant de lancer la partie** (6 par défaut) + un chariot de vivres, de semences et d'outils (`data/start.json`).
 - Fiche : nom, **métier**, niveau d'expérience du métier, besoins.
 - **Besoins** : faim, sommeil, chaleur (hiver), moral. Moral bas → travail lent ; très bas → il quitte le village.
 - **Déplacement** : marche, monte une marche d'**1 bloc**, ne saute pas plus ; escaliers, échelles et ponts à construire pour le reste.
@@ -28,7 +34,7 @@
 
 ## 3. Métiers
 - **Validé** : le métier de base dépend de **l'outil** porté (hache = bûcheron, pioche = mineur…). Les outils se fabriquent → l'économie contrôle la main-d'œuvre.
-- Métiers de base : voir `data/jobs.json` — porteur (sans outil), bûcheron, mineur, bâtisseur, cueilleur, pêcheur, chasseur, fermier, menuisier, tailleur de pierre, forgeron, cuisinier.
+- Métiers de base : voir `data/jobs.json` — porteur (sans outil), bûcheron, mineur, terrassier, bâtisseur, cueilleur, pêcheur, chasseur, fermier, menuisier, tailleur de pierre, forgeron, cuisinier, **tisserand** (navette), **meunier** (fléau), **boulanger** (pelle à pain).
 - Les lutins gagnent de l'**expérience** dans leur métier → travaillent plus vite.
 - **Validé — métiers connus** : chaque lutin garde la liste des métiers qu'il a pratiqués, chacun avec **son niveau et sa jauge d'XP**
   (ex. bûcheron niv. 3, mineur niv. 2, fermier niv. 5). Passer à un **métier de base** est libre : métier jamais pratiqué → niveau 1,
@@ -62,9 +68,14 @@
 - Phase 2 : technologies militaires et magiques.
 
 ## 4. Récolte (même logique que Castle Story)
-- Le joueur **désigne** : arbres à couper (tap ou zone), blocs à creuser (zone en 3D), buissons à cueillir.
+- Menu **Récolter** (à côté de Construire) : **couper** des arbres, **creuser** (trou, **mine**, **puits**), **cueillir**, **chasser**, **pêcher**.
+- **Validé — zone en cercle** : un tap pose un cercle dont le **rayon se règle de 1 à 20 cases** ; **toutes** les ressources
+  du bon type à l'intérieur sont sélectionnées (arbres, buissons, lin sauvage, gibier…). Creuser : sélection en 3D (bloc, cube, puits).
+- **Validé — tâches assignables** : chaque ordre de récolte ou de chasse apparaît dans le **tableau des tâches** ; on peut y
+  **assigner des lutins précis** (sinon les lutins du bon métier la prennent d'eux-mêmes).
 - Désigner = des ordres sur un **tableau de tâches** ; les lutins du bon métier les prennent d'eux-mêmes.
-- Pêche : poste de pêche au bord de l'eau. Chasse : zone de chasse.
+- Pêche : poste de pêche au bord de l'eau. Chasse : zone de chasse (fusil à silex) → viande et peaux.
+- Creuser : sélection en 3D, **bloc par bloc** ou par cube de 4 ; les couches inférieures se découvrent en creusant.
 - Ressources **physiques** : elles tombent au sol, les porteurs les ramènent en **réserve**.
 
 ## 5. Construction (le cœur)
@@ -80,19 +91,27 @@
 - Les plans créent des tâches : les porteurs apportent les blocs, les **bâtisseurs** les posent.
 - Règle de solidité Phase 1 (simple) : un bloc doit toucher un autre bloc solide. Pas d'effondrement en Phase 1.
 
+### Constructions de départ
+- Dès le début : **tente** (3 peaux + 2 bûches, **1 lutin par tente**), feu de camp, zone de réserve, établi de menuisier (`data/buildings.json`).
+- Ensuite : puits (creusé jusqu'à la nappe), moulin, four à pain, rouet, métier à tisser, puis maisons en blocs.
+
 ### Objets et pièces
 - **Objets** placés sur les blocs : lit, foyer, table, coffre, étagère, établis, porte, fenêtre, torche, échelle.
 - Un volume **fermé** (murs + toit) = une **pièce**, typée selon ses objets (`data/rooms.json`) : maison, dortoir, atelier, cuisine, réserve.
 - Une pièce chauffée et meublée donne du moral et protège du froid.
 
 ## 6. Agriculture
-- **Champs** tracés sur terre fertile ; cultures : blé, légumes, lin. Semis au printemps, récolte en été/automne.
-- Rendement selon fertilité, saison, fermier. **[Plus tard]** élevage : moutons (laine), poules (œufs).
+- **Validé : champs posés case par case**, comme une construction (case de champ sur terre ou herbe) : forme libre.
+- On choisit la **culture par case** : **blé**, **orge**, **lin**, **pomme de terre** (`data/crops.json`).
+- Rendements **réalistes** (≈ 1 grain semé pour 3 récoltés ; pomme de terre 1 → 5) ; × fertilité, niveau du fermier ; rien ne pousse l'hiver.
+- Les **tiges** des céréales donnent la **paille** (chaume des toits, litières).
+- Lin sauvage à cueillir au début, puis cultivé. **[Plus tard]** élevage : moutons (laine), poules (œufs).
 
 ## 7. Production (chaînes)
 - Sur des **établis** avec liste de commandes (« faire 20 planches », « garder 50 pains en stock »).
-- Bois → planches ; pierre → pierre taillée ; argile → briques ; blé → farine → pain ; minerai + charbon → lingot → outils ;
-  lin → tissu → vêtements ; poisson/viande → repas.
+- Bûche → planches ou poutres ; pierre → pierre taillée ; argile → briques ;
+  **blé/orge → moulin (farine) → four (pain, avec eau du puits)** ; minerai + charbon → lingot → outils ;
+  **lin → rouet (fil) → métier à tisser (tissu) → vêtements** ; peaux → tentes ou cuir ; poisson/viande → repas.
 - Bonus si l'établi est dans une pièce du bon type (atelier, cuisine).
 
 ## 8. Gestion et objectifs (partie longue)
@@ -108,7 +127,11 @@
 - **Orcs** rouges grassouillets : camps sur la carte, raids nocturnes, sièges avec béliers et échelles.
 - **Fiche de guerrier** : techniques de combat (niveaux), ennemis vaincus, **réputation** avec titres, et **grades** :
   Recrue → Soldat → Capitaine → Commandant → Général. Ton inspiré du **murim** (maîtres, techniques, légendes) **sans magie abusive**.
-- Combat : **soldats** (guerrier, archer) et **mages** formés à la caserne / tour des mages (§3b), ordres de groupe, défense par étages, créneaux.
+- **Équipement des soldats** (`data/equipment.json`) : **arme** (lance, épée courte, **fusil à silex** + balles et poudre),
+  **armure** (tissu matelassé, **cuir**, **fer** : plus de défense, moins de vitesse), **uniforme** aux couleurs du village (+moral).
+  Ateliers liés : **armurerie** (lances, épées, armures de fer), **atelier d'arquebusier** (fusils, munitions),
+  **tannerie-sellerie** (cuir, armures de cuir, métier **tanneur**), **atelier de couture** (gambisons, uniformes, vêtements).
+- Combat : **soldats** (lanciers, fusiliers…) et **mages** formés à la caserne / tour des mages (§3b), ordres de groupe, défense par étages, créneaux.
 - **Destruction et effondrement** des blocs non soutenus (sièges spectaculaires).
 - **Carte régionale** : autres royaumes lutins (IA), tribus orques, provinces à prendre.
 - **Diplomatie** : émissaires, alliances, tributs, commerce, déclarations de guerre.

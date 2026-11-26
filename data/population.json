@@ -44,5 +44,10 @@
     "enabled": true,
     "from_day": 500,
     "chance_per_day": 0.02
+  },
+  "job_memory": {
+    "keep_level_on_change": true,
+    "new_job_level": 1,
+    "base_job_change": "free"
   }
 }

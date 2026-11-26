@@ -17,6 +17,12 @@
 5. Pendant le mode construction, **1 doigt = construire**, **2 doigts = caméra** (pour ne pas poser par erreur).
 6. **Curseur d'étage** sur le bord droit : glisser pour masquer les étages supérieurs.
 
+## Mode récolte (menu Récolter)
+1. Choisir l'ordre : Couper · Creuser (trou / mine / puits) · Cueillir · Chasser · Pêcher.
+2. **Tap** = cercle de sélection ; **curseur de rayon 1 → 20 cases** ; tout ce qui se récolte dedans est marqué.
+3. Creuser : sélection 3D bloc par bloc ou par cube ; puits = colonne 1×1 jusqu'à la nappe.
+4. Bouton **Assigner** : choisir les lutins qui font cette tâche (liste avec métier et niveau).
+
 ## Écran principal (paysage)
 - **Haut** : jour/saison, vitesse, population, ressources (Nourriture = total des aliments, bois, pierre, fer, or ; chaque case ouvre un **menu déroulant** de détail), **cloche d'alerte**, **engrenage**.
 - **Bas** : Construire · Récolter · Zones (champs, réserve, chasse) · Lutins (métiers) · **Militaire** · **Commerce** · Gestion.

@@ -34,6 +34,8 @@ FACES = {
     "thatch_block": ("thatch_top", "thatch_side", "thatch_top"),
     "thatch_snow": ("snow", "thatch_side", "thatch_top"),
     "dirt_block": ("dirt_packed",) * 3,
+    "gravel": ("gravel",) * 3,
+    "deep_stone": ("deep_stone",) * 3,
 }
 LIQUID = {"water", "ice"}
 SOMBRE = False  # ambiance dark fantasy : végétation désaturée et assombrie

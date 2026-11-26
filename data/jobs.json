@@ -1,5 +1,5 @@
 {
-  "_doc": "Métiers de base : donnés par l'outil porté (validé). Métiers spécialisés : uniquement par l'éducation (voir education.json).",
+  "_doc": "Métiers de base : donnés par l'outil porté (validé). Métiers spécialisés : uniquement par l'éducation (voir education.json). Chaque lutin garde ses métiers connus avec leur niveau et leur XP (voir population.json job_memory). L'outil n'est visible qu'en action.",
   "jobs": [
     {
       "id": "hauler",
@@ -108,6 +108,41 @@
       "tool": "ladle",
       "tasks": [
         "craft:cooking"
+      ]
+    },
+    {
+      "id": "weaver",
+      "name": "Tisserand",
+      "tool": "shuttle",
+      "tasks": [
+        "craft:spinning",
+        "craft:weaving"
+      ]
+    },
+    {
+      "id": "tanner",
+      "name": "Tanneur",
+      "tool": "scraper",
+      "tasks": [
+        "craft:tanning",
+        "craft:leatherwork"
+      ]
+    },
+    {
+      "id": "miller",
+      "name": "Meunier",
+      "tool": "flail",
+      "tasks": [
+        "craft:milling",
+        "thresh"
+      ]
+    },
+    {
+      "id": "baker",
+      "name": "Boulanger",
+      "tool": "bread_peel",
+      "tasks": [
+        "craft:baking"
       ]
     },
     {

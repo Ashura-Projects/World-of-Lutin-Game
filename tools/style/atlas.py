@@ -20,6 +20,7 @@ TILES = [
     "bedrock", "grass_top", "grass_side", "dirt", "fertile_soil", "sand", "clay", "stone",
     "iron_ore", "coal_ore", "snow", "snow_side", "water", "wood_top", "wood_side", "plank",
     "cobble", "cut_stone", "brick", "thatch_top", "thatch_side", "dirt_packed", "ice", "leaves",
+    "gravel", "deep_stone",
 ]
 
 PALETTES = {
@@ -132,8 +133,15 @@ def make_tile(name, p, rng):
         for y in range(0, TILE, 6):
             for x in range(TILE):
                 img.putpixel((x, (y + x // 8) % TILE), shade(p["clay"], 0.88))
-    elif name in ("stone", "bedrock", "iron_ore", "coal_ore"):
-        base = p["bedrock"] if name == "bedrock" else p["stone"]
+    elif name == "gravel":
+        noise_fill(img, shade(p["stone"], 0.8), 0.06, rng)
+        for _ in range(70):
+            x, y = rng.randrange(TILE), rng.randrange(TILE)
+            c = shade(p["stone"], rng.uniform(0.75, 1.25))
+            for dx, dy in ((0, 0), (1, 0), (0, 1), (1, 1)):
+                img.putpixel(((x + dx) % TILE, (y + dy) % TILE), c)
+    elif name in ("stone", "bedrock", "iron_ore", "coal_ore", "deep_stone"):
+        base = p["bedrock"] if name == "bedrock" else shade(p["stone"], 0.68) if name == "deep_stone" else p["stone"]
         noise_fill(img, base, 0.08, rng)
         blobs(img, shade(base, 0.82), 9, 3, rng, 0.04)
         blobs(img, shade(base, 1.12), 6, 2, rng, 0.04)
