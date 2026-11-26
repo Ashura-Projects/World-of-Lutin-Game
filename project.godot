@@ -1,0 +1,40 @@
+; Fichier de configuration du projet Godot (World of Lutin).
+
+config_version=5
+
+[application]
+
+config/name="World of Lutin"
+config/description="Construction en blocs, gestion et stratégie médiéval — projet d'Ashura."
+run/main_scene="res://src/ui/title_screen.tscn"
+config/features=PackedStringArray("4.7", "Mobile")
+config/icon="res://assets/ui/icon.png"
+
+[autoload]
+
+EventBus="*res://src/autoload/event_bus.gd"
+DataRegistry="*res://src/autoload/data_registry.gd"
+Rng="*res://src/autoload/rng.gd"
+GameClock="*res://src/autoload/game_clock.gd"
+SaveManager="*res://src/autoload/save_manager.gd"
+Settings="*res://src/autoload/settings.gd"
+GameSetup="*res://src/autoload/game_setup.gd"
+
+[display]
+
+window/size/viewport_width=1600
+window/size/viewport_height=720
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+window/handheld/orientation=4
+
+[input_devices]
+
+pointing/emulate_touch_from_mouse=true
+
+[rendering]
+
+renderer/rendering_method="mobile"
+renderer/rendering_method.mobile="mobile"
+textures/canvas_textures/default_texture_filter=1
+textures/vram_compression/import_etc2_astc=true

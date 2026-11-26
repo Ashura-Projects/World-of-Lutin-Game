@@ -1,0 +1,16 @@
+{
+  "_doc": "Temps de jeu. Tick fixe de la simulation (indépendant des FPS). 1 jour = day_seconds secondes réelles à x1.",
+  "ticks_per_second": 10,
+  "day_seconds": 360,
+  "days_per_season": 5,
+  "seasons": [
+    {"id": "spring", "name": "Printemps"},
+    {"id": "summer", "name": "Été"},
+    {"id": "autumn", "name": "Automne"},
+    {"id": "winter", "name": "Hiver"}
+  ],
+  "speeds": [0, 1, 2, 4],
+  "dawn": 0.25,
+  "dusk": 0.8,
+  "max_ticks_per_frame": 8
+}

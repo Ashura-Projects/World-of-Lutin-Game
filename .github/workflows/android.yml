@@ -1,0 +1,56 @@
+name: Tests et APK Android
+
+on:
+  push:
+  workflow_dispatch:
+
+env:
+  GODOT_VERSION: 4.7.2
+
+jobs:
+  tests:
+    name: Tests GUT (headless)
+    runs-on: ubuntu-24.04
+    container:
+      image: barichello/godot-ci:4.7.2
+    steps:
+      - uses: actions/checkout@v4
+      - name: Import du projet
+        run: godot --headless --import || true
+      - name: Tests
+        run: godot --headless -s addons/gut/gut_cmdln.gd
+
+  android:
+    name: APK Android (debug)
+    needs: tests
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    container:
+      image: barichello/godot-ci:4.7.2
+    steps:
+      - uses: actions/checkout@v4
+      - name: Préparation (modèles d'export, keystore debug)
+        run: |
+          mkdir -v -p ~/.local/share/godot/export_templates/ ~/.config/
+          mv /root/.config/godot ~/.config/godot || true
+          mv /root/.local/share/godot/export_templates/${GODOT_VERSION}.stable ~/.local/share/godot/export_templates/${GODOT_VERSION}.stable || true
+      - name: Export APK
+        run: |
+          mkdir -v -p build
+          godot --headless --import || true
+          godot --headless --verbose --export-debug "Android" "$(readlink -f build)/world-of-lutin.apk"
+          ls -la build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: world-of-lutin-apk
+          path: build/world-of-lutin.apk
+      - name: Publication (pré-release « dernier-build »)
+        if: github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          (type -p gh >/dev/null) || (apt-get update -qq && apt-get install -y -qq gh) || true
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          gh release view dernier-build >/dev/null 2>&1 || gh release create dernier-build --prerelease --title "Dernier build" --notes "APK de la branche main"
+          gh release upload dernier-build build/world-of-lutin.apk --clobber

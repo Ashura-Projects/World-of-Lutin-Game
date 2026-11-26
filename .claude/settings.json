@@ -1,0 +1,11 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {"type": "command", "command": "bash \"$CLAUDE_PROJECT_DIR/scripts/install-godot.sh\" >/dev/null 2>&1 || true"}
+        ]
+      }
+    ]
+  }
+}
