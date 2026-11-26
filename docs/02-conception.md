@@ -24,7 +24,7 @@
 - **Naissance** : un couple de lutins adultes dans une **maison** avec un lit libre, village nourri et moral correct → chance de naissance (`data/population.json`).
 - **Âges** : bébé → **enfant** → adulte → ancien. Un enfant ne travaille pas : il joue, mange et **va à l'école**.
 - Ce que l'enfant apprend décide de ce qu'il pourra devenir (§3b).
-- **[À VALIDER]** Les anciens meurent-ils de vieillesse (cimetière, héritage de savoir) ou restent-ils indéfiniment ?
+- **Validé** : les anciens **meurent de vieillesse** (cimetière ; leur expérience peut être transmise en étant maître d'école).
 
 ## 3. Métiers
 - **Validé** : le métier de base dépend de **l'outil** porté (hache = bûcheron, pioche = mineur…). Les outils se fabriquent → l'économie contrôle la main-d'œuvre.
@@ -47,7 +47,7 @@
   | **Bibliothèque / académie** | **Chercheurs** | produisent des points de recherche → débloquent les **technologies** |
   | **Atelier de maître** | Artisans experts | recettes avancées, meilleure qualité |
   | **Caserne** *(Phase 2)* | **Soldats** (guerrier, archer) | défense, guerre |
-  | **Tour des mages** *(Phase 2)* | **Mages** | **[À VALIDER : que fait la magie ?]** (soin, protection des remparts, météo, combat…) |
+  | **Tour des mages** *(Phase 2)* | **Mages** | 4 voies, **choisies à l'âge adulte** : **soin** (guérir les blessés), **protection** (renforcer remparts et blocs), **météo** (pluie pour les champs, éloigner l'orage, adoucir l'hiver), **combat** (sorts offensifs) |
 - Les métiers spécialisés ne s'obtiennent **que par l'éducation** (pas par un simple outil).
 - Un adulte non formé peut suivre une formation courte (moins efficace qu'un enfant éduqué).
 
@@ -105,6 +105,4 @@
 - But de partie : unifier la région / devenir Haut-Roi. **[À VALIDER]**
 
 ## Questions ouvertes
-1. Que fait la magie des mages (soin, protection, météo, combat…) ?
-2. Les anciens meurent-ils de vieillesse ?
-3. Carte aléatoire, ou aussi des cartes dessinées à la main ?
+1. Carte aléatoire, ou aussi des cartes dessinées à la main ? (par défaut : aléatoire seedée)

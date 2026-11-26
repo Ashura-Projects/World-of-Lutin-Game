@@ -21,10 +21,11 @@ Projet personnel d'**Ashura**, développé dans le cloud avec Claude Code (Godot
 | `docs/07-interface-mobile.md` | Gestes, pose de blocs au doigt |
 | `docs/decisions/` | Décisions techniques (ADR) |
 | `data/*.json` | Blocs, ressources, recettes, métiers, pièces, population, éducation, technologies |
-| `prompts/bibliotheque-prompts.md` | Prompts prêts à copier |
+| `prompts/01…03` | Ordre de lancement : planches de style → Bac à sable complet → reprise / corrections |
+| `prompts/bibliotheque-prompts.md` | Prompts ponctuels (bug, lag, équilibrage…) |
 | `.claude/commands/` | `/jalon`, `/verifier`, `/point` |
 
 ## Démarrer
 1. Dépôt : `Ashura-Projects/World-of-Lutin-Game` (dossier déjà en place).
 2. Ouvrir Claude Code sur ce dépôt.
-3. Coller le **prompt 0** de `prompts/bibliotheque-prompts.md`.
+3. Coller `prompts/01-planches-de-style.md`, valider le style, puis `prompts/02-sandbox-complet.md`.

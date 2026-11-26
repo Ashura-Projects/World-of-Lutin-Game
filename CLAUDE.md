@@ -43,6 +43,14 @@ Lis avant toute tâche importante :
 2. Mécanique floue ou contradictoire → **demander à Ashura**, ne pas inventer. Idée hors jalon → `docs/idees.md`.
 3. Petits commits ; chaque commit compile, passe les tests et laisse le jeu lançable.
 4. Mécanique = code + JSON + tests GUT + doc à jour.
+
+### Mode marathon (validé par Ashura)
+Quand Ashura lance le prompt « Sandbox complet » (`prompts/02-sandbox-complet.md`) :
+- On enchaîne **J0 → J8 sans attendre sa validation entre les jalons** ; elle se fait à la fin, sur téléphone.
+- Les jalons restent faits **dans l'ordre**, chacun terminé par `/verifier` (tests verts, critère démontré) avant le suivant.
+- Un point [À VALIDER] non tranché → prendre l'option la plus simple, la noter dans `docs/journal.md` (section « Choix faits sans Ashura »), continuer.
+- `docs/journal.md` est tenu à jour après chaque jalon : fait, preuves, problèmes, prochaine étape. C'est ce qui permet de **reprendre** dans une nouvelle session.
+- Le style visuel est figé par `docs/style/STYLE-VALIDE.md` : ne pas s'en écarter.
 5. **`/verifier` avant de dire « fini »**, rapport honnête (testé / pas testé / cassé). Ne jamais prétendre avoir testé sur téléphone.
 
 ## 6. Interdits
