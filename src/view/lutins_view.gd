@@ -37,7 +37,7 @@ func _add(l: Lutin) -> void:
 	m.build(l.job, _age_scale(l))
 	m.position = l.pos
 	_models[l.id] = m
-	_jobs[l.id] = l.job
+	_jobs[l.id] = l.job + ":" + l.age_stage()
 
 
 func _age_scale(l: Lutin) -> float:
@@ -54,9 +54,9 @@ func _process(delta: float) -> void:
 		var m: LutinModel = _models.get(l.id)
 		if m == null:
 			continue
-		var job_view := "militia" if l.mobilized else l.job
+		var job_view := ("militia" if l.mobilized else l.job) + ":" + l.age_stage()
 		if _jobs[l.id] != job_view:
-			m.build(job_view, _age_scale(l))
+			m.build(job_view.split(":")[0], _age_scale(l))
 			_jobs[l.id] = job_view
 		var target := l.pos
 		var dir := target - m.position

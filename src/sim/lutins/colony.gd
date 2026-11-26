@@ -14,6 +14,7 @@ var task_board: RefCounted = null  # TaskBoard (J4) : fournit des tâches aux lu
 var structures: Structures = null  # sources de chaleur (J6)
 var heating_ok: bool = true  # faux si le bois de chauffage manque
 var combat: RefCounted = null  # Combat (J7) : mobilisation, cachette
+var education: RefCounted = null  # Education (J8) : école des enfants
 var _pop: Dictionary
 var _move: Dictionary
 var _needs: Dictionary
@@ -100,6 +101,10 @@ func _decide(l: Lutin, night: bool) -> void:
 		else:
 			l.state = Lutin.State.SLEEP
 		return
+	if l.state == Lutin.State.WORK and not l.can_work():
+		if l.wait_ticks > 0:
+			return
+		l.state = Lutin.State.IDLE
 	if l.state == Lutin.State.WORK:
 		var urgent: bool = l.needs["hunger"] < float(_needs["hunger"]["critical"]) * 2.0 or l.needs["sleep"] < 15.0
 		if not urgent:
@@ -128,6 +133,9 @@ func _decide(l: Lutin, night: bool) -> void:
 		else:
 			l.state = Lutin.State.SLEEP
 		return
+	if not l.can_work():
+		_child_day(l)
+		return
 	if task_board != null and task_board.call("assign", l):
 		return
 	# flâner autour du camp
@@ -145,7 +153,7 @@ func _act(l: Lutin) -> void:
 		l.wait_ticks -= 1
 		if l.wait_ticks == 0 and l.state == Lutin.State.EAT:
 			l.state = Lutin.State.IDLE
-	if l.state == Lutin.State.WORK and task_board != null:
+	if l.state == Lutin.State.WORK and task_board != null and l.can_work():
 		task_board.call("work", l)
 	if l.state == Lutin.State.WALK:
 		if task_board != null and l.task_id >= 0:
@@ -156,6 +164,24 @@ func _act(l: Lutin) -> void:
 			l.state = Lutin.State.IDLE
 			if task_board != null:
 				task_board.call("arrived", l)
+
+
+## Les enfants vont à l'école le jour (s'il y en a une), sinon jouent près de la maison ; les bébés restent près de la maison.
+func _child_day(l: Lutin) -> void:
+	var school: Vector3i = education.call("school_cell") if education != null else Vector3i(-1, -1, -1)
+	if l.age_stage() == "child" and school.y >= 0:
+		if _near(l.cell, school, 2):
+			l.state = Lutin.State.WORK  # en classe
+			l.wait_ticks = 5 * GameClock.ticks_per_second()
+		else:
+			_go(l, school, "école", true)
+		return
+	var base := l.home if l.home.y >= 0 else stock.pos
+	var r := 3 if l.age_stage() == "baby" else 6
+	var target := Pathfinder.snap(world, base + Vector3i(Rng.randi_range(-r, r), 0, Rng.randi_range(-r, r)))
+	if target.y >= 0:
+		_go(l, target, "jouer")
+	l.wait_ticks = Rng.randi_range(3, 8) * GameClock.ticks_per_second()
 
 
 ## Demande un chemin (budget limité par tick). Renvoie false si le chemin est impossible.
@@ -185,7 +211,12 @@ static func _near(a: Vector3i, b: Vector3i, r: int) -> bool:
 func change_job(l: Lutin, job: String) -> bool:
 	if job == l.job:
 		return true
-	var new_tool = DataRegistry.find("jobs", "jobs", job).get("tool")
+	var jd := DataRegistry.find("jobs", "jobs", job)
+	if jd.has("requires_training") and not l.trained.has(str(jd["requires_training"])) and not l.trained.has(job):
+		return false  # métier spécialisé : uniquement après formation
+	if not l.can_work() and job != "hauler":
+		return false
+	var new_tool = jd.get("tool")
 	if new_tool != null and stock.count(str(new_tool)) <= 0:
 		return false
 	var old_tool = DataRegistry.find("jobs", "jobs", l.job).get("tool")

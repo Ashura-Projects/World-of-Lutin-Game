@@ -29,6 +29,7 @@ var zones_panel: ZonesPanel
 var workshops_panel: WorkshopsPanel
 var military_panel: MilitaryPanel
 var dashboard: DashboardPanel
+var research_panel: ResearchPanel
 var _toasts: VBoxContainer
 var _res_labels: Dictionary = {}
 var _food_drop: PanelContainer
@@ -74,8 +75,13 @@ func bind_game(game: Node) -> void:
 	dashboard.position = Vector2(390, 80)
 	dashboard.visible = false
 	root.add_child(dashboard)
+	research_panel = ResearchPanel.new()
+	research_panel.setup(game)
+	research_panel.position = Vector2(360, 80)
+	research_panel.visible = false
+	root.add_child(research_panel)
 	_toasts = VBoxContainer.new()
-	_toasts.position = Vector2(1180, 80)
+	_toasts.position = Vector2(1150, 120)
 	_toasts.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	root.add_child(_toasts)
 	EventBus.alert.connect(_toast)
@@ -101,6 +107,13 @@ func _toast(kind: String, text: String) -> void:
 	if _toasts.get_child_count() > 5:
 		_toasts.get_child(0).queue_free()
 	get_tree().create_timer(6.0).timeout.connect(p.queue_free)
+
+
+func toggle_research() -> void:
+	research_panel.visible = not research_panel.visible
+	workshops_panel.visible = false
+	if research_panel.visible:
+		research_panel.refresh()
 
 
 func toggle_dashboard() -> void:

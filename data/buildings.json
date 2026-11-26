@@ -189,7 +189,9 @@
       "build_time": 15,
       "tags": [
         "workstation"
-      ]
+      ],
+      "training": "herbalist",
+      "available_from_start": true
     },
     {
       "id": "bed",
@@ -425,6 +427,90 @@
         "hearth"
       ],
       "available_from_start": true
+    },
+    {
+      "id": "school",
+      "name": "École",
+      "size": [
+        3,
+        3,
+        3
+      ],
+      "cost": {
+        "plank": 10,
+        "beam": 4
+      },
+      "station": "school",
+      "staff": 1,
+      "job": "teacher",
+      "seats": 8,
+      "build_time": 20,
+      "tags": [
+        "school"
+      ],
+      "available_from_start": true
+    },
+    {
+      "id": "library",
+      "name": "Bibliothèque",
+      "size": [
+        3,
+        3,
+        3
+      ],
+      "cost": {
+        "plank": 12,
+        "beam": 4,
+        "stone": 6
+      },
+      "station": "library",
+      "staff": 2,
+      "job": "researcher",
+      "training": "library",
+      "build_time": 25,
+      "tags": [
+        "workstation"
+      ],
+      "available_from_start": true
+    },
+    {
+      "id": "master_workshop",
+      "name": "Atelier de maître",
+      "size": [
+        3,
+        3,
+        3
+      ],
+      "cost": {
+        "plank": 10,
+        "beam": 4,
+        "stone": 6
+      },
+      "station": "master_workshop",
+      "staff": 1,
+      "job": "master_artisan",
+      "training": "master_workshop",
+      "build_time": 25,
+      "tags": [
+        "workstation"
+      ]
+    },
+    {
+      "id": "graveyard",
+      "name": "Cimetière",
+      "size": [
+        3,
+        3,
+        1
+      ],
+      "cost": {
+        "stone": 6
+      },
+      "build_time": 10,
+      "available_from_start": true,
+      "tags": [
+        "graveyard"
+      ]
     }
   ]
 }

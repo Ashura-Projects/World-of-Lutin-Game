@@ -34,7 +34,7 @@ func test_objectifs() -> void:
 	v.check()
 	assert_true(v.done.has("logs50"))
 	assert_true(v.done.has("fire"))
-	assert_false(v.done.has("bread20"))
+	assert_false(v.done.has("bread60"))
 
 
 func test_tour_de_vingt_blocs() -> void:

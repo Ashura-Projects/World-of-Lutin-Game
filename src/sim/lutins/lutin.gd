@@ -28,6 +28,8 @@ var combat_xp: float = 0.0
 var kills: Dictionary = {}  # espèce -> nombre abattu
 var hiding: bool = false
 var attack_cool: int = 0
+var trained: Dictionary = {}  # métier formé -> efficacité (1.0 enfant éduqué, 0.5 formation courte d'adulte)
+var parents: Array = []
 
 
 func place_at(c: Vector3i) -> void:
@@ -65,6 +67,19 @@ func walk(distance: float) -> bool:
 
 
 ## Change de métier (base : libre). Métier jamais pratiqué → niveau 1 ; déjà connu → garde son niveau (validé).
+## Âge : baby / child / adult / elder (data/population.json).
+func age_stage() -> String:
+	var stage := "adult"
+	for a: Dictionary in DataRegistry.get_table("population").get("ages", []):
+		if age_days >= int(a["from_day"]):
+			stage = a["id"]
+	return stage
+
+
+func can_work() -> bool:
+	return age_stage() in ["adult", "elder"]
+
+
 func set_job(j: String) -> void:
 	job = j
 	if not jobs_known.has(j):
@@ -147,3 +162,10 @@ func from_dict(d: Dictionary) -> void:
 	for k: String in ks:
 		kills[k] = int(ks[k])
 	hiding = bool(d.get("hiding", false))
+	trained = {}
+	var tr: Dictionary = d.get("trained", {})
+	for k: String in tr:
+		trained[k] = float(tr[k])
+	parents = []
+	for p_id in d.get("parents", []):
+		parents.append(int(p_id))

@@ -12,6 +12,8 @@ static func run(game: Node, action: String) -> void:
 			game.camera.focus(l.pos)
 			game.lutins_view.selected_id = l.id
 			game.hud.show_lutin(l)
+		"recherche":
+			recherche(game)
 		"loups":
 			loups(game)
 		"ferme":
@@ -129,3 +131,16 @@ static func loups(game: Node) -> void:
 	game.camera.distance = 14.0
 	game.camera.focus(Vector3(c) + Vector3(4, 0, 0))
 	game.hud.menu_button("Militaire").button_pressed = true
+
+
+static func recherche(game: Node) -> void:
+	var c: Vector3i = game.colony.stock.pos
+	var st: Structures = game.structures
+	var lib := st.add("library", c + Vector3i(-6, 0, -4), true)
+	st.add("school", c + Vector3i(5, 0, -5), true)
+	game.sim.education.enroll(game.colony.lutins[0], lib)
+	game.sim.research.choose("plough")
+	game.sim.research.points = 22.0
+	game.camera.distance = 18.0
+	game.camera.focus(Vector3(c))
+	game.hud.toggle_research()

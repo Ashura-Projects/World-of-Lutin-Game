@@ -38,7 +38,12 @@
       "food_stock_days>=5",
       "village_mood>=50"
     ],
-    "chance_per_day": 0.08
+    "chance_per_day": 0.08,
+    "food_per_lutin_day": 2.75,
+    "baby_aptitude": [
+      0,
+      10
+    ]
   },
   "death_of_old_age": {
     "enabled": true,

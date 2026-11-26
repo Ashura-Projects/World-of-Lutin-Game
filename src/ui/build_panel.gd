@@ -6,6 +6,7 @@ var tool: BuildTool
 var _height_label: Label
 var _mode_buttons: Array[Button] = []
 var _mat_buttons: Dictionary = {}
+var _locks: Dictionary = {}  # bouton -> id bloqué par une technologie
 
 
 func setup(t: BuildTool) -> void:
@@ -35,6 +36,7 @@ func setup(t: BuildTool) -> void:
 		btn.expand_icon = true
 		btn.pressed.connect(func() -> void: _select_material(n))
 		mats.add_child(btn)
+		_locks[btn] = b["id"]
 		_mat_buttons[n] = btn
 		if first:
 			_select_material(n)
@@ -56,6 +58,7 @@ func setup(t: BuildTool) -> void:
 				tool.object_kind = kind
 		)
 		objs.add_child(ob)
+		_locks[ob] = kind
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 6)
 	v.add_child(row)
@@ -91,6 +94,15 @@ func setup(t: BuildTool) -> void:
 	row.add_child(_small("↷", func() -> void: tool.history.redo()))
 	_select_mode(0)
 	_height(0)
+
+
+func _process(_d: float) -> void:
+	if not visible or Engine.get_process_frames() % 30 != 0:
+		return
+	for b: Button in _locks:
+		var locked := Research.is_locked(_locks[b])
+		b.disabled = locked
+		b.tooltip_text = "Technologie requise" if locked else ""
 
 
 func _small(text: String, cb: Callable) -> Button:

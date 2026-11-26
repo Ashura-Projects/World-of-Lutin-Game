@@ -32,7 +32,9 @@
         }
       }
     ],
-    "_note": "gains par jour d'école"
+    "_note": "gains par jour d'école",
+    "default_focus": "balanced",
+    "_focus_doc": "Cours de l'école : 'balanced' (les gains de tous les cours divisés par leur nombre) ou l'id d'un cours (gain complet)."
   },
   "training_centers": [
     {
@@ -76,5 +78,13 @@
       "phase": 1
     }
   ],
-  "adult_without_school_penalty": 0.5
+  "adult_without_school_penalty": 0.5,
+  "research": {
+    "points_per_day": 10,
+    "_doc": "Chaque chercheur affecté à la bibliothèque produit ces points par jour (× efficacité de sa formation)."
+  },
+  "child_start_aptitude": [
+    0,
+    10
+  ]
 }

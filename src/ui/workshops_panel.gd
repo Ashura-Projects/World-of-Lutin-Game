@@ -23,6 +23,11 @@ func setup(g: Node) -> void:
 	dash.custom_minimum_size = Vector2(240, 50)
 	dash.pressed.connect(func() -> void: game.hud.toggle_dashboard())
 	head.add_child(dash)
+	var res := Button.new()
+	res.text = "Recherche"
+	res.custom_minimum_size = Vector2(170, 50)
+	res.pressed.connect(func() -> void: game.hud.toggle_research())
+	head.add_child(res)
 	var scroll := ScrollContainer.new()
 	scroll.custom_minimum_size = Vector2(880, 420)
 	v.add_child(scroll)

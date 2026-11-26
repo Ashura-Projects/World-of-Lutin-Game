@@ -21,11 +21,11 @@
       "n": 1
     },
     {
-      "id": "bread20",
-      "name": "Avoir 20 pains en réserve",
+      "id": "bread60",
+      "name": "Avoir 60 pains en réserve",
       "kind": "stock",
       "res": "bread",
-      "n": 20
+      "n": 60
     },
     {
       "id": "wolf",

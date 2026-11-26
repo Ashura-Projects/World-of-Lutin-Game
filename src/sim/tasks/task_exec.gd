@@ -118,6 +118,13 @@ func work(l: Lutin) -> void:
 		return
 	var tps := float(GameClock.ticks_per_second())
 	var speed := 1.0 + float(_work.get("speed_per_level", 0.1)) * (l.job_level(t["job"]) - 1)
+	if l.age_stage() == "elder":
+		for a: Dictionary in DataRegistry.get_table("population").get("ages", []):
+			if a["id"] == "elder":
+				speed *= float(a.get("work_speed", 0.6))
+	speed *= float(l.trained.get(l.job, 1.0))  # formation courte d'adulte : moins efficace
+	if t["kind"] == "craft" and t.get("recipe", "").begins_with("grind"):
+		speed *= 1.0 + Research.get_bonus("flour_speed")
 	l.add_xp(float(_work.get("xp_per_second", 1.0)) / tps, float(_work.get("xp_per_level", 100)))
 	if t["kind"] == "hunt":
 		_hunt(l, t, tps)

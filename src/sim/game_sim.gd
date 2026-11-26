@@ -17,6 +17,9 @@ var fields: Fields
 var production: Production
 var combat: Combat
 var village: Village
+var research: Research
+var education: Education
+var population: Population
 
 
 func _init(w: VoxelWorld) -> void:
@@ -36,6 +39,9 @@ func _init(w: VoxelWorld) -> void:
 	village = Village.new(colony, structures, w)
 	combat.lutin_died.connect(func(_n: String, _c: String) -> void: village.on_death())
 	w.block_changed.connect(village.on_block)
+	research = Research.new()
+	education = Education.new(colony, structures, production, research)
+	population = Population.new(colony, structures, w)
 
 
 ## Nouvelle partie sur un monde généré.
@@ -66,11 +72,14 @@ func tick() -> void:
 
 func daily() -> void:
 	production.daily()
+	population.daily()
+	education.daily()
+	structures.assign_homes(colony)
 	village.daily()
 
 
 func register_saves() -> void:
-	var objs := [world, colony, flora, fauna, ground, structures, production, board, combat, village]
+	var objs := [world, colony, flora, fauna, ground, structures, production, board, combat, village, education]
 	for i in SAVE_KEYS.size():
 		SaveManager.register(SAVE_KEYS[i], objs[i])
 

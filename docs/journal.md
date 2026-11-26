@@ -12,7 +12,7 @@ Reprise : lire ce fichier, puis `prompts/03-reprise-et-corrections.md`.
 | J5 — Les lutins bâtissent | **fait** | maison (murs, toit, porte, 4 lits) bâtie par les lutins, reconnue « maison », ils y dorment (test) ; tentes attribuées ; `village.jpg` |
 | J6 — Agriculture & production | **fait** | champ case par case → récolte + paille (test), blé → farine → pain avec l'eau du puits (test), hiver de 5 jours en autonomie (test) ; `ferme.jpg` |
 | J7 — Prédateurs, gestion & sauvegarde | **fait** | loups (nuit) et ours, milice qui abat le loup (tests), sauvegarde → réouverture identique (test), rangs/objectifs/bilan (tests) ; `loups.jpg` |
-| J8 — Familles, école & recherche | à faire | |
+| J8 — Familles, école & recherche | **fait** | enfant né au village → école → chercheur → « Écriture » découverte (test) ; mort de vieillesse (test) ; `recherche.jpg` |
 
 ## J0 — Fondations
 Plan : projet Godot 4.7.2 (rendu Mobile, paysage 20:9), autoloads (EventBus, DataRegistry, Rng, GameClock, SaveManager,
@@ -75,3 +75,11 @@ Settings, GameSetup), GUT 9.7.1 headless, export Android arm64 (`com.ashura.worl
 - Sauvegarde : auto toutes les 5 min (`autosave_s`), à la mise en arrière-plan et à la fermeture ; test d'aller-retour complet strictement identique.
 - Interface : Militaire (cloche, armes, combattants), Tableau de bord (dans Gestion), alertes en bulles, rang dans la barre du haut.
 - Non fait : le guérisseur ne va pas encore soigner activement (les blessés boivent une potion à la réserve) ; formation du guérisseur au J8.
+
+## J8 — Familles, école & recherche
+- `Population` : vieillissement quotidien, naissances (couple dans une maison fermée avec un lit libre, ≥ 5 jours de nourriture, moral ≥ 50), mort de vieillesse.
+- `Education` : école (maître affecté, cours au choix ou équilibré), formations (bibliothèque → chercheur, atelier de maître → artisan expert,
+  herboristerie → guérisseur ; formation courte d'adulte à 50 % d'efficacité), production de recherche.
+- `Research` : points, choix, effets (rendement, école, farine, vitesse de recherche) et déblocages (blocs et bâtiments grisés tant que non découverts).
+- Les enfants ne travaillent pas : école le jour, jeux près de la maison ; les métiers spécialisés exigent une formation.
+- Interface : Gestion → Recherche (technologies, cours de l'école, inscriptions).
