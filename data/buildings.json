@@ -128,6 +128,23 @@
       },
       "station": "loom",
       "job": "weaver"
+    },
+    {
+      "id": "herbalist",
+      "name": "Herboristerie",
+      "size": [
+        2,
+        2,
+        2
+      ],
+      "cost": {
+        "plank": 6,
+        "beam": 2
+      },
+      "station": "herbalist",
+      "staff": 1,
+      "job": "healer",
+      "heals_in_bed": true
     }
   ]
 }

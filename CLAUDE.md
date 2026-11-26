@@ -39,7 +39,7 @@ Lis avant toute tâche importante :
 - Mesurer avant d'optimiser. Si le maillage GDScript ne tient pas le budget → ADR pour passer ce seul module en GDExtension C++.
 
 ## 5. Méthode de travail
-1. **Un jalon à la fois.** Rien du mode Aventure Royale (orcs, combat, diplomatie) avant la fin de la Phase 1.
+1. **Un jalon à la fois.** Rien du mode Aventure Royale (orcs, sièges, diplomatie) avant la fin de la Phase 1. Exception validée par Ashura : prédateurs (loup, ours) et combat simple dès la Phase 1.
 2. Mécanique floue ou contradictoire → **demander à Ashura**, ne pas inventer. Idée hors jalon → `docs/idees.md`.
 3. Petits commits ; chaque commit compile, passe les tests et laisse le jeu lançable.
 4. Mécanique = code + JSON + tests GUT + doc à jour.

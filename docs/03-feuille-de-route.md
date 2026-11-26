@@ -12,14 +12,14 @@ Règle : **un jalon = un APK jouable** sur le Xiaomi 14T Pro. On passe au suivan
 | **J4 — Récolte & métiers** | Outils = métiers, coupe (bûches), minage bloc par bloc / par cube, cueillette (lin sauvage), pêche, chasse (cerfs, sangliers : viande + peaux), réserve, porteurs, **panneau d'affectation lutin → bâtiment** (outil pris automatiquement) | Bois et pierre récoltés arrivent en réserve sans action du joueur ; un lutin affecté à un poste y travaille seul chaque jour |
 | **J5 — Les lutins bâtissent** | Écran de configuration (2 à 10 lutins), **tentes** (1 par lutin), feu de camp ; plans → apport des matériaux → pose ; objets ; pièces | Une maison (murs, toit, porte, lits) est bâtie par les lutins et ils y dorment |
 | **J6 — Agriculture & production** | **Champs case par case** (blé, orge, lin, pomme de terre), paille, puits, **moulin → four**, rouet → métier à tisser, établis + commandes, chauffage l'hiver | Le village passe un hiver complet en autonomie |
-| **J7 — Gestion & sauvegarde** | Tableau de bord, alertes, rangs, objectifs, sauvegarde auto | 1 h de partie sans bug bloquant ; sauvegarde → réouverture = identique |
+| **J7 — Gestion & sauvegarde** | **Loups et ours**, PV et attaque des lutins, cloche d'alerte, guérisseur et potions ; tableau de bord, alertes, rangs, objectifs, sauvegarde auto | 1 h de partie sans bug bloquant ; sauvegarde → réouverture = identique |
 | **J8 — Familles, école & recherche** | Naissances, âges, enfants, école + maître, aptitudes, bibliothèque → chercheurs, arbre de technologies court, atelier de maître | Un enfant né au village va à l'école, devient chercheur et débloque une technologie |
 
 ## Phase 2 — Aventure Royale
 | Jalon | Contenu |
 |---|---|
-| J9 | Orcs, raids, combat ; **caserne** → soldats (guerrier, archer) formés par l'éducation |
-| J10 | **Tour des mages** → mages, technologies militaires et magiques |
+| J9 | Orcs, raids ; **caserne** → soldats (lanciers, fusiliers) formés par l'éducation |
+| J10 | Armures et uniformes, technologies militaires |
 | J11 | Destruction, effondrement, sièges |
 | J12 | Carte régionale, royaumes IA, diplomatie |
 | J13 | Guerres, conquête, but de partie |

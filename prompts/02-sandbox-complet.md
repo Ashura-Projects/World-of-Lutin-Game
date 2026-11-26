@@ -19,7 +19,7 @@ Pour CHAQUE jalon :
 6. Point [À VALIDER] non tranché → option la plus simple, notée dans le journal, et tu continues.
 
 Utilise des sous-agents pour paralléliser ce qui est indépendant (ex. modèles 3D pendant le code), et un agent relecteur indépendant à la fin de chaque jalon.
-Rien de la Phase 2 (orcs, combat, caserne, mages, sièges, diplomatie).
+Rien de la Phase 2 (orcs, caserne, armures, sièges, diplomatie). Les loups, les ours et le combat simple sont en Phase 1 (J7).
 
 Si la session doit s'arrêter (limite, contexte plein) : mets docs/journal.md à jour, pousse, et dis-moi où tu t'es arrêté.
 

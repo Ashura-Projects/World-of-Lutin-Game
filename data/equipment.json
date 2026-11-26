@@ -1,5 +1,5 @@
 {
-  "_doc": "PHASE 2 — équipement des soldats. Un soldat équipe 1 arme + 1 armure (+ 1 uniforme aux couleurs du village). Fabriqué dans des ateliers dédiés. Valeurs de départ à équilibrer.",
+  "_doc": "équipement des soldats. Un soldat équipe 1 arme + 1 armure (+ 1 uniforme aux couleurs du village). Fabriqué dans des ateliers dédiés. Valeurs de départ à équilibrer. Lances et fusil disponibles dès le Bac à sable (défense contre loups et ours) ; armures et uniformes : Phase 2.",
   "slots": [
     "weapon",
     "armor",

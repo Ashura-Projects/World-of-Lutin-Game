@@ -184,14 +184,14 @@
       "phase": 2
     },
     {
-      "id": "mage",
-      "name": "Mage",
-      "tool": null,
-      "requires_training": "mage",
+      "id": "healer",
+      "name": "Guérisseur",
+      "tool": "mortar",
+      "requires_training": "healer",
       "tasks": [
-        "cast"
-      ],
-      "phase": 2
+        "heal",
+        "craft:potions"
+      ]
     }
   ]
 }

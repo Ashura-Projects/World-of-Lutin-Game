@@ -1,5 +1,5 @@
 {
-  "_doc": "Faune sauvage (chasse au fusil à silex). Les peaux servent aux tentes et au cuir.",
+  "_doc": "Faune. Gibier (cerf, sanglier) : viande + peaux. Prédateurs (loup, ours) : premiers ennemis, dès le Bac à sable. Valeurs fixes : pv, dégâts par coup, portée en blocs, cadence en secondes. Tuer un ennemi donne de l'XP de combat.",
   "animals": [
     {
       "id": "deer",
@@ -53,6 +53,57 @@
       "drop": {
         "fish": 1
       }
+    },
+    {
+      "id": "wolf",
+      "name": "Loup",
+      "hostile": true,
+      "biome": [
+        "forest",
+        "hills"
+      ],
+      "pack": [
+        3,
+        5
+      ],
+      "per_1000": 1,
+      "hp": 40,
+      "damage": 8,
+      "reach": 1.2,
+      "attack_every_s": 1.5,
+      "speed": 2.2,
+      "hunts_at_night": true,
+      "drop": {
+        "meat": 3,
+        "hide": 1
+      },
+      "xp": 15,
+      "respawn_days": 15
+    },
+    {
+      "id": "bear",
+      "name": "Ours",
+      "hostile": true,
+      "biome": [
+        "forest",
+        "mountain"
+      ],
+      "pack": [
+        1,
+        1
+      ],
+      "per_1000": 0.4,
+      "hp": 150,
+      "damage": 22,
+      "reach": 1.6,
+      "attack_every_s": 2.5,
+      "speed": 1.6,
+      "drop": {
+        "meat": 15,
+        "hide": 3
+      },
+      "xp": 60,
+      "respawn_days": 30
     }
   ]
 }

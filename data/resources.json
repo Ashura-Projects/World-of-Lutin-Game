@@ -295,6 +295,25 @@
       "name": "Grattoir",
       "category": "tool",
       "stack": 5
+    },
+    {
+      "id": "medicinal_herb",
+      "name": "Plante médicinale",
+      "category": "raw",
+      "stack": 40
+    },
+    {
+      "id": "healing_potion",
+      "name": "Potion de soin",
+      "category": "medicine",
+      "stack": 10,
+      "heal": 30
+    },
+    {
+      "id": "mortar",
+      "name": "Mortier et pilon",
+      "category": "tool",
+      "stack": 5
     }
   ]
 }

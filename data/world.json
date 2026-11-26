@@ -167,11 +167,29 @@
     }
   ],
   "dig": {
-    "order_brush_sizes": [
+    "_doc": "Ordre de creusage : on pose un rectangle puis on règle avec des boutons + / − la largeur, la longueur et la profondeur. Puits = 1×1 jusqu'à la nappe.",
+    "width": [
       1,
-      4
+      32
     ],
-    "_note": "ordres de minage bloc par bloc, ou par cube de 4 [À VALIDER : 2×2 à plat, ou cube 4×4×4 ?]"
+    "length": [
+      1,
+      32
+    ],
+    "depth": [
+      1,
+      48
+    ],
+    "default": [
+      2,
+      2,
+      1
+    ],
+    "well_preset": [
+      1,
+      1,
+      "water_table"
+    ]
   },
   "harvest_circle": {
     "radius_min": 1,

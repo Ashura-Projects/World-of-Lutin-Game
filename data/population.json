@@ -49,5 +49,22 @@
     "keep_level_on_change": true,
     "new_job_level": 1,
     "base_job_change": "free"
+  },
+  "combat": {
+    "_doc": "Stats de base d'un lutin adulte (sans arme). L'arme et l'armure s'ajoutent (equipment.json). Enfant/bébé : fuient.",
+    "hp": 50,
+    "damage_unarmed": 3,
+    "reach_unarmed": 1.0,
+    "attack_every_s": 1.2,
+    "regen_per_day": 5,
+    "xp_per_level": 100,
+    "levels": {
+      "hp_per_level": 5,
+      "damage_per_level": 0.5
+    },
+    "alert_bell": {
+      "mobilize": "les adultes prennent l'arme en réserve et vont au point de rassemblement",
+      "hide": "tous courent à l'abri le plus proche (tente, maison)"
+    }
   }
 }

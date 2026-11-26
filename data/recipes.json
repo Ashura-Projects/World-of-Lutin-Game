@@ -286,6 +286,31 @@
         "flail": 1
       },
       "work": 8
+    },
+    {
+      "id": "brew_potion",
+      "station": "herbalist",
+      "job": "healer",
+      "in": {
+        "medicinal_herb": 3,
+        "water": 1
+      },
+      "out": {
+        "healing_potion": 1
+      },
+      "work": 20
+    },
+    {
+      "id": "make_mortar",
+      "station": "mason_bench",
+      "job": "stonemason",
+      "in": {
+        "stone": 2
+      },
+      "out": {
+        "mortar": 1
+      },
+      "work": 10
     }
   ]
 }

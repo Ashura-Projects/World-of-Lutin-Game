@@ -1,10 +1,9 @@
 {
-  "_doc": "École (enfants) et centres de formation (adultes). Aptitudes 0-100. phase = phase de développement où le centre arrive.",
+  "_doc": "École (enfants) et centres de formation (adultes). Aptitudes 0-100. phase = phase de développement où le centre arrive. Pas de magie (décision d'Ashura) : le soin passe par le guérisseur et ses potions.",
   "aptitudes": [
     "knowledge",
     "strength",
-    "dexterity",
-    "magic"
+    "dexterity"
   ],
   "school": {
     "building": "school",
@@ -31,14 +30,6 @@
         "gives": {
           "strength": 2
         }
-      },
-      {
-        "id": "mysteries",
-        "name": "Mystères",
-        "gives": {
-          "magic": 2
-        },
-        "phase": 2
       }
     ],
     "_note": "gains par jour d'école"
@@ -75,34 +66,15 @@
       "phase": 2
     },
     {
-      "id": "mage_tower",
-      "name": "Tour des mages",
-      "trains": "mage",
+      "id": "herbalist",
+      "name": "Herboristerie",
+      "trains": "healer",
       "requires": {
-        "magic": 60
+        "knowledge": 30
       },
-      "days": 15,
-      "phase": 2
+      "days": 6,
+      "phase": 1
     }
   ],
-  "adult_without_school_penalty": 0.5,
-  "mage_paths": [
-    {
-      "id": "healing",
-      "name": "Soin"
-    },
-    {
-      "id": "protection",
-      "name": "Protection"
-    },
-    {
-      "id": "weather",
-      "name": "Météo"
-    },
-    {
-      "id": "combat",
-      "name": "Combat"
-    }
-  ],
-  "mage_paths_note": "Voie choisie à l'âge adulte, à l'entrée dans la tour des mages (Phase 2)."
+  "adult_without_school_penalty": 0.5
 }

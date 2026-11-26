@@ -11,16 +11,21 @@
 - Génération seedée : **grande plaine**, **forêts**, **rivière** (et lac), **collines** riches en minerais, **montagne à explorer**.
 - **Couches comme Minecraft** : herbe → terre (2-4) → pierre → roche profonde → socle. Poches de gravier, d'argile (près de l'eau),
   de **charbon** et de **fer** dans la pierre. On creuse **bloc par bloc** : trous, galeries, mines, **puits** (jusqu'à la nappe d'eau).
-- Ordres de minage : bloc par bloc ou **par cube de 4 blocs**. **[À VALIDER : 2×2 à plat, ou cube 4×4×4 ?]**
+- **Validé — ordre de creusage simple** : on pose un rectangle, puis des boutons **+ / −** règlent **largeur**, **longueur** et **profondeur**.
+  Puits = raccourci 1×1 jusqu'à la nappe.
 - Blocs naturels : herbe, terre, terre fertile, sable, gravier, argile, pierre, roche profonde, minerai de fer, charbon, eau (fixe), neige (sommets).
 - Tout bloc naturel peut être **creusé** (récolte) sauf l'eau et le socle du fond.
 - **Végétation** (objets, pas des blocs) : arbres (plusieurs espèces pour le décor), buissons à baies, roseaux, **lin sauvage**.
 - **Un seul bois** : la **bûche**, quel que soit l'arbre. Elle se transforme en **planches** ou en **poutres**, matériaux des blocs.
 - **Faune** : **cerfs** et **sangliers** (viande + **peaux**), poissons dans la rivière/lac (pêche). `data/animals.json`.
+- **Validé — premiers ennemis dès le Bac à sable : loup** (en meute, la nuit) et **ours** (seul, très solide).
+  PV, dégâts, portée et cadence **fixes et réalistes** (loup 40 PV / 8 dégâts / 1,2 bloc ; ours 150 PV / 22 dégâts / 1,6 bloc).
+  Les tuer donne de l'**XP de combat** (premiers guerriers). Les **lutins ont des PV et des stats d'attaque** (`population.json` › combat).
+  Armes dès la Phase 1 : lance et fusil à silex ; armures et uniformes en Phase 2.
 - **Temps** : 1 jour = 6 min à x1 ; 4 saisons × 5 jours. L'hiver : pas de culture, neige, besoin de bois de chauffe.
 
 ## 2. Les Lutins
-- Petites créatures **bleues**, environ 1 bloc de haut. Départ : **2 à 10 lutins, réglable avant de lancer la partie** (6 par défaut) + un chariot de vivres, de semences et d'outils (`data/start.json`).
+- Petites créatures **bleu sombre** (validé), environ 1 bloc de haut. Départ : **2 à 10 lutins, réglable avant de lancer la partie** (6 par défaut) + un chariot de vivres, de semences et d'outils (`data/start.json`).
 - Fiche : nom, **métier**, niveau d'expérience du métier, besoins.
 - **Besoins** : faim, sommeil, chaleur (hiver), moral. Moral bas → travail lent ; très bas → il quitte le village.
 - **Déplacement** : marche, monte une marche d'**1 bloc**, ne saute pas plus ; escaliers, échelles et ponts à construire pour le reste.
@@ -51,21 +56,22 @@
 - Alertes : « Scierie : 1 poste vide », « Pas de hache en réserve pour le bûcheron affecté ».
 
 ## 3b. Éducation, formation et recherche
-- **École** (bâtiment, avec un **maître** affecté) : les enfants y vont le jour ; ils accumulent des **aptitudes** (savoir, force, adresse, magie) selon les cours choisis.
+- **École** (bâtiment, avec un **maître** affecté) : les enfants y vont le jour ; ils accumulent des **aptitudes** (savoir, force, adresse) selon les cours choisis.
 - À l'âge adulte, les aptitudes ouvrent l'accès aux **centres de formation** :
   | Centre | Forme des | Rôle |
   |---|---|---|
   | **Bibliothèque / académie** | **Chercheurs** | produisent des points de recherche → débloquent les **technologies** |
   | **Atelier de maître** | Artisans experts | recettes avancées, meilleure qualité |
   | **Caserne** *(Phase 2)* | **Soldats** (guerrier, archer) | défense, guerre |
-  | **Tour des mages** *(Phase 2)* | **Mages** | 4 voies, **choisies à l'âge adulte** : **soin** (guérir les blessés), **protection** (renforcer remparts et blocs), **météo** (pluie pour les champs, éloigner l'orage, adoucir l'hiver), **combat** (sorts offensifs) |
+  | **Herboristerie** | **Guérisseurs** | soignent les blessés avec des **potions** faites de **plantes médicinales** récoltées (+ eau) |
 - Les métiers spécialisés ne s'obtiennent **que par l'éducation** (pas par un simple outil).
 - Un adulte non formé peut suivre une formation courte (moins efficace qu'un enfant éduqué).
 
 ### Technologies (Phase 1 : arbre court)
 - Les chercheurs accumulent des points ; le joueur choisit la prochaine technologie (`data/technologies.json`).
 - Exemples : charrue (rendement agricole), moulin (farine plus rapide), maçonnerie (pierre taillée, tours), fours à briques, fer forgé (outils durables), écriture (école améliorée).
-- Phase 2 : technologies militaires et magiques.
+- Phase 2 : technologies militaires.
+- **Validé : pas de mages ni de magie** (ton murim réaliste). Le soin passe par le **guérisseur**.
 
 ## 4. Récolte (même logique que Castle Story)
 - Menu **Récolter** (à côté de Construire) : **couper** des arbres, **creuser** (trou, **mine**, **puits**), **cueillir**, **chasser**, **pêcher**.
@@ -116,7 +122,7 @@
 
 ## 8. Gestion et objectifs (partie longue)
 - **Validé — cloche d'alerte** (bouton court sur la fiche et la barre du haut) : choisir **Mobiliser** (prendre les armes, point de rassemblement)
-  ou **Se cacher** (courir à l'abri). Utile surtout en Phase 2 (orcs) ; en Phase 1 : animaux sauvages / exercice. **[À VALIDER : présent dès la Phase 1 ?]**
+  ou **Se cacher** (courir à l'abri). **Validé : dès le Bac à sable** (loups, ours), puis contre les orcs en Phase 2.
 - Ressources affichées en haut : **Nourriture** (= total de tous les aliments, détail dans un menu déroulant), bois, pierre, fer, **or** (échanges).
 - Tableau de bord : stocks, production/consommation par jour, lutins, moral, alertes (famine, froid, plus d'outils).
 - **Rangs** : Campement → Hameau → Village → Bourg. Chaque rang débloque matériaux, objets, métiers.
@@ -131,7 +137,7 @@
   **armure** (tissu matelassé, **cuir**, **fer** : plus de défense, moins de vitesse), **uniforme** aux couleurs du village (+moral).
   Ateliers liés : **armurerie** (lances, épées, armures de fer), **atelier d'arquebusier** (fusils, munitions),
   **tannerie-sellerie** (cuir, armures de cuir, métier **tanneur**), **atelier de couture** (gambisons, uniformes, vêtements).
-- Combat : **soldats** (lanciers, fusiliers…) et **mages** formés à la caserne / tour des mages (§3b), ordres de groupe, défense par étages, créneaux.
+- Combat : **soldats** (lanciers, fusiliers…) formés à la caserne (§3b), ordres de groupe, défense par étages, créneaux.
 - **Destruction et effondrement** des blocs non soutenus (sièges spectaculaires).
 - **Carte régionale** : autres royaumes lutins (IA), tribus orques, provinces à prendre.
 - **Diplomatie** : émissaires, alliances, tributs, commerce, déclarations de guerre.

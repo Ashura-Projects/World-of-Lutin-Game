@@ -14,7 +14,7 @@ le village devient forteresse… puis, en Aventure Royale, royaume face aux **Or
 | Objectif | survie face aux vagues | **partie longue** : rangs du village, puis royaume, diplomatie, guerres |
 
 ## Les deux modes
-1. **Bac à sable** (Phase 1) — pas d'ennemis. Ressources, construction, métiers, agriculture, économie. On bâtit tranquille.
+1. **Bac à sable** (Phase 1) — pas d'armées ennemies ; seuls des **prédateurs** (loups, ours) menacent. Ressources, construction, métiers, agriculture, économie. On bâtit tranquille.
 2. **Aventure Royale** (Phase 2) — départ avec quelques lutins ; bâtir un royaume entier : orcs, sièges, autres royaumes, diplomatie, conquête.
 
 ## Les 4 piliers

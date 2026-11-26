@@ -42,7 +42,7 @@ def value_noise(cell):
 # ---------------------------------------------------------------- hauteurs et biomes
 n1, n2, n3 = value_noise(48), value_noise(20), value_noise(8)
 yy, xx = np.mgrid[0:N, 0:N]
-h = 25 + 2.5 * n2 + 1.0 * n3
+h = 24.2 + 2.2 * n2 + 0.8 * n3
 hills = np.clip((value_noise(64) - 0.55) * 3.0, 0, 1)
 h += hills * (8 + 6 * n2)
 mount = np.clip(1 - np.hypot(xx - 225, yy - 225) / 75, 0, 1) ** 1.3
@@ -58,13 +58,19 @@ forest = (n1 > 0.5) & (~in_water) & (~bank) & (mount < 0.25)
 H = np.clip(np.round(h), 2, 63).astype(int)
 
 # exemples creusés : une mine à ciel ouvert dans les collines, un puits dans la plaine
-mine_c = np.unravel_index(np.argmax(hills * (mount < 0.1) * (xx > 20) * (yy > 20) * (xx < 236) * (yy < 236)), H.shape)
+mine_c = np.unravel_index(np.argmax(hills * (mount < 0.1) * (xx > 50) * (yy > 50) * (xx < 200) * (yy < 200)), H.shape)
 my, mx = mine_c
 for k in range(4):  # gradins de 4×4 en 4×4
     r = 7 - 2 * k
     H[my - r:my + r, mx - r:mx + r] = np.minimum(H[my - r:my + r, mx - r:mx + r], H[my, mx] - 3 * (k + 1))
-well = (150, 60)
+well = (mx + 12, my + 2)
 H[well[1], well[0]] = WORLD["water_table"]
+
+
+def _hash(x, y, z):
+    v = (x * 374761393 + y * 668265263 + z * 1442695041) & 0xFFFFFFFF
+    v = ((v ^ (v >> 13)) * 1274126177) & 0xFFFFFFFF
+    return (v ^ (v >> 16)) & 0xFFFF
 
 
 def block_at(x, y, z, top):
@@ -82,7 +88,7 @@ def block_at(x, y, z, top):
         return "stone" if mount[y, x] > 0.45 else "grass"
     if depth <= 3 and mount[y, x] < 0.45:
         return "dirt" if not bank[y, x] else "sand"
-    hsh = ((x * 73856093) ^ (y * 19349663) ^ (z * 83492791)) & 0xFFFF
+    hsh = _hash(x // 2, y // 2, z // 2)  # poches de 2×2×2 environ
     if z < 12:
         return "iron_ore" if hsh < 900 else "deep_stone"
     if hsh < 1800 and z < 40:
@@ -138,7 +144,7 @@ def mesh(lay):
     uvl.data.foreach_set("uv", flat)
     ob = bpy.data.objects.new("carte", me)
     bpy.context.scene.collection.objects.link(ob)
-    ob.data.materials.append(voxel.atlas_material(ATLAS / "atlas_C.png", "carte_mat", 0.9))
+    ob.data.materials.append(voxel.atlas_material(ATLAS / "atlas_B.png", "carte_mat", 0.9))
     # eau : une nappe plane sur la rivière, le lac et au fond du puits
     wv, wf = [], []
     for y in range(N):
@@ -200,7 +206,7 @@ print("arbres:", nt, "mine:", mx, my)
 blib.camera((-120, -150, 230), (128, 118, 20), lens=40)
 blib.render(OUT / "carte_ensemble.png", 1600, 900)
 # zoom sur un coin : couches visibles en coupe + mine
-blib.camera((mx - 40, my - 50, H[my, mx] + 38), (mx, my, H[my, mx] - 6), lens=40)
+blib.camera((mx - 26, my - 30, H[my, mx] + 34), (mx + 4, my, H[my, mx] - 8), lens=36)
 blib.render(OUT / "carte_mine.png", 1600, 900)
 # coin de carte en coupe (bord sud-ouest)
 blib.camera((-22, -26, 48), (14, 14, 18), lens=35)
