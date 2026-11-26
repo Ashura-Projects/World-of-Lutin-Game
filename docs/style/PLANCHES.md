@@ -24,6 +24,10 @@ Bleu actuel, bleu sombre, ou vert foncé façon gobelin (design restant original
 Mains vides au repos ; l'outil apparaît pendant le travail.
 **Question : outils plus lisibles maintenant ? Fusil du chasseur OK ?**
 
+## b2. Fusil à silex
+![Fusil](fusil-tir.png)
+Porté dans le dos au repos ; en action, épaulé, canon vers l'avant, le lutin vise ; au tir, flash et fumée au bout du canon.
+
 ## c. Âges (ambiance sombre)
 ![Âges](ages.png)
 

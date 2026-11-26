@@ -33,7 +33,8 @@ POSES = {
     "pinces": ((0.5, -0.6, 0.0), (0, 0, 0)),
     "louche": ((0.3, -0.6, 0.0), (0, 0, 0)),
     "canne": ((0.75, -0.35, 0.0), (0, 0, 0)),
-    "fusil": ((0.25, -1.15, -0.25), (0.06, -0.02, 0.04)),  # en travers du corps, crosse à l'épaule
+    "fusil_vise": ((math.pi / 2, 0.0, 0.0), (0.0, 0.0, 0.0)),   # épaulé, canon pointé vers l'avant (-Y)
+    "fusil_dos": ((0.0, 0.75, 0.0), (0.0, 0.0, 0.0)),           # en bandoulière, canon vers le haut
     "epee": ((0.2, -0.7, 0.0), (0, 0, 0)),
     "panier": ((0.0, 0.0, 0.0), (0, -0.02, -0.02)),
     "livre": ((0.3, 0.0, 0.0), (0.04, -0.02, 0.04)),
@@ -89,11 +90,11 @@ def build(name):
     elif name == "canne":
         o.append(cyl((0, 0, 0.42), 0.012, 0.95, mat("bambou", (170, 140, 80), 0.6), verts=6))
         o.append(torus((0.02, 0, 0.12), 0.025, 0.008, iron, rot=(math.pi / 2, 0, 0), seg=8))  # moulinet
-    elif name == "fusil":  # fusil à silex, à l'échelle du lutin
+    elif name in ("fusil", "fusil_vise", "fusil_dos"):  # fusil à silex, à l'échelle du lutin
         stock = mat("crosse", WOOD_D, 0.6)
         o.append(box((0, 0, -0.1), (0.05, 0.035, 0.2), stock, rot=(0.12, 0, 0), bevel=0.008))  # crosse
-        o.append(box((0, 0, 0.12), (0.032, 0.03, 0.3), stock, bevel=0.006))                   # fût
-        o.append(cyl((0, -0.006, 0.36), 0.012, 0.6, mat("canon", DARK, 0.35, metal=0.8), verts=8))
+        o.append(box((0, 0, 0.22), (0.032, 0.03, 0.5), stock, bevel=0.006))                   # fût long (fusil à silex)
+        o.append(cyl((0, -0.012, 0.38), 0.014, 0.56, mat("canon", DARK, 0.35, metal=0.8), verts=8))
         o.append(box((0.022, 0, 0.04), (0.012, 0.03, 0.05), mat("platine", BRASS, 0.35, metal=0.8)))  # platine à silex
         o.append(box((0.03, 0, 0.075), (0.01, 0.012, 0.03), mat("chien", DARK, 0.4, metal=0.7), rot=(0, -0.5, 0)))
         o.append(torus((-0.022, 0, 0.0), 0.018, 0.004, mat("pontet", BRASS, 0.35, metal=0.8), rot=(0, math.pi / 2, 0), seg=8))
@@ -117,6 +118,28 @@ def build(name):
         o.append(cyl((0, -0.04, 0), 0.035, 0.24, mat("parch", (226, 210, 170), 0.9), verts=8, rot=(0, math.pi / 2, 0)))
         o.append(sphere((0.0, -0.08, 0.0), 0.018, mat("sceau", (160, 30, 30)), 8, 6))
     return o
+
+
+MUZZLE = 0.68  # bout du canon, en coordonnées locales du fusil (avant l'échelle 1.3)
+
+
+def muzzle_flash(objs, hand=(-0.1, -0.16, 0.47)):
+    """Tir : flamme et fumée au bout du canon (le canon pointe vers -Y)."""
+    y = hand[1] - MUZZLE * 1.3
+    x, z = hand[0], hand[2]
+    fire = mat("flash", (255, 190, 80), 0.3, emit=40.0)
+    core = mat("flash_coeur", (255, 250, 210), 0.3, emit=80.0)
+    objs.append(cone((x, y - 0.18, z), 0.12, 0.36, fire, verts=7, rot=(math.pi / 2, 0, 0)))
+    objs.append(sphere((x, y - 0.04, z), 0.08, core, 8, 6))
+    for i, (dx, dz, r) in enumerate(((0.02, 0.04, 0.07), (-0.03, 0.08, 0.06), (0.0, 0.13, 0.05))):
+        objs.append(sphere((x + dx, y - 0.22 - i * 0.06, z + dz), r, mat("fumee", (190, 186, 180), 0.9), 8, 6))
+    ld = bpy.data.lights.new("eclair_tir", "POINT")
+    ld.energy = 25
+    ld.color = (1.0, 0.7, 0.35)
+    lo = bpy.data.objects.new("eclair_tir", ld)
+    lo.location = (x, y - 0.1, z)
+    bpy.context.scene.collection.objects.link(lo)
+    objs.append(lo)
 
 
 def place(name, hand, objs, side=-1):

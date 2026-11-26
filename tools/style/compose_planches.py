@@ -95,12 +95,13 @@ blocks = [b for b in json.loads((ROOT / "data/blocks.json").read_text())["blocks
 parts = [header(W, "Les blocs", "atlas unique 32×32 px par tuile")]
 for pal, titre in (("B", "Palette B — réaliste (choisie)"), ("C", "Palette C — sombre, usée (dark fantasy)")):
     parts.append(band(titre))
-    ims = [Image.open(R / f"bloc_{pal}_{b['id']}.png").convert("RGB") for b in blocks]
+    shown = [b for b in blocks if (R / f"bloc_{pal}_{b['id']}.png").exists()]  # nouveaux blocs : rendus plus tard
+    ims = [Image.open(R / f"bloc_{pal}_{b['id']}.png").convert("RGB") for b in shown]
     for i in range(0, len(ims), 9):
         parts.append(row(ims[i:i + 9], 176))
         lab = Image.new("RGB", (W, 40), BG)
         dl = ImageDraw.Draw(lab)
-        for k, b in enumerate(blocks[i:i + 9]):
+        for k, b in enumerate(shown[i:i + 9]):
             text_c(dl, (8 + 176 * k + 88, 20), b["name"], font(16, True), TXT)
         parts.append(lab)
     atlas = Image.open(ATL / f"atlas_{pal}.png")
@@ -116,4 +117,10 @@ for mood, titre in (("jour", "Jour"), ("crepuscule", "Crépuscule (torches allum
     parts += [band(titre), Image.open(R / f"scene_C_{mood}.png").convert("RGB")]
 parts += [band("Zoom « près des lutins » — jour"), Image.open(R / "scene_C_jour_zoom.png").convert("RGB")]
 stack(parts, BG).save(OUT / "scene-village.png")
+# g. Fusil à silex : porté, visée, tir --------------------------------------------------------------
+if (R / "tir_feu.png").exists():
+    top = row([Image.open(R / "tir_repos.png"), Image.open(R / "tir_vise.png")], 420)
+    stack([header(W, "Le fusil à silex", "porté dans le dos · épaulé, canon vers l'avant · tir : flash et fumée au bout du canon"),
+           top, labels(["Au repos : en bandoulière", "En visée"], 56),
+           band("Le tir, face à un loup"), fit(Image.open(R / "tir_feu.png").convert("RGB"), W)], BG).save(OUT / "fusil-tir.png")
 print("planches OK")

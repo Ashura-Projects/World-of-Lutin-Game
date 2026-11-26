@@ -110,7 +110,7 @@ def _face(head_c, r, objs, big_eyes=1.0, eye_spread=0.36):
         objs.append(sphere((x + s * r * 0.58, y - r * 0.72, z - r * 0.15), (0.05, 0.02, 0.03), mat("joue", CHEEK, 0.8), 8, 4))
 
 
-def _variant_a(o, objs, skin, s_head=1.0, action=False, nose=SKIN_DARK):
+def _variant_a(o, objs, skin, s_head=1.0, action=False, nose=SKIN_DARK, hand_pos=None):
     tunic = mat("tunique", o["tunic"], 0.85)
     sk = mat("peau", skin, 0.55)
     # jambes et bottes
@@ -129,6 +129,8 @@ def _variant_a(o, objs, skin, s_head=1.0, action=False, nose=SKIN_DARK):
         shoulder = (s * 0.18, 0, 0.44)
         # en action, la main droite (côté -X) se lève devant le corps pour tenir l'outil
         hand = (-0.3, -0.12, 0.4) if (action and s == -1) else (s * 0.25, -0.03, 0.25)
+        if hand_pos and s in hand_pos:  # pose imposée (ex. visée au fusil, deux mains)
+            hand = hand_pos[s]
         objs.append(limb(shoulder, hand, 0.045, tunic))
         objs.append(sphere(hand, 0.055, sk, 10, 6))
         hands[s] = hand
@@ -183,7 +185,7 @@ def grade(c, sombre):
 
 
 def build(job="porteur", age="adult", name="lutin", loc=(0, 0, 0), rot_z=0.0, scale=1.0,
-          action=False, skin="bleu", sombre=False):
+          action=False, skin="bleu", sombre=False, tir=False):
     """Construit un lutin et renvoie son objet racine.
 
     action : l'outil du métier n'apparaît qu'en action (sinon mains vides).
@@ -206,10 +208,21 @@ def build(job="porteur", age="adult", name="lutin", loc=(0, 0, 0), rot_z=0.0, sc
     o["tunic"] = grade(o["tunic"], sombre)
     o["hat"] = (o["hat"][0], grade(o["hat"][1], sombre))
     holds = action and bool(o["tool"]) and job != "porteur"
-    hc, r, hands = _variant_a(o, objs, sk, s_head={"baby": 1.22, "child": 1.1}.get(age, 1.0), action=holds, nose=nose)
+    gun = o["tool"] == "fusil"
+    # fusil : en action = épaulé et pointé vers l'avant (deux mains) ; au repos = porté en bandoulière dans le dos
+    hand_pos = {-1: (-0.1, -0.16, 0.47), 1: (-0.08, -0.44, 0.5)} if (holds and gun) else None
+    hc, r, hands = _variant_a(o, objs, sk, s_head={"baby": 1.22, "child": 1.1}.get(age, 1.0), action=holds and not gun,
+                              nose=nose, hand_pos=hand_pos)
     _hat(o["hat"][0], o["hat"][1], hc, r, objs)
     _extras(o, objs, hc, r)
-    if holds:
+    if gun and age == "adult":
+        if holds:
+            outils.place("fusil_vise", hands[-1], objs)
+            if tir:
+                outils.muzzle_flash(objs)
+        else:
+            outils.place("fusil_dos", (0.0, 0.17, 0.42), objs)
+    elif holds:
         outils.place(o["tool"], hands[-1], objs)
     if age == "baby":  # lange et tétine
         objs.append(sphere((0, -r * 1.0, hc[2] - r * 0.35), (0.06, 0.03, 0.045), mat("tetine", (120, 200, 230)), 8, 6))
