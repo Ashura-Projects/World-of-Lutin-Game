@@ -43,6 +43,9 @@ OUTFITS = {
     "cuisinier":        dict(tunic=(230, 230, 224), hat=("toque", (252, 252, 250)), tool="louche", extras=["tablier_blanc"]),
     "maitre_ecole":     dict(tunic=(120, 70, 140), hat=("beret", (70, 50, 110)), tool="livre", extras=["lunettes"]),
     "chercheur":        dict(tunic=(50, 70, 130), hat=("pointu_haut", (40, 50, 110)), tool="parchemin", extras=["lunettes", "robe"]),
+    # uniforme de mobilisation (validé) : tunique aux couleurs du village, chapeau de fer, baudriers croisés
+    "milicien":         dict(tunic=(40, 74, 170), hat=("chapeau_fer", (150, 154, 162)), tool="fusil", extras=["baudriers"]),
+    "milicien_lance":   dict(tunic=(40, 74, 170), hat=("chapeau_fer", (150, 154, 162)), tool="lance", extras=["baudriers"]),
     "soldat":           dict(tunic=(120, 36, 40), hat=("heaume", (150, 152, 160)), tool="epee", extras=["cotte"]),
     "artisan_expert":   dict(tunic=(150, 40, 50), hat=("beret", (190, 50, 60)), tool="marteau_or", extras=["ceinture_outils", "medaille"]),
 }
@@ -87,6 +90,11 @@ def _hat(kind, color, head_c, r, objs):
         objs.append(sphere((x, y, top - 0.06), (r * 1.04, r * 1.04, r * 0.7), steel, 14, 7))
         objs.append(torus((x, y, top - 0.08), r * 1.02, r * 0.07, steel, seg=16))
         objs.append(box((x, y - r * 1.02, z + r * 0.2), (0.04, 0.03, r * 0.6), steel))
+    elif kind == "chapeau_fer":  # chapel de fer : calotte + large bord
+        steel = mat("acier", color, 0.35, metal=0.8)
+        objs.append(sphere((x, y, top - 0.04), (r * 0.98, r * 0.98, r * 0.6), steel, 14, 7))
+        objs.append(cyl((x, y, top - 0.06), r * 1.38, 0.025, steel, verts=16))
+        objs.append(torus((x, y, top - 0.02), r * 0.96, 0.018, mat("lanière", (60, 40, 28)), seg=14))
     elif kind == "calotte":
         objs.append(sphere((x, y, top - 0.02), (r * 0.95, r * 0.95, r * 0.5), m, 12, 6))
     elif kind == "toque":
@@ -168,6 +176,12 @@ def _extras(o, objs, hc, r):
         gl = mat("monture", (60, 40, 30), 0.4)
         for s in (-1, 1):
             objs.append(torus((s * r * 0.36, hc[1] - r * 0.97, hc[2] + r * 0.12), 0.06, 0.008, gl, rot=(math.pi / 2, 0, 0)))
+    if "baudriers" in ex:  # deux baudriers blancs croisés + giberne
+        strap = mat("baudrier_blanc", (226, 220, 204), 0.7)
+        for s in (-1, 1):
+            objs.append(box((0, -0.165, 0.34), (0.04, 0.02, 0.36), strap, rot=(0.15, s * 0.62, 0)))
+        objs.append(box((0, -0.19, 0.34), (0.06, 0.02, 0.06), mat("plaque_laiton", (200, 160, 70), 0.3, metal=0.8)))
+        objs.append(box((0.15, 0.1, 0.24), (0.1, 0.07, 0.08), mat("giberne", (40, 30, 24), 0.6), bevel=0.01))
     if "cotte" in ex:  # plastron de cuir clouté
         objs.append(sphere((0, -0.03, 0.36), (0.205, 0.17, 0.16), mat("plastron", (70, 52, 40), 0.6), 12, 6))
         for i in range(5):

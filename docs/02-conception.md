@@ -127,6 +127,7 @@
 ## 8. Gestion et objectifs (partie longue)
 - **Validé — cloche d'alerte** (bouton court sur la fiche et la barre du haut) : choisir **Mobiliser** (prendre les armes, point de rassemblement)
   ou **Se cacher** (courir à l'abri). **Validé : dès le Bac à sable** (loups, ours), puis contre les orcs en Phase 2.
+  **Mobiliser** = les adultes enfilent l'**uniforme de mobilisation** (tunique bleue, chapel de fer, baudriers) et prennent fusil ou lance.
 - Ressources affichées en haut : **Nourriture** (= total de tous les aliments, détail dans un menu déroulant), bois, pierre, fer, **or** (échanges).
 - Tableau de bord : stocks, production/consommation par jour, lutins, moral, alertes (famine, froid, plus d'outils).
 - **Rangs** : Campement → Hameau → Village → Bourg. Chaque rang débloque matériaux, objets, métiers.

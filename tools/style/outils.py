@@ -36,6 +36,7 @@ POSES = {
     "fusil_vise": ((math.pi / 2, 0.0, 0.0), (0.0, 0.0, 0.0)),   # épaulé, canon pointé vers l'avant (-Y)
     "fusil_dos": ((0.0, 0.75, 0.0), (0.0, 0.0, 0.0)),           # en bandoulière, canon vers le haut
     "epee": ((0.2, -0.7, 0.0), (0, 0, 0)),
+    "lance": ((1.15, -0.15, 0.0), (0.0, -0.02, 0.0)),        # pointée vers l'avant, en garde
     "panier": ((0.0, 0.0, 0.0), (0, -0.02, -0.02)),
     "livre": ((0.3, 0.0, 0.0), (0.04, -0.02, 0.04)),
     "parchemin": ((0.0, 0.0, 0.0), (0.03, -0.04, 0.04)),
@@ -104,6 +105,10 @@ def build(name):
         o.append(box((0, 0, 0.06), (0.14, 0.03, 0.025), mat("garde", BRASS, 0.3, metal=0.8)))
         o.append(box((0, 0, 0.28), (0.045, 0.012, 0.4), edge))
         o.append(cone((0, 0, 0.5), 0.032, 0.05, edge, verts=4, rot=(0, 0, math.pi / 4)))
+    elif name == "lance":
+        o.append(cyl((0, 0, 0.3), 0.017, 1.2, mat("hampe", WOOD, 0.8), verts=8))
+        o.append(cone((0, 0, 0.98), 0.04, 0.2, edge, verts=4))
+        o.append(box((0, 0, 0.87), (0.03, 0.03, 0.04), iron))
     elif name == "panier":
         wick = mat("osier", (176, 132, 74), 0.9)
         o.append(cyl((0, 0, -0.14), 0.1, 0.11, wick, verts=12, r2=0.12))
