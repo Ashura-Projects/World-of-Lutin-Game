@@ -61,6 +61,7 @@ func test_zone_sur_fil_de_travail() -> void:
 		if st.is_loaded(Vector3i(100, 0, 100)):
 			break
 	assert_true(st.is_loaded(Vector3i(100, 0, 100)), "zone fusionnée après génération en arrière-plan")
+	st.finish()  # jamais de fil de travail encore en cours à la fermeture
 	WorldStreamer.active = null
 
 
