@@ -73,7 +73,14 @@ func to_dict() -> Dictionary:
 	for s: Dictionary in items.values():
 		var c: Vector3i = s["cell"]
 		out.append(
-			{"id": s["id"], "kind": s["kind"], "cell": [c.x, c.y, c.z], "built": s["built"], "owner": s["owner"]}
+			{
+				"id": s["id"],
+				"kind": s["kind"],
+				"cell": [c.x, c.y, c.z],
+				"built": s["built"],
+				"owner": s["owner"],
+				"claimed": s.get("claimed", false)
+			}
 		)
 	return {"items": out, "next_id": next_id}
 
@@ -87,7 +94,8 @@ func from_dict(d: Dictionary) -> void:
 			"kind": e["kind"],
 			"cell": Vector3i(int(c[0]), int(c[1]), int(c[2])),
 			"built": bool(e["built"]),
-			"owner": int(e["owner"])
+			"owner": int(e["owner"]),
+			"claimed": bool(e.get("claimed", false))
 		}
 	next_id = int(d.get("next_id", items.size() + 1))
 	changed.emit()

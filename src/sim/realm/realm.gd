@@ -258,6 +258,7 @@ func soldiers() -> Array:
 func garrison_capacity() -> int:
 	var m: Dictionary = _cfg.get("military", {})
 	var n := int(m.get("max_soldiers_without_garrison", 2))
+	n += structures.built_with_tag("barracks").size() * int(m.get("barracks_places", 4))
 	for s: Dictionary in structures.built_with_tag("bed"):
 		if RoomDetector.room_at(world, structures, s["cell"]).get("type", "") == "garrison":
 			n += int(m.get("soldier_per_bed", 1))

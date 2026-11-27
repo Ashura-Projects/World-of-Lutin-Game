@@ -1,0 +1,63 @@
+{
+  "_doc": "Carte : couleurs des blocs vus du dessus, pas d'échantillonnage, ressources repérées sous la surface.",
+  "colors": {
+    "grass": "5f8a3a",
+    "dirt": "7a5434",
+    "fertile_soil": "5a3a24",
+    "sand": "d8c890",
+    "clay": "b07a5a",
+    "stone": "8a8a8a",
+    "snow": "eef0f4",
+    "water": "3a6aa8",
+    "gravel": "9a948a",
+    "deep_stone": "5a5a60",
+    "wood_block": "8a6440",
+    "plank_block": "b08a58",
+    "thatch_block": "c8a84a",
+    "cut_stone_block": "a8a49c",
+    "stone_block": "8a8a8a",
+    "road_dirt": "9a7a50",
+    "road_stone": "8a8478",
+    "field_plot": "6a4a2a",
+    "crenel": "b0aca4",
+    "rampart": "9a968e",
+    "training_ground": "9a948a"
+  },
+  "default_color": "7a7a72",
+  "max_size": 256,
+  "ore_depth": 6,
+  "resources": {
+    "iron_ore": [
+      "Fer",
+      "c87a4a"
+    ],
+    "gold_ore": [
+      "Or",
+      "f0c840"
+    ],
+    "coal_ore": [
+      "Charbon",
+      "2a2a2e"
+    ],
+    "clay": [
+      "Argile",
+      "b07a5a"
+    ]
+  },
+  "marker_icons": [
+    "★",
+    "⚑",
+    "⚒",
+    "⚠",
+    "⌂",
+    "✚"
+  ],
+  "marker_labels": [
+    "Point de rendez-vous",
+    "Minerai",
+    "Forêt",
+    "Danger",
+    "Village",
+    "Camp"
+  ]
+}

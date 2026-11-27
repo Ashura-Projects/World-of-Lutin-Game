@@ -117,6 +117,7 @@ func tick() -> void:
 		rivals.check_conquest()
 		for l in colony.lutins:
 			territory.explore(l.cell, int(DataRegistry.find("jobs", "jobs", l.job).get("explore_radius", 2)))
+		_buildings_effects()
 		rivals.check_meetings()
 		orcs.check_discovery(territory)
 
@@ -165,3 +166,25 @@ func register_saves() -> void:
 func unregister_saves() -> void:
 	for k: String in SAVE_KEYS:
 		SaveManager.unregister(k)
+
+
+## Bornes de territoire (revendiquent les colonnes autour contre de l'or) et tours de guet (vue lointaine).
+func _buildings_effects() -> void:
+	var tc: Dictionary = DataRegistry.get_table("factions").get("territory", {})
+	for s: Dictionary in structures.built_with_tag("claim"):
+		if s.get("claimed", false):
+			continue
+		s["claimed"] = true
+		var cost := int(tc.get("claim_post_gold", 20))
+		if colony.stock.count("gold") < cost:
+			EventBus.alert.emit("alerte", "Borne de territoire : il faut %d or pour revendiquer." % cost)
+			s["claimed"] = false
+			continue
+		var owner := territory.owner_at(s["cell"])
+		var force: bool = owner != "" and owner != "player" and realm.status(owner) in ["war", "conquered"]
+		colony.stock.take("gold", cost)
+		var n := territory.claim(s["cell"], int(tc.get("claim_post_radius", 1)), "player", force)
+		EventBus.alert.emit("faction", "Territoire revendiqué : %d zone(s)." % n)
+	var wr := int(DataRegistry.get_table("realm").get("watchtower_radius_cols", 5))
+	for s: Dictionary in structures.built_with_tag("watchtower"):
+		territory.explore(s["cell"], wr)

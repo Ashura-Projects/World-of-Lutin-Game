@@ -149,7 +149,8 @@
   "military": {
     "soldier_job": "soldier",
     "max_soldiers_without_garrison": 2,
-    "soldier_per_bed": 1
+    "soldier_per_bed": 1,
+    "barracks_places": 4
   },
   "training": {
     "xp_per_s": 0.5,
@@ -188,5 +189,6 @@
     "enabled": true,
     "color": "1c2028",
     "alpha": 0.94
-  }
+  },
+  "watchtower_radius_cols": 5
 }

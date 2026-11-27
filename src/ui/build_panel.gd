@@ -13,11 +13,28 @@ const CATEGORIES := [
 	["decor", "Décoration"],
 	["workshops", "Ateliers"],
 	["buildings", "Bâtiments"],
+	["defense", "Défense"],
+	["religion", "Religion"],
 ]
 const FURNITURE := [
-	"bed", "wood_bed", "table", "chair", "bench", "chest", "wardrobe", "shelf", "door", "barrel", "crate", "weapon_rack"
+	"bed",
+	"wood_bed",
+	"table",
+	"chair",
+	"bench",
+	"chest",
+	"wardrobe",
+	"shelf",
+	"door",
+	"barrel",
+	"crate",
+	"throne",
+	"wood_cage",
+	"iron_cage"
 ]
-const GROUND := ["road_dirt", "road_stone", "dirt_block"]
+const GROUND := ["road_dirt", "road_stone", "dirt_block", "training_ground"]
+const DEFENSE := ["crenel", "rampart", "barracks", "watchtower", "claim_post", "weapon_rack"]
+const RELIGION := ["chapel", "church", "altar", "church_bell"]
 
 var tool: BuildTool
 var board: TaskBoard
@@ -46,8 +63,8 @@ func setup(t: BuildTool, b: TaskBoard) -> void:
 	for c: Array in CATEGORIES:
 		var tb := Button.new()
 		tb.text = c[1]
-		tb.custom_minimum_size = Vector2(170, 52)
-		tb.add_theme_font_size_override("font_size", 19)
+		tb.custom_minimum_size = Vector2(134, 52)
+		tb.add_theme_font_size_override("font_size", 16)
 		tb.pressed.connect(show_category.bind(str(c[0])))
 		tabs.add_child(tb)
 		_tabs[c[0]] = tb
@@ -131,11 +148,18 @@ func show_category(cat: String) -> void:
 	match cat:
 		"blocks", "ground":
 			for b: Dictionary in DataRegistry.get_table("blocks").get("blocks", []):
-				if not b.has("cost") or b["id"] == "field_plot":
+				if not b.has("cost") or b["id"] == "field_plot" or DEFENSE.has(b["id"]):
 					continue
 				if (cat == "ground") != (GROUND.has(b["id"]) or b.get("surface", false)):
 					continue
 				_add_block_choice(b)
+		"defense":
+			for b: Dictionary in DataRegistry.get_table("blocks").get("blocks", []):
+				if DEFENSE.has(b["id"]):
+					_add_block_choice(b)
+			for b: Dictionary in DataRegistry.get_table("buildings").get("buildings", []):
+				if DEFENSE.has(b["id"]):
+					_add_object_choice(b)
 		_:
 			for b: Dictionary in DataRegistry.get_table("buildings").get("buildings", []):
 				if b.get("zone", false) or _building_category(b) != cat:
@@ -145,6 +169,10 @@ func show_category(cat: String) -> void:
 
 
 static func _building_category(b: Dictionary) -> String:
+	if RELIGION.has(b["id"]):
+		return "religion"
+	if DEFENSE.has(b["id"]):
+		return "defense"
 	if FURNITURE.has(b["id"]):
 		return "furniture"
 	if b.get("object", false):

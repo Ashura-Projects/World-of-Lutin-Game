@@ -81,6 +81,9 @@ static func _box(
 
 
 static func model(kind: String) -> Node3D:
+	var bm := BuildingModels.build(kind)
+	if bm != null:
+		return bm
 	var r := Node3D.new()
 	match kind:
 		"tent":  # toile de peaux tendue sur deux perches

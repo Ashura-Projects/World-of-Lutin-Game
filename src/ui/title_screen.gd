@@ -4,6 +4,8 @@ extends Control
 const GAME_SCENE := "res://src/game/game.tscn"
 
 var _setup_panel: NewGamePanel
+var _debug_btn: Button
+var _taps: Array = []  # 5 touchers rapides dans le coin droit = menu débug
 
 
 func _ready() -> void:
@@ -45,6 +47,9 @@ func _build() -> void:
 		UiStyle.make_primary(newb)
 	_menu_button(col, "Paramètres", func() -> void: _popup(SettingsPanel.new()))
 	_menu_button(col, "Crédits", func() -> void: _popup(CreditsPanel.new()))
+	_debug_btn = _menu_button(col, "Débug", _debug_menu)
+	_debug_btn.add_theme_color_override("font_color", Color("ff8a7a"))
+	_debug_btn.visible = bool(Settings.get_value("debug"))
 	_menu_button(col, "Quitter", func() -> void: get_tree().quit())
 
 	var ver := Label.new()
@@ -55,6 +60,17 @@ func _build() -> void:
 	ver.position = Vector2(16, -30)
 	add_child(ver)
 	_build_setup_panel()
+	var corner := Button.new()
+	corner.flat = true
+	corner.position = Vector2(1480, 0)
+	corner.custom_minimum_size = Vector2(120, 120)
+	corner.set_meta("silent", true)
+	corner.add_theme_stylebox_override("normal", StyleBoxEmpty.new())
+	corner.add_theme_stylebox_override("hover", StyleBoxEmpty.new())
+	corner.add_theme_stylebox_override("pressed", StyleBoxEmpty.new())
+	corner.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
+	corner.pressed.connect(_corner_tap)
+	add_child(corner)
 
 
 func _menu_button(parent: Control, text: String, cb: Callable) -> Button:
@@ -121,3 +137,62 @@ func _toast(text: String) -> void:
 	l.position = Vector2(600, 640)
 	add_child(l)
 	get_tree().create_timer(2.0).timeout.connect(l.queue_free)
+
+
+## Menu débug caché : 5 touchers en moins de 3 secondes dans le coin en haut à droite.
+func _corner_tap() -> void:
+	var now := Time.get_ticks_msec()
+	_taps = _taps.filter(func(t: int) -> bool: return now - t < 3000)
+	_taps.append(now)
+	if _taps.size() < 5:
+		return
+	_taps.clear()
+	Settings.set_value("debug", true)
+	_debug_btn.visible = true
+	_dialog("Mode débug activé", "Le menu débug est maintenant dans le menu (accueil et ⚙ en partie).")
+
+
+func _dialog(title: String, text: String) -> void:
+	var p := PanelContainer.new()
+	p.add_theme_stylebox_override("panel", UiStyle.box(UiStyle.IRON, Color("e05050"), 3, 10))
+	p.position = Vector2(500, 260)
+	var v := VBoxContainer.new()
+	v.add_theme_constant_override("separation", 12)
+	p.add_child(v)
+	v.add_child(UiStyle.title_label(title, 30, Color("ff8a7a")))
+	var l := Label.new()
+	l.text = text
+	v.add_child(l)
+	var ok := Button.new()
+	ok.text = "OK"
+	ok.custom_minimum_size = Vector2(200, 56)
+	UiStyle.make_primary(ok)
+	ok.pressed.connect(p.queue_free)
+	v.add_child(ok)
+	add_child(p)
+
+
+## Menu débug de l'accueil : rappel et désactivation (les commandes sont dans ⚙ en partie).
+func _debug_menu() -> void:
+	var p := PanelContainer.new()
+	p.add_theme_stylebox_override("panel", UiStyle.box(UiStyle.IRON, Color("e05050"), 3, 10))
+	p.position = Vector2(520, 200)
+	var v := VBoxContainer.new()
+	v.add_theme_constant_override("separation", 12)
+	p.add_child(v)
+	v.add_child(UiStyle.header("Menu débug", 30, p.queue_free))
+	var l := Label.new()
+	l.text = "En partie : ⚙ › Débug (apparitions, ressources, mode dieu,\nconstruction libre, temps, orcs, factions, carte)."
+	v.add_child(l)
+	var off := Button.new()
+	off.text = "Désactiver le menu débug"
+	off.custom_minimum_size = Vector2(460, 56)
+	UiStyle.make_primary(off)
+	off.pressed.connect(
+		func() -> void:
+			Settings.set_value("debug", false)
+			_debug_btn.visible = false
+			p.queue_free()
+	)
+	v.add_child(off)
+	add_child(p)

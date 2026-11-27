@@ -49,6 +49,49 @@ static func run(game: Node, action: String) -> void:
 			game.hud.tools._floor_panel.visible = true
 		"chargement":
 			pass
+		"carte":
+			game.sim.territory.reveal_all()
+			game.sim.rivals.check_meetings()
+			game.sim.orcs.check_discovery(game.sim.territory)
+			game.hud.top.map_panel.visible = true
+		"camp_orc":
+			var c: Dictionary = game.sim.orcs.camps[0]
+			game.sim.territory.explore(c["cell"], 2)
+			game.camera.distance = 16.0
+			game.camera.focus(Vector3(c["cell"]))
+		"village_voisin":
+			var st: Dictionary = game.sim.rivals.states.values()[0]
+			game.sim.territory.explore(st["center"], 2)
+			game.camera.distance = 22.0
+			game.camera.focus(Vector3(st["center"]))
+		"brouillard":
+			game.camera.distance = 70.0
+			game.camera.focus(Vector3(game.colony.stock.pos))
+		"religion":
+			game.sim.structures.add("chapel", game.colony.stock.pos + Vector3i(5, 0, 0), true)
+			game.sim.religion.ordain(game.colony.lutins[0])
+			game.hud.open_realm()
+			game.hud.realm_panel.show_tab("religion")
+		"debug":
+			game.hud.debug_panel.visible = true
+			game.hud.debug_panel.refresh()
+		"batiments":
+			var p: Vector3i = game.colony.stock.pos
+			for e: Array in [
+				["chapel", Vector3i(6, 0, -6)],
+				["church", Vector3i(-12, 0, -8)],
+				["barracks", Vector3i(6, 0, 4)],
+				["watchtower", Vector3i(-6, 0, 6)],
+				["claim_post", Vector3i(2, 0, 8)],
+				["altar", Vector3i(0, 0, -4)],
+				["church_bell", Vector3i(-3, 0, -4)],
+				["throne", Vector3i(3, 0, -4)],
+				["iron_cage", Vector3i(-1, 0, 4)]
+			]:
+				var c := Pathfinder.snap(game.world, p + e[1])
+				game.sim.structures.add(e[0], c, true)
+			game.camera.distance = 30.0
+			game.camera.focus(Vector3(p))
 		"parametres":
 			game.hud._settings()
 			for c in game.hud.root.get_children():

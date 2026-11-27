@@ -33,6 +33,7 @@ var _load_t: float = 0.0
 var _mesh_total: int = 0
 var _cart: Node3D
 var fog_view: FogView
+var realm_view: RealmView
 var fauna_fog: Territory
 
 
@@ -131,6 +132,9 @@ func _on_world_ready() -> void:
 	fields_view = FieldsView.new()
 	add_child(fields_view)
 	fields_view.bind(fields)
+	realm_view = RealmView.new()
+	add_child(realm_view)
+	realm_view.bind(sim.orcs, sim.territory, world)
 	var stores := StoreZonesView.new()
 	add_child(stores)
 	stores.bind(colony)

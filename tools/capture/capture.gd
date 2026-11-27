@@ -18,6 +18,11 @@ func _initialize() -> void:
 		_scene = args[1]
 	if args.size() > 2:
 		_wait = float(args[2])
+	_setup.call_deferred(args)
+
+
+## Réglages de la partie une fois les autoloads (données) prêts, puis lancement de la scène.
+func _setup(args: Array) -> void:
 	var gs := root.get_node_or_null("GameSetup")
 	if gs:
 		gs.reset_defaults()
@@ -27,6 +32,8 @@ func _initialize() -> void:
 			gs.map_size = args[4]
 	if args.size() > 5:
 		_action = args[5]
+	if args.size() > 6 and gs:
+		gs.set_mode(args[6])  # sandbox / royal
 	change_scene_to_file(_scene)
 
 

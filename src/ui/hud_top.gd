@@ -16,7 +16,7 @@ func setup(h: Hud, g: Node) -> void:
 	root = h.root
 	game = g
 	_toasts = VBoxContainer.new()
-	_toasts.position = Vector2(1100, 120)
+	_toasts.position = Vector2(1010, 120)
 	_toasts.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	root.add_child(_toasts)
 	EventBus.alert.connect(_toast)
@@ -33,7 +33,7 @@ func setup(h: Hud, g: Node) -> void:
 	]:
 		var b := Button.new()
 		b.position = Vector2(x, 6)
-		var wide := 200 if r[0] == "food" else 140
+		var wide := 184 if r[0] == "food" else 128
 		b.custom_minimum_size = Vector2(wide, 50)
 		b.add_theme_font_size_override("font_size", 17)
 		b.tooltip_text = "Toutes les ressources"
@@ -41,7 +41,55 @@ func setup(h: Hud, g: Node) -> void:
 		b.pressed.connect(func() -> void: toggle_resources(cat))
 		root.add_child(b)
 		_res_labels[r[0]] = [b, r[1]]
-		x += wide + 8
+		x += wide + 6
+	_build_map()
+
+
+var minimap: Minimap
+var map_panel: MapPanel
+
+
+## Bouton carte (barre du haut) → minicarte ; « Grande carte » → carte avec filtres et marqueurs.
+func _build_map() -> void:
+	var b := Button.new()
+	b.text = "Carte"
+	b.position = Vector2(1398, 6)
+	b.custom_minimum_size = Vector2(70, 50)
+	b.add_theme_font_size_override("font_size", 16)
+	root.add_child(b)
+	var box := PanelContainer.new()
+	box.add_theme_stylebox_override("panel", UiStyle.box(Color(0.08, 0.06, 0.06, 0.9), UiStyle.GOLD_D, 2, 6))
+	box.position = Vector2(1240, 66)
+	box.visible = false
+	root.add_child(box)
+	var v := VBoxContainer.new()
+	box.add_child(v)
+	minimap = Minimap.new()
+	minimap.setup(game, Vector2(220, 220))
+	minimap.picked.connect(func(c: Vector3i) -> void: game.camera.focus(Vector3(c)))
+	v.add_child(minimap)
+	var big := Button.new()
+	big.text = "Grande carte"
+	big.custom_minimum_size = Vector2(220, 44)
+	big.add_theme_font_size_override("font_size", 17)
+	v.add_child(big)
+	map_panel = MapPanel.new()
+	map_panel.setup(game)
+	map_panel.position = Vector2(150, 72)
+	map_panel.visible = false
+	root.add_child(map_panel)
+	hud.windows.add(map_panel, func() -> void: map_panel.visible = false)
+	big.pressed.connect(
+		func() -> void:
+			box.visible = false
+			map_panel.visible = true
+	)
+	b.pressed.connect(
+		func() -> void:
+			box.visible = not box.visible
+			if box.visible:
+				minimap.rebuild()
+	)
 
 
 func toggle_resources(cat: String = "") -> void:
@@ -61,6 +109,9 @@ func refresh() -> void:
 func _toast(kind: String, text: String) -> void:
 	var l := Label.new()
 	l.text = text
+	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	l.custom_minimum_size = Vector2(500, 0)
+	l.add_theme_font_size_override("font_size", 19)
 	l.add_theme_color_override(
 		"font_color", Color("ffd27a") if kind in ["mort", "alerte", "froid", "cloche"] else UiStyle.TXT
 	)

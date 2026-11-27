@@ -3,7 +3,13 @@ extends PanelContainer
 ## Menu Royaume : Faction (emblème, seigneur, garnison, prison), Membres (promouvoir, soldat, cage),
 ## Diplomatie (voisins), Lois et taxes. Les règles sont dans Realm (src/sim/realm) et data/realm.json.
 
-const TABS := [["faction", "Faction"], ["members", "Membres"], ["diplomacy", "Diplomatie"], ["laws", "Lois et taxes"]]
+const TABS := [
+	["faction", "Faction"],
+	["members", "Membres"],
+	["diplomacy", "Diplomatie"],
+	["laws", "Lois et taxes"],
+	["religion", "Religion"]
+]
 
 var game: Node
 var tab: String = "faction"
@@ -24,12 +30,12 @@ func setup(g: Node) -> void:
 	head.add_theme_constant_override("separation", 6)
 	v.add_child(head)
 	var t := UiStyle.title_label("Royaume", 30)
-	t.custom_minimum_size = Vector2(190, 0)
+	t.custom_minimum_size = Vector2(170, 0)
 	head.add_child(t)
 	for e: Array in TABS:
 		var b := Button.new()
 		b.text = e[1]
-		b.custom_minimum_size = Vector2(190, 50)
+		b.custom_minimum_size = Vector2(168, 50)
 		b.pressed.connect(show_tab.bind(str(e[0])))
 		head.add_child(b)
 		_tabs[e[0]] = b
@@ -57,7 +63,7 @@ func show_tab(t: String) -> void:
 
 ## Rafraîchi régulièrement : seulement les onglets d'information (pas pendant un choix).
 func refresh() -> void:
-	if tab in ["members", "diplomacy"]:
+	if tab in ["members", "diplomacy"] and not get_viewport().gui_get_focus_owner() is LineEdit:
 		_rebuild()
 
 
@@ -73,6 +79,8 @@ func _rebuild() -> void:
 			_diplomacy_tab()
 		"laws":
 			_laws_tab()
+		"religion":
+			ReligionTab.fill(self)
 
 
 func _realm() -> Realm:
@@ -204,24 +212,35 @@ func _do(ok: bool, fail_msg: String) -> void:
 func _diplomacy_tab() -> void:
 	var r := _realm()
 	_label(
-		"Les cadeaux et accords améliorent les prix du marchand. Les guerres n'auront d'effet qu'avec l'Aventure Royale.",
+		"Cadeaux, commerce et alliance améliorent les prix. En guerre, leurs soldats attaquent ; conquérez leur village.",
 		18,
 		UiStyle.TXT_D
 	)
+	if r.neighbours().is_empty():
+		_label("Aucun voisin rencontré : explorez la carte (éclaireurs) pour les trouver.", 20)
 	for f: Dictionary in r.neighbours():
 		var id: String = f["id"]
 		_label("%s — %s" % [f["name"], f["desc"]], 21, UiStyle.GOLD)
-		_label("Relation : %d / 100 · %s" % [int(r.relation(id)), r.status_name(id)], 19)
+		var info := "Relation : %d / 100 · %s" % [int(r.relation(id)), r.status_name(id)]
+		if Rivals.active != null and Rivals.active.states.has(id):
+			var st: Dictionary = Rivals.active.states[id]
+			info += " · %d habitants, %d soldats" % [int(st["population"]), int(st["soldiers"])]
+			if st.get("peace_offer", false):
+				info += " · PROPOSE LA PAIX"
+		_label(info, 19)
+		if r.status(id) == "conquered":
+			continue
 		var row := _row()
 		for a: Array in [
 			["gift", "Cadeau (%d or)" % int(DataRegistry.get_table("realm")["diplomacy"].get("gift_gold", 20))],
-			["treaty", "Accord commercial"],
+			["treaty", "Commerce"],
+			["alliance", "Alliance"],
 			["peace", "Paix"],
 			["war", "Guerre"],
 			["insult", "Insulter"]
 		]:
 			var act: String = a[0]
-			_button(row, a[1], func() -> void: _diplo(id, act), 190)
+			_button(row, a[1], func() -> void: _diplo(id, act), 160)
 
 
 func _diplo(id: String, act: String) -> void:
