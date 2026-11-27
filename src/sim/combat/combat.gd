@@ -236,7 +236,10 @@ func _strike(l: Lutin, a: Dictionary, tps: float) -> void:
 	var cell: Vector3i = a["cell"]
 	var kind: String = a["kind"]
 	EventBus.sfx.emit("fusil" if l.weapon == "flintlock" else "marteau", l.pos)
-	if fauna.damage(a["id"], float(ws["attack"])):
+	var dmg := float(ws["attack"])
+	if Religion.active != null and l.faith >= 50.0:
+		dmg *= Religion.active.damage_mult()  # dogme « Guerre sainte »
+	if fauna.damage(a["id"], dmg):
 		l.kills[kind] = int(l.kills.get(kind, 0)) + 1
 		l.combat_xp += float(fauna.def(kind).get("xp", 10))
 		ground.drop(cell, fauna.def(kind).get("drop", {}))

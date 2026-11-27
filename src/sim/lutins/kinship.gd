@@ -24,8 +24,17 @@ static func siblings_of(colony: Colony, l: Lutin) -> Array:
 	)
 
 
-## Conjoint : l'autre parent d'un enfant commun.
+## Parents, enfants, frères et sœurs : pas de mariage entre eux.
+static func close_kin(colony: Colony, a: Lutin, b: Lutin) -> bool:
+	if a.parents.has(b.id) or b.parents.has(a.id):
+		return true
+	return a.parents.any(func(p: int) -> bool: return b.parents.has(p))
+
+
+## Conjoint : le mari ou la femme, sinon l'autre parent d'un enfant commun.
 static func partner_of(colony: Colony, l: Lutin) -> Lutin:
+	if l.spouse >= 0 and colony.find_lutin(l.spouse) != null:
+		return colony.find_lutin(l.spouse)
 	for c: Lutin in children_of(colony, l):
 		for p in c.parents:
 			if int(p) != l.id:

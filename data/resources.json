@@ -556,6 +556,18 @@
       "name": "Cage en fer",
       "category": "furniture",
       "stack": 5
+    },
+    {
+      "id": "altar_item",
+      "name": "Autel",
+      "category": "furniture",
+      "stack": 5
+    },
+    {
+      "id": "bell_item",
+      "name": "Cloche d'église",
+      "category": "furniture",
+      "stack": 5
     }
   ]
 }

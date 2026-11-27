@@ -119,6 +119,8 @@ func _update_needs(l: Lutin, tpd: float) -> void:
 			l.needs[k] = maxf(float(l.needs[k]), 90.0)  # mode dieu (débug) : jamais faim, froid ni fatigue
 		return
 	var food_mult: float = Realm.active.food_mult() if Realm.active != null else 1.0
+	if Religion.active != null and l.faith >= 50.0:
+		food_mult *= Religion.active.food_mult()  # dogme « Ascèse »
 	l.needs["hunger"] = maxf(0.0, l.needs["hunger"] - float(_needs["hunger"]["loss_per_day"]) * food_mult / tpd)
 	if l.state == Lutin.State.SLEEP:
 		l.needs["sleep"] = minf(100.0, l.needs["sleep"] + float(_needs["sleep"]["recover_per_day"]) / tpd)

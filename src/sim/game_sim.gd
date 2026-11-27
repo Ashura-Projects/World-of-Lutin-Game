@@ -22,7 +22,8 @@ const SAVE_KEYS := [
 	"rules",
 	"orcs",
 	"territory",
-	"rivals"
+	"rivals",
+	"religion"
 ]
 
 var world: VoxelWorld
@@ -47,6 +48,7 @@ var rules: GameRules
 var orcs: Orcs
 var territory: Territory
 var rivals: Rivals
+var religion: Religion
 
 
 func _init(w: VoxelWorld) -> void:
@@ -77,6 +79,7 @@ func _init(w: VoxelWorld) -> void:
 	orcs = Orcs.new(w, fauna, colony, flora)
 	territory = Territory.new(w)
 	rivals = Rivals.new(w, fauna, colony, flora, territory)
+	religion = Religion.new(colony, structures, fauna)
 
 
 ## Nouvelle partie sur un monde généré.
@@ -106,6 +109,7 @@ func tick() -> void:
 			cells.append(l.cell)
 		fauna.tick(cells)
 	if GameClock.tick_index % tps == 0:
+		religion.tick_second()
 		production.plan()
 		colony.heating_ok = not production.fire_out
 	if GameClock.tick_index % (tps * 5) == 0:
@@ -127,6 +131,7 @@ func daily() -> void:
 	realm.daily()
 	orcs.daily(GameClock.day())
 	rivals.daily(GameClock.day())
+	religion.daily()
 
 
 func register_saves() -> void:
@@ -150,7 +155,8 @@ func register_saves() -> void:
 		rules,
 		orcs,
 		territory,
-		rivals
+		rivals,
+		religion
 	]
 	for i in SAVE_KEYS.size():
 		SaveManager.register(SAVE_KEYS[i], objs[i])

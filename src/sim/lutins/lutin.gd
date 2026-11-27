@@ -36,6 +36,8 @@ var order: Dictionary = {}  # ordre direct du joueur (LutinOrders) : aller ici, 
 var title: String = "villager"  # titre de faction (data/realm.json › titles)
 var jailed := Vector3i(-1, -1, -1)  # cage où il est enfermé
 var unit_id: int = -1  # unité militaire (Units)
+var spouse: int = -1  # conjoint (mariage)
+var faith: float = 30.0  # foi (0..100) dans la religion du village
 
 
 func place_at(c: Vector3i) -> void:
@@ -139,6 +141,8 @@ func to_dict() -> Dictionary:
 		"title": title,
 		"jailed": [jailed.x, jailed.y, jailed.z],
 		"unit": unit_id,
+		"spouse": spouse,
+		"faith": faith,
 	}
 
 
@@ -192,3 +196,5 @@ func from_dict(d: Dictionary) -> void:
 	var j: Array = d.get("jailed", [-1, -1, -1])
 	jailed = Vector3i(int(j[0]), int(j[1]), int(j[2]))
 	unit_id = int(d.get("unit", -1))
+	spouse = int(d.get("spouse", -1))
+	faith = float(d.get("faith", 30.0))

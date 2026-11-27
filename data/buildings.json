@@ -909,6 +909,146 @@
         "cage"
       ],
       "escape_per_day": 0.0
+    },
+    {
+      "id": "chapel",
+      "name": "Chapelle",
+      "size": [
+        3,
+        3,
+        3
+      ],
+      "cost": {
+        "plank": 12,
+        "beam": 4,
+        "stone": 8
+      },
+      "build_time": 40,
+      "available_from_start": true,
+      "tags": [
+        "chapel",
+        "faith"
+      ],
+      "_note": "lieu de culte : 10 fidèles par office ; permet le métier de prêtre et les mariages"
+    },
+    {
+      "id": "church",
+      "name": "Église",
+      "size": [
+        5,
+        5,
+        5
+      ],
+      "cost": {
+        "cut_stone": 24,
+        "beam": 8,
+        "plank": 10,
+        "glass": 4
+      },
+      "build_time": 90,
+      "available_from_start": true,
+      "tags": [
+        "church",
+        "faith"
+      ],
+      "_note": "grand lieu de culte : 40 fidèles par office"
+    },
+    {
+      "id": "altar",
+      "name": "Autel",
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "cost": {
+        "altar_item": 1
+      },
+      "build_time": 6,
+      "available_from_start": true,
+      "object": true,
+      "tags": [
+        "altar",
+        "decor"
+      ]
+    },
+    {
+      "id": "church_bell",
+      "name": "Cloche d'église",
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "cost": {
+        "bell_item": 1
+      },
+      "build_time": 8,
+      "available_from_start": true,
+      "object": true,
+      "tags": [
+        "bell",
+        "decor"
+      ]
+    },
+    {
+      "id": "barracks",
+      "name": "Caserne",
+      "size": [
+        4,
+        4,
+        3
+      ],
+      "cost": {
+        "plank": 16,
+        "beam": 6,
+        "stone": 10
+      },
+      "build_time": 60,
+      "available_from_start": true,
+      "tags": [
+        "barracks"
+      ],
+      "_note": "+4 places de soldats ; forme les soldats plus vite"
+    },
+    {
+      "id": "watchtower",
+      "name": "Tour de guet",
+      "size": [
+        2,
+        2,
+        6
+      ],
+      "cost": {
+        "beam": 8,
+        "plank": 10
+      },
+      "build_time": 45,
+      "available_from_start": true,
+      "tags": [
+        "watchtower"
+      ],
+      "_note": "découvre la carte autour (rayon 5 colonnes)"
+    },
+    {
+      "id": "claim_post",
+      "name": "Borne de territoire",
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "cost": {
+        "log": 1,
+        "stone": 2
+      },
+      "build_time": 6,
+      "available_from_start": true,
+      "object": true,
+      "tags": [
+        "claim"
+      ],
+      "_note": "revendique les colonnes autour (coûte de l'or)"
     }
   ]
 }

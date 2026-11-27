@@ -121,6 +121,8 @@ func work(l: Lutin) -> void:
 	speed *= float(l.trained.get(l.job, 1.0))  # formation courte d'adulte : moins efficace
 	if Realm.active != null:
 		speed *= Realm.active.work_mult()  # lois (corvée, jour de fête)
+	if Religion.active != null and l.faith >= 50.0:
+		speed *= Religion.active.work_mult()  # dogme « Travail sacré »
 	if t["kind"] == "craft" and t.get("recipe", "").begins_with("grind"):
 		speed *= 1.0 + Research.get_bonus("flour_speed")
 	l.add_xp(float(_work.get("xp_per_second", 1.0)) / tps, float(_work.get("xp_per_level", 100)))

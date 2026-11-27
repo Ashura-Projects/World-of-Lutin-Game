@@ -58,32 +58,25 @@ func _free_bed_in(room: Dictionary) -> Dictionary:
 	return {}
 
 
+## Naissances : un couple marié, une mère avec un foyer dans une pièce où reste un lit libre.
 func _births() -> void:
 	var b: Dictionary = _cfg.get("birth", {})
 	if food_days() < 5.0 or mood() < 50.0:
 		return
-	var done := {}
-	for a in colony.lutins:
-		if a.sex != "f" or a.age_stage() != "adult" or a.home.y < 0 or done.has(a.id):
+	var mult: float = Religion.active.birth_mult() if Religion.active != null else 1.0
+	for a in colony.lutins.duplicate():
+		if a.sex != "f" or a.age_stage() != "adult" or a.home.y < 0 or a.spouse < 0:
+			continue
+		var m := colony.find_lutin(a.spouse)
+		if m == null or m.age_stage() not in ["adult"]:
 			continue
 		var room := RoomDetector.room_at(world, structures, a.home)
 		if room.is_empty():
 			continue
-		for m in colony.lutins:
-			if (
-				m.sex == "m"
-				and m.age_stage() == "adult"
-				and m.home.y >= 0
-				and room["cells"].has(m.home)
-				and not done.has(m.id)
-			):
-				var bed := _free_bed_in(room)
-				if bed.is_empty() or not Rng.chance(float(b.get("chance_per_day", 0.08))):
-					break
-				done[a.id] = true
-				done[m.id] = true
-				_birth(a, m, bed)
-				break
+		var bed := _free_bed_in(room)
+		if bed.is_empty() or not Rng.chance(float(b.get("chance_per_day", 0.08)) * mult):
+			continue
+		_birth(a, m, bed)
 
 
 func _birth(mother: Lutin, father: Lutin, bed: Dictionary) -> void:

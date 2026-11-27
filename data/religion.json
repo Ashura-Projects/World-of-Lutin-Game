@@ -1,0 +1,96 @@
+{
+  "_doc": "Religion (1.2) : offices des prêtres (foi), mariages, clergé (prêtre, cardinal, chef de culte), religion personnalisée, prédication chez les voisins et recrutement des fidèles à 100 % de foi.",
+  "default": {
+    "name": "Culte des Anciens",
+    "symbol": "soleil",
+    "color": "e8c440",
+    "dogmas": []
+  },
+  "symbols": [
+    "soleil",
+    "lune",
+    "arbre",
+    "étoile",
+    "flamme",
+    "épi",
+    "goutte",
+    "montagne"
+  ],
+  "dogmas": [
+    {
+      "id": "charity",
+      "name": "Charité",
+      "desc": "Moral +5 pour tous les fidèles.",
+      "mood": 5
+    },
+    {
+      "id": "sacred_work",
+      "name": "Travail sacré",
+      "desc": "Les fidèles travaillent 5 % plus vite.",
+      "work_mult": 1.05
+    },
+    {
+      "id": "holy_war",
+      "name": "Guerre sainte",
+      "desc": "Les fidèles frappent 10 % plus fort.",
+      "damage_mult": 1.1
+    },
+    {
+      "id": "ascesis",
+      "name": "Ascèse",
+      "desc": "Les fidèles mangent 10 % de moins.",
+      "food_mult": 0.9
+    },
+    {
+      "id": "proselytism",
+      "name": "Prosélytisme",
+      "desc": "Les prédicateurs convertissent 40 % plus vite.",
+      "convert_mult": 1.4
+    },
+    {
+      "id": "fertility",
+      "name": "Fertilité",
+      "desc": "Naissances plus fréquentes (×1,5).",
+      "birth_mult": 1.5
+    }
+  ],
+  "max_dogmas": 2,
+  "ranks": [
+    {
+      "id": "priest",
+      "name": "Prêtre"
+    },
+    {
+      "id": "cardinal",
+      "name": "Cardinal"
+    },
+    {
+      "id": "leader",
+      "name": "Chef de culte"
+    }
+  ],
+  "faith_per_day_office": 12,
+  "faith_decay_per_day": 2,
+  "faith_mood_from": 50,
+  "faith_mood": 5,
+  "capacity": {
+    "chapel": 10,
+    "church": 40,
+    "altar": 5
+  },
+  "bell_bonus": 0.1,
+  "customize_needs": {
+    "cardinals": 1,
+    "leader": 1
+  },
+  "preach_per_day": 20,
+  "preach_radius": 16,
+  "preach_village_radius": 12,
+  "recruit_relation_cost": 5,
+  "marriage": {
+    "chance_per_day": 0.06,
+    "chapel_mult": 2.0,
+    "min_mood": 45,
+    "min_age_days": 0
+  }
+}

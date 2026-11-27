@@ -1024,6 +1024,33 @@
         "iron_cage_item": 1
       },
       "work": 35
+    },
+    {
+      "id": "make_altar",
+      "name": "Autel",
+      "station": "mason_bench",
+      "job": "stonemason",
+      "in": {
+        "cut_stone": 4,
+        "cloth": 1
+      },
+      "out": {
+        "altar_item": 1
+      },
+      "work": 30
+    },
+    {
+      "id": "forge_bell",
+      "name": "Cloche d'église",
+      "station": "anvil",
+      "job": "smith",
+      "in": {
+        "iron_ingot": 6
+      },
+      "out": {
+        "bell_item": 1
+      },
+      "work": 45
     }
   ]
 }
