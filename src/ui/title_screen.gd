@@ -182,7 +182,10 @@ func _debug_menu() -> void:
 	p.add_child(v)
 	v.add_child(UiStyle.header("Menu débug", 30, p.queue_free))
 	var l := Label.new()
-	l.text = "En partie : ⚙ › Débug (apparitions, ressources, mode dieu,\nconstruction libre, temps, orcs, factions, carte)."
+	l.text = (
+		"En partie : ⚙ › Débug (apparitions, ressources, mode dieu,\n"
+		+ "construction libre, temps, orcs, factions, carte)."
+	)
 	v.add_child(l)
 	var off := Button.new()
 	off.text = "Désactiver le menu débug"
