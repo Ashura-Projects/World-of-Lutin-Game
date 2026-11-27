@@ -64,10 +64,13 @@ func _process(delta: float) -> void:
 		var left := world_view.pending_count()
 		_mesh_total = maxi(_mesh_total, left)
 		_loading.set_progress(0.65 + 0.35 * (1.0 - float(left) / maxf(1.0, float(_mesh_total))))
-		if left == 0:
+		if left == 0 and world_view.has_scanned():
 			_loading.ready_to_play()
 	if sky and world_view:
 		sky.update(GameClock.time_of_day())
+		world_view.focus = camera.target
+		flora_view.focus = camera.target
+		fauna_view.focus = camera.target
 	if _cart != null and colony != null:
 		for l: Lutin in colony.lutins:
 			if l.order.get("kind", "") == "cart" and int(l.order["stage"]) == 1:
@@ -93,6 +96,7 @@ func _on_world_ready() -> void:
 	world_view = WorldView.new()
 	add_child(world_view)
 	world_view.setup(world)
+	world_view.focus = Vector3(colony.stock.pos)
 	flora_view = FloraView.new()
 	add_child(flora_view)
 	flora_view.bind(flora)
@@ -149,7 +153,7 @@ func _on_world_ready() -> void:
 func _on_tick(_i: int) -> void:
 	sim.tick()
 	_autosave_ticks += 1
-	if _autosave_ticks >= int(DataRegistry.get_table("time").get("autosave_s", 300)) * GameClock.ticks_per_second():
+	if _autosave_ticks >= int(Settings.get_value("autosave_min")) * 60 * GameClock.ticks_per_second():
 		_autosave_ticks = 0
 		SaveManager.save_game("auto")
 

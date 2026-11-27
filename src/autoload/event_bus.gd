@@ -13,4 +13,5 @@ signal game_loaded(slot: String)
 signal alert(kind: String, text: String)
 signal sfx(name: String, pos: Vector3)
 signal faction_changed
+signal settings_changed  # réglages du joueur modifiés (graphismes, son, jeu)
 @warning_ignore_restore("unused_signal")

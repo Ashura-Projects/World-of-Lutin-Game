@@ -1,0 +1,65 @@
+{
+  "_doc": "Réglages graphiques : préréglages (Paramètres › Graphismes). « custom » = choix libres du joueur.",
+  "presets": {
+    "low": {
+      "shadows": "off",
+      "view_distance": 80,
+      "render_scale": 0.7,
+      "aa": "off",
+      "fog": true,
+      "fps_cap": 30,
+      "vegetation": 0.5
+    },
+    "medium": {
+      "shadows": "low",
+      "view_distance": 128,
+      "render_scale": 0.85,
+      "aa": "fxaa",
+      "fog": true,
+      "fps_cap": 60,
+      "vegetation": 0.8
+    },
+    "high": {
+      "shadows": "high",
+      "view_distance": 192,
+      "render_scale": 1.0,
+      "aa": "msaa2",
+      "fog": true,
+      "fps_cap": 60,
+      "vegetation": 1.0
+    }
+  },
+  "view_distances": [
+    64,
+    80,
+    128,
+    192,
+    256
+  ],
+  "shadow_sizes": {
+    "low": 2048,
+    "high": 4096
+  },
+  "shadow_distance": {
+    "low": 70,
+    "high": 140
+  },
+  "fps_caps": [
+    30,
+    60,
+    0
+  ],
+  "render_scales": [
+    0.5,
+    0.6,
+    0.7,
+    0.85,
+    1.0
+  ],
+  "vegetation_levels": [
+    0.25,
+    0.5,
+    0.8,
+    1.0
+  ]
+}

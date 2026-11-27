@@ -2,21 +2,43 @@
   "_doc": "Génération de la carte (seedée). Démarrage sur carte vierge : aucune construction. Couches façon Minecraft : on peut creuser des trous, des mines, des puits.",
   "sizes": [
     {
+      "id": "small",
+      "name": "Petite",
+      "x": 256,
+      "z": 256,
+      "height": 64,
+      "fauna_mult": 1.0,
+      "note": "carte d'origine"
+    },
+    {
       "id": "medium",
       "name": "Moyenne",
-      "x": 128,
-      "z": 128,
-      "height": 64
+      "x": 368,
+      "z": 368,
+      "height": 64,
+      "fauna_mult": 0.8,
+      "note": "≈ 2 × la surface de la petite"
     },
     {
       "id": "large",
       "name": "Grande",
-      "x": 256,
-      "z": 256,
-      "height": 64
+      "x": 576,
+      "z": 576,
+      "height": 64,
+      "fauna_mult": 0.5,
+      "note": "≈ 5 × la surface de la petite"
+    },
+    {
+      "id": "huge",
+      "name": "Gigantesque",
+      "x": 992,
+      "z": 992,
+      "height": 64,
+      "fauna_mult": 0.3,
+      "note": "≈ 15 × la surface de la petite ; création longue"
     }
   ],
-  "default_size": "large",
+  "default_size": "small",
   "sea_level": 24,
   "water_table": 20,
   "_water_table_note": "un puits creusé jusqu'à cette hauteur trouve de l'eau",

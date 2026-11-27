@@ -26,7 +26,8 @@ func populate(kinds: Array, avoid: Vector3i, avoid_radius: float = 20.0) -> void
 	var area := world.size.x * world.size.z
 	for kind: String in kinds:
 		var d := def(kind)
-		var groups := maxi(1, int(area / 1000.0 * float(d.get("per_1000", 1)) / 3.0))
+		var mult := float(GameSetup.size_def().get("fauna_mult", 1.0)) if area > 70000 else 1.0
+		var groups := maxi(1, int(area / 1000.0 * float(d.get("per_1000", 1)) / 3.0 * mult))
 		for _g in groups:
 			var c := Vector3i(Rng.randi_range(4, world.size.x - 5), 0, Rng.randi_range(4, world.size.z - 5))
 			if Vector2(c.x - avoid.x, c.z - avoid.z).length() < avoid_radius:

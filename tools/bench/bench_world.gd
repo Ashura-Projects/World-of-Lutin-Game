@@ -14,7 +14,7 @@ func _process(_delta: float) -> void:
 
 func _run() -> void:
 	var args := OS.get_cmdline_user_args()
-	var size_id := args[0] if args.size() > 0 else "large"
+	var size_id := args[0] if args.size() > 0 else "small"
 	var seed_value := int(args[1]) if args.size() > 1 else 1234
 	var gs := GameSetup
 	gs.map_size = size_id
@@ -26,7 +26,7 @@ func _run() -> void:
 	var faces := 0
 	var worst := 0
 	var n := 0
-	for k: Vector3i in w.chunk_keys():
+	for k: Vector3i in w.chunk_keys().slice(0, 1200):
 		var a := Time.get_ticks_usec()
 		faces += int(ChunkMesher.build(w, k)["faces"])
 		worst = maxi(worst, Time.get_ticks_usec() - a)

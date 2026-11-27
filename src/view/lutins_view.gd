@@ -7,6 +7,7 @@ var _models: Dictionary = {}  # id -> LutinModel
 var _jobs: Dictionary = {}
 var _time: float = 0.0
 var _marker: MeshInstance3D
+var _zzz: Dictionary = {}  # id lutin -> Label3D « zZz » au-dessus des dormeurs
 var selected_id: int = -1
 
 
@@ -18,6 +19,9 @@ func setup(c: Colony) -> void:
 			if _models.has(id):
 				_models[id].queue_free()
 				_models.erase(id)
+			if _zzz.has(id):
+				_zzz[id].queue_free()
+				_zzz.erase(id)
 	)
 	for l in colony.lutins:
 		_add(l)
@@ -74,6 +78,7 @@ func _process(delta: float) -> void:
 		var working := l.state == Lutin.State.WORK
 		m.show_tool(working)
 		m.animate(_time + l.id, walking, l.state == Lutin.State.SLEEP, working)
+		_sleep_label(l, m)
 		if l.id == selected_id:
 			_marker.visible = true
 			_marker.position = m.position + Vector3(0, 0.05, 0)
@@ -94,3 +99,29 @@ func pick(cam: Camera3D, screen: Vector2) -> Lutin:
 	selected_id = best.id if best else -1
 	_marker.visible = best != null
 	return best
+
+
+## Petits « zZz » qui montent au-dessus d'un lutin endormi.
+func _sleep_label(l: Lutin, m: LutinModel) -> void:
+	var asleep := l.state == Lutin.State.SLEEP
+	var z: Label3D = _zzz.get(l.id)
+	if not asleep:
+		if z != null:
+			z.visible = false
+		return
+	if z == null:
+		z = Label3D.new()
+		z.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+		z.no_depth_test = false
+		z.font_size = 48
+		z.pixel_size = 0.006
+		z.outline_size = 10
+		z.modulate = Color("dfe8ff")
+		z.outline_modulate = Color(0.1, 0.1, 0.2, 0.9)
+		add_child(z)
+		_zzz[l.id] = z
+	z.visible = true
+	var t := fmod(_time * 0.8 + l.id * 0.37, 1.0)
+	z.text = ["z", "zZ", "zZz", "zZzZ"][int(t * 4.0) % 4]
+	z.position = m.position + Vector3(0.15, 1.05 + t * 0.35, 0)
+	z.modulate.a = 1.0 - t * 0.6

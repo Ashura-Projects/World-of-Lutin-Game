@@ -3,7 +3,7 @@ extends Node
 
 var mode: String = "sandbox"
 var lutin_count: int = 6
-var map_size: String = "large"
+var map_size: String = "small"
 var seed_value: int = 0
 var load_slot: String = ""
 var faction: Dictionary = {}  # faction choisie avant la partie (éditeur)
@@ -12,7 +12,7 @@ var faction: Dictionary = {}  # faction choisie avant la partie (éditeur)
 func reset_defaults() -> void:
 	var start := DataRegistry.get_table("start")
 	lutin_count = int(start.get("lutins", {}).get("default", 6))
-	map_size = str(start.get("map_size", "large"))
+	map_size = str(start.get("map_size", "small"))
 	seed_value = randi() % 100000
 	mode = "sandbox"
 	load_slot = ""
@@ -28,4 +28,11 @@ func map_dims() -> Vector3i:
 	for s: Dictionary in DataRegistry.get_table("world").get("sizes", []):
 		if s["id"] == map_size:
 			return Vector3i(int(s["x"]), int(s["height"]), int(s["z"]))
-	return Vector3i(128, 64, 128)
+	return Vector3i(256, 64, 256)
+
+
+func size_def() -> Dictionary:
+	for s: Dictionary in DataRegistry.get_table("world").get("sizes", []):
+		if s["id"] == map_size:
+			return s
+	return {}

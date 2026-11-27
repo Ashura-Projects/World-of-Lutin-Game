@@ -1,6 +1,8 @@
 class_name WorldView
 extends Node3D
 ## Affiche les chunks : maillage sur thread de travail (WorkerThreadPool), application dans le thread principal.
+## Seuls les chunks proches de la caméra (distance de vue des Paramètres) sont maillés : les grandes cartes
+## restent fluides ; les chunks lointains sont libérés.
 
 const ATLAS_PATH := "res://assets/textures/blocks_atlas.png"
 const MAX_APPLY_PER_FRAME := 6
@@ -15,6 +17,9 @@ var _results: Array = []
 var _mutex := Mutex.new()
 var _mat_opaque: StandardMaterial3D
 var _mat_liquid: StandardMaterial3D
+var focus := Vector3.ZERO  # point regardé par la caméra (mis à jour par la scène de jeu)
+var _scanned_at := Vector3(-9999, 0, -9999)
+var _scan_radius: float = -1.0
 
 
 func setup(w: VoxelWorld) -> void:
@@ -31,12 +36,45 @@ func setup(w: VoxelWorld) -> void:
 	_mat_liquid.roughness = 0.08
 	_mat_liquid.metallic_specular = 0.8
 	world.block_changed.connect(_on_block_changed)
-	for k: Vector3i in world.chunk_keys():
-		_pending[k] = true
+
+
+## Rayon d'affichage (blocs) ; 0 = tout le monde (tests, bancs d'essai).
+func radius() -> float:
+	return Graphics.view_distance()
+
+
+func _in_range(k: Vector3i, r: float) -> bool:
+	var c := Vector2(k.x * Chunk.SIZE + Chunk.SIZE / 2.0, k.z * Chunk.SIZE + Chunk.SIZE / 2.0)
+	return c.distance_to(Vector2(focus.x, focus.z)) <= r
+
+
+## Ajoute les chunks entrés dans le rayon, libère ceux qui en sont sortis.
+func _scan() -> void:
+	var r := radius()
+	_scanned_at = focus
+	_scan_radius = r
+	var s := Chunk.SIZE
+	var c0 := Vector2i(floori((focus.x - r) / s), floori((focus.z - r) / s))
+	var c1 := Vector2i(floori((focus.x + r) / s), floori((focus.z + r) / s))
+	var ny := ceili(float(world.size.y) / s)
+	for cx in range(maxi(c0.x, 0), c1.x + 1):
+		for cz in range(maxi(c0.y, 0), c1.y + 1):
+			for cy in ny:
+				var k := Vector3i(cx, cy, cz)
+				if world.chunks.has(k) and not _views.has(k) and _in_range(k, r):
+					_pending[k] = true
+	for k: Vector3i in _views.keys():
+		if not _in_range(k, r + s * 1.5):
+			for mi: MeshInstance3D in _views[k]:
+				mi.queue_free()
+			_views.erase(k)
+	for k: Vector3i in _pending.keys():
+		if not _in_range(k, r + s * 1.5):
+			_pending.erase(k)
 
 
 func remesh_all() -> void:
-	for k: Vector3i in world.chunk_keys():
+	for k: Vector3i in _views:
 		_pending[k] = true
 
 
@@ -49,7 +87,7 @@ func set_max_y(y: int) -> void:
 
 func _on_block_changed(p: Vector3i, _old: int, _new: int) -> void:
 	for k in VoxelWorld.affected_chunks(p):
-		if world.chunks.has(k):
+		if world.chunks.has(k) and _views.has(k):
 			_pending[k] = true
 
 
@@ -61,8 +99,20 @@ func build_all_now() -> void:
 
 
 func _process(_delta: float) -> void:
-	# lancer les tâches en attente (une par chunk)
-	for k: Vector3i in _pending.keys():
+	if Vector2(focus.x - _scanned_at.x, focus.z - _scanned_at.z).length() > 8.0 or radius() != _scan_radius:
+		_scan()
+	# lancer les tâches en attente, les plus proches d'abord (une par chunk)
+	var keys := _pending.keys()
+	if keys.size() > 1:
+		var f := Vector2(focus.x, focus.z)
+		keys.sort_custom(
+			func(a: Vector3i, b: Vector3i) -> bool:
+				return (
+					Vector2(a.x, a.z).distance_squared_to(f / Chunk.SIZE)
+					< Vector2(b.x, b.z).distance_squared_to(f / Chunk.SIZE)
+				)
+		)
+	for k: Vector3i in keys:
 		if _running.values().has(k):
 			continue
 		_pending.erase(k)
@@ -92,6 +142,8 @@ func _mesh_task(key: Vector3i, my: int) -> void:
 
 
 func _apply(key: Vector3i, res: Dictionary) -> void:
+	if _scan_radius > 0.0 and not _in_range(key, _scan_radius + Chunk.SIZE * 1.5):
+		return  # la caméra est partie entre-temps
 	var pair: Array = _views.get(key, [])
 	if pair.is_empty():
 		pair = [MeshInstance3D.new(), MeshInstance3D.new()]
@@ -109,6 +161,10 @@ func _apply(key: Vector3i, res: Dictionary) -> void:
 		m.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
 		m.surface_set_material(0, _mat_opaque if i == 0 else _mat_liquid)
 		mi.mesh = m
+
+
+func has_scanned() -> bool:
+	return _scan_radius > 0.0
 
 
 ## Chunks encore à mailler (écran de chargement).

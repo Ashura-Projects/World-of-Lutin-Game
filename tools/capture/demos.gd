@@ -49,6 +49,17 @@ static func run(game: Node, action: String) -> void:
 			game.hud.tools._floor_panel.visible = true
 		"chargement":
 			pass
+		"parametres":
+			game.hud._settings()
+			for c in game.hud.root.get_children():
+				if c is SettingsPanel:
+					c.show_tab("graphics")
+		"dodo":
+			GameClock.set_speed(0)
+			for l: Lutin in game.colony.lutins:
+				l.state = Lutin.State.SLEEP
+			game.camera.distance = 9.0
+			game.camera.focus(game.colony.lutins[0].pos)
 		"soldats":
 			for i in 3:
 				game.sim.realm.enroll(game.colony.lutins[i])

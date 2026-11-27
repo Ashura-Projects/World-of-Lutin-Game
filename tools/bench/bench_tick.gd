@@ -9,7 +9,7 @@ func _process(_d: float) -> void:
 	if _done:
 		return
 	_done = true
-	GameSetup.map_size = "large"
+	GameSetup.map_size = "small"
 	GameClock.configure()
 	GameClock.reset(true)
 	Rng.set_seed(1234)

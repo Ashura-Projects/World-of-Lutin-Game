@@ -46,7 +46,7 @@ func _apply() -> void:
 
 
 func pan_screen(delta: Vector2) -> void:
-	var k := distance * 0.0022 * float(_cfg.get("pan_speed", 1.0))
+	var k := distance * 0.0022 * float(_cfg.get("pan_speed", 1.0)) * float(Settings.get_value("camera_speed"))
 	var right := Vector3(cos(yaw), 0, -sin(yaw))
 	var fwd := Vector3(sin(yaw), 0, cos(yaw))
 	target -= (right * delta.x + fwd * delta.y) * k

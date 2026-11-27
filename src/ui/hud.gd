@@ -22,6 +22,7 @@ var dashboard: DashboardPanel
 var research_panel: ResearchPanel
 var commerce_panel: CommercePanel
 var _time_label: Label
+var _fps_label: Label
 var _speed_buttons: Array[Button] = []
 var _menu_panel: PanelContainer
 var _game: Node
@@ -193,6 +194,11 @@ func _build_top() -> void:
 	_time_label = UiStyle.title_label("", 22)
 	_time_label.position = Vector2(18, 12)
 	bar.add_child(_time_label)
+	_fps_label = Label.new()
+	_fps_label.position = Vector2(18, 66)
+	_fps_label.add_theme_color_override("font_color", Color("ffd27a"))
+	_fps_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	root.add_child(_fps_label)
 	var speeds: Array = DataRegistry.get_table("time").get("speeds", [0, 1, 2, 4])
 	for i in speeds.size():
 		var s := int(speeds[i])
@@ -303,6 +309,9 @@ func _process(_delta: float) -> void:
 	_time_label.text = "%s · jour %d" % [sname, GameClock.day() % dps + 1]
 	if _game != null and _game.sim != null:
 		_time_label.text += " · " + _game.sim.village.rank_name()
+	_fps_label.visible = bool(Settings.get_value("show_fps"))
+	if _fps_label.visible:
+		_fps_label.text = "%d img/s" % Engine.get_frames_per_second()
 	if top != null and Engine.get_process_frames() % 15 == 0:
 		top.refresh()
 	if Engine.get_process_frames() % 30 == 0:

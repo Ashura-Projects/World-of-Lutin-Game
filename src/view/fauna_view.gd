@@ -80,11 +80,20 @@ func _add(a: Dictionary) -> void:
 	_nodes[a["id"]] = m
 
 
+var focus := Vector3.ZERO
+
+
 func _process(delta: float) -> void:
 	_t += delta
+	var r := Graphics.view_distance()
 	for a in _fauna.animals:
 		var m: Node3D = _nodes.get(a["id"])
 		if m == null:
+			continue
+		var p: Vector3 = a["pos"]
+		m.visible = Vector2(p.x - focus.x, p.z - focus.z).length() <= r
+		if not m.visible:
+			m.position = p
 			continue
 		var dir: Vector3 = a["pos"] - m.position
 		dir.y = 0

@@ -10,7 +10,7 @@ var _cfg: Dictionary
 func _ready() -> void:
 	_cfg = DataRegistry.get_table("lighting")
 	sun = DirectionalLight3D.new()
-	sun.shadow_enabled = str(Settings.get_value("quality")) != "low"
+	sun.shadow_enabled = str(Settings.get_value("shadows")) != "off"
 	sun.directional_shadow_max_distance = 120.0
 	add_child(sun)
 	env = Environment.new()
@@ -24,6 +24,8 @@ func _ready() -> void:
 	we.environment = env
 	add_child(we)
 	update(0.4)
+	Graphics.apply.call_deferred(get_viewport(), self)
+	EventBus.settings_changed.connect(func() -> void: Graphics.apply(get_viewport(), self))
 
 
 func _c(key: String) -> Color:

@@ -2,8 +2,6 @@ class_name FloraView
 extends Node3D
 ## Arbres et buissons en MultiMeshInstance3D (un par espèce) — modèles low-poly du style validé.
 
-var _multis: Dictionary = {}
-
 
 static func _mat(c: Color) -> StandardMaterial3D:
 	var m := StandardMaterial3D.new()
@@ -64,22 +62,69 @@ static func bush_mesh() -> Mesh:
 	return s
 
 
+const REGION := 64  # les plantes sont groupées par carrés de 64 blocs (masqués au-delà de la distance de vue)
+
+
+## Pose des MultiMesh par région ; seules les régions dont le contenu change sont reconstruites.
 func show_items(kind: String, mesh: Mesh, positions: Array) -> void:
-	var mmi: MultiMeshInstance3D = _multis.get(kind)
-	if mmi == null:
-		mmi = MultiMeshInstance3D.new()
-		add_child(mmi)
-		_multis[kind] = mmi
-	var mm := MultiMesh.new()
-	mm.transform_format = MultiMesh.TRANSFORM_3D
-	mm.mesh = mesh
-	mm.instance_count = positions.size()
-	for i in positions.size():
-		var p: Vector3i = positions[i]
-		var rot := Basis(Vector3.UP, float((p.x * 73 + p.z * 37) % 628) / 100.0)
-		var sc := 0.9 + float((p.x * 13 + p.z * 7) % 40) / 100.0
-		mm.set_instance_transform(i, Transform3D(rot.scaled(Vector3.ONE * sc), Vector3(p) + Vector3(0.5, 0, 0.5)))
-	mmi.multimesh = mm
+	var by_region := {}
+	for p: Vector3i in positions:
+		by_region.get_or_add(Vector2i(p.x / REGION, p.z / REGION), []).append(p)
+	var old: Dictionary = _regions.get(kind, {})
+	var keep := {}
+	for r: Vector2i in by_region:
+		var list: Array = by_region[r]
+		var sig: int = (
+			list.size() * 7919
+			+ list.reduce(func(acc: int, q: Vector3i) -> int: return (acc * 31 + q.x * 3 + q.z) % 1000003, 0)
+		)
+		keep[r] = true
+		if old.has(r) and old[r][1] == sig:
+			continue
+		var mmi: MultiMeshInstance3D = old[r][0] if old.has(r) else MultiMeshInstance3D.new()
+		if not old.has(r):
+			add_child(mmi)
+		var mm := MultiMesh.new()
+		mm.transform_format = MultiMesh.TRANSFORM_3D
+		mm.mesh = mesh
+		mm.instance_count = list.size()
+		for i in list.size():
+			var p: Vector3i = list[i]
+			var rot := Basis(Vector3.UP, float((p.x * 73 + p.z * 37) % 628) / 100.0)
+			var sc := 0.9 + float((p.x * 13 + p.z * 7) % 40) / 100.0
+			mm.set_instance_transform(i, Transform3D(rot.scaled(Vector3.ONE * sc), Vector3(p) + Vector3(0.5, 0, 0.5)))
+		mmi.multimesh = mm
+		mmi.position = Vector3.ZERO
+		mmi.set_meta("center", Vector3((r.x + 0.5) * REGION, 0, (r.y + 0.5) * REGION))
+		old[r] = [mmi, sig]
+	for r: Vector2i in old.keys():
+		if not keep.has(r):
+			old[r][0].queue_free()
+			old.erase(r)
+	_regions[kind] = old
+
+
+var _regions: Dictionary = {}  # sorte -> {région: [MultiMeshInstance3D, signature]}
+var _dirty: bool = false
+var _dirty_t: float = 0.0
+var focus := Vector3.ZERO
+
+
+## Masque les régions trop loin de la caméra (distance de vue).
+func _process(delta: float) -> void:
+	if _dirty:
+		_dirty_t += delta
+		if _dirty_t > 0.6:  # regroupe les changements (arbres coupés…) : une reconstruction max par 0,6 s
+			_dirty = false
+			_dirty_t = 0.0
+			refresh()
+	if Engine.get_process_frames() % 10 != 0:
+		return
+	var r := Graphics.view_distance() + REGION * 0.75
+	for kind: String in _regions:
+		for e: Array in _regions[kind].values():
+			var c: Vector3 = e[0].get_meta("center")
+			e[0].visible = Vector2(c.x - focus.x, c.z - focus.z).length() <= r
 
 
 var _flora: Flora
@@ -87,7 +132,8 @@ var _flora: Flora
 
 func bind(f: Flora) -> void:
 	_flora = f
-	f.changed.connect(func(_k: String) -> void: refresh())
+	f.changed.connect(func(_k: String) -> void: _dirty = true)
+	EventBus.settings_changed.connect(func() -> void: _dirty = true)
 	EventBus.day_changed.connect(func(_d: int) -> void: refresh())
 	refresh()
 
@@ -199,7 +245,10 @@ func refresh() -> void:
 			show_items(k, tree_mesh(k), [])
 	show_flora(trees, bushes)
 	var herbs := {}
+	var veg := float(Settings.get_value("vegetation"))
 	for p: Vector3i in _flora.herbs:
+		if veg < 1.0 and float((p.x * 92821 + p.z * 68917) % 1000) / 1000.0 > veg:
+			continue  # Paramètres › Herbes et plantes : une partie seulement est affichée
 		herbs.get_or_add(_flora.herbs[p], []).append(p)
 	for k: String in ["wild_flax", "medicinal_herb", "mushroom", "reed"]:
 		show_items(k, herb_mesh(k), herbs.get(k, []))
