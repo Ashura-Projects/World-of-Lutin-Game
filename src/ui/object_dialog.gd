@@ -97,28 +97,13 @@ func show_animal(a: Dictionary) -> void:
 	info.append("Vitesse %.1f" % float(d.get("speed", 1.5)))
 	var drop: Dictionary = d.get("drop", {})
 	if not drop.is_empty():
-		info.append(
-			(
-				"Donne : "
-				+ ", ".join(
-					drop.keys().map(
-						func(k: String) -> String:
-							return "%d %s" % [int(drop[k]), str(Stockpile._resource(k).get("name", k)).to_lower()]
-					)
-				)
-			)
-		)
+		var parts := []
+		for k: String in drop:
+			parts.append("%d %s" % [int(drop[k]), str(Stockpile._resource(k).get("name", k)).to_lower()])
+		info.append("Donne : " + ", ".join(parts))
 	if a.get("owned", false):
-		info.append(
-			(
-				"À vous"
-				+ (
-					" · monté par %s" % game.colony.find_lutin(int(a["rider"])).name
-					if int(a.get("rider", -1)) >= 0 and game.colony.find_lutin(int(a["rider"])) != null
-					else ""
-				)
-			)
-		)
+		var rider := game.colony.find_lutin(int(a.get("rider", -1))) as Lutin
+		info.append("À vous" + (" · monté par %s" % rider.name if rider != null else ""))
 	_label(" · ".join(info), 19)
 	var row := _row()
 	if not d.get("npc", false) and not a.get("owned", false):
