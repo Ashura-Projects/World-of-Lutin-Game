@@ -99,7 +99,7 @@ func _menu_button(parent: Control, text: String, cb: Callable) -> Button:
 
 func _build_setup_panel() -> void:
 	_setup_panel = NewGamePanel.new()
-	_setup_panel.position = Vector2(560, 80)
+	_setup_panel.position = Vector2(560, 60)
 	_setup_panel.visible = false
 	add_child(_setup_panel)
 	_setup_panel.start_requested.connect(_start_game)
@@ -181,7 +181,7 @@ func _open_slots() -> void:
 ## Coin bas-droit : Info (aide) et Retour (revenir en arrière facilement).
 func _build_corner_buttons() -> void:
 	var box := HBoxContainer.new()
-	box.position = Vector2(1300, 640)
+	box.position = Vector2(1270, 640)
 	box.add_theme_constant_override("separation", 10)
 	add_child(box)
 	var info := Button.new()

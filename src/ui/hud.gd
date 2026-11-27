@@ -247,14 +247,14 @@ func _build_bottom() -> void:
 
 ## Coin bas-droit : Info (aide selon ce qu'on fait) et Retour (revenir en arrière).
 func _build_corner() -> void:
-	var box := VBoxContainer.new()
-	box.position = Vector2(1530, 634)
+	var box := HBoxContainer.new()
+	box.position = Vector2(1474, 646)
 	box.add_theme_constant_override("separation", 4)
 	root.add_child(box)
 	for e: Array in [["ℹ", _info], ["↩", back]]:
 		var b := Button.new()
 		b.text = e[0]
-		b.custom_minimum_size = Vector2(62, 38)
+		b.custom_minimum_size = Vector2(58, 62)
 		b.add_theme_font_size_override("font_size", 20)
 		b.pressed.connect(e[1])
 		box.add_child(b)

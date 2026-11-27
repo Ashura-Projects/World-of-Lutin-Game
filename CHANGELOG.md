@@ -1,5 +1,26 @@
 # Journal des versions
 
+## 1.3.0 — Bâtir, meubler, chevaucher (2026-11-27)
+- **Formes de blocs** (Construire › Forme + Sens) : demi-bloc sol et plafond, escalier, pente de toit, coins de toit
+  extérieur et intérieur, angle arrondi, quart de cône et quart de dôme (tours rondes, toits pointus, coupoles).
+- **Cheminée** (foyer) et **conduit de cheminée** qui fume ; **remparts** avec ou sans meurtrière, empilables ;
+  **pont** : tablier et piliers.
+- **Herse** 2 × 3 et **pont-levis** 1 à 4 × 1 à 4 : on les touche pour ouvrir / fermer, avec un cadenas ; ils s'animent.
+- **Meubles et déco** : lit double, chevet, bibliothèque, tabouret, fauteuil, buffet, candélabre, statue, porte en fer,
+  grande porte, tapis (rouge, bleu, vert, fourrure), tapisseries (rouge, bleue, dorée, chasse, aux armes).
+- **Lumières** : torche murale, torche sur pied, braseros en pierre et en fer.
+- **Loisirs** : tables de dés, d'échecs, de cartes et comptoir de bar ; **bière** (houblon, brasserie) et **vin**
+  (vigne, pressoir) ; les lutins viennent s'y détendre (moral).
+- **Animaux** : on les touche pour voir leur fiche (PV, infos) et les chasser. **Chevaux** : capture (avec mangeoire
+  et abreuvoir), « Cheval » dans la barre d'ordres pour monter (bien plus rapide) ; sol en paille pour les box.
+- **Champs** : aperçu des cases puis « Valider ». **Lits** libres pour tous par défaut, ou attribués ; **chambres**
+  (lit + coffre) attribuables à un ou plusieurs lutins.
+- **Voisins** : ils démarrent comme vous (2 à 10 lutins, réglable) et leur village grandit maison par maison.
+- **Menus** : « Jouer » → Continuer, Nouvelle partie, Charger, Tutoriel ; **5 emplacements** de partie (supprimer) ;
+  nouvelle partie simple + « Paramètres avancés » ; raids d'orcs 20 → 50 → 100 → 200 jours en boucle.
+- **Tutoriel à missions** : bois, tentes, feu, réserve, maison, champs, loups, exploration ; puis on continue la partie.
+- Boutons **ℹ Info** et **↩ Retour** en bas à droite (et le bouton retour du téléphone) ; « Creuser instantané » au débug.
+
 ## 1.2.1 — Silence dans les menus (2026-11-27)
 - Plus aucun bruit de clic quand on touche les boutons des menus et leurs actions (demande d'Ashura).
   La musique, les animaux, les bruits du monde et les sons d'événements restent.

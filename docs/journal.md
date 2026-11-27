@@ -120,6 +120,21 @@ Settings, GameSetup), GUT 9.7.1 headless, export Android arm64 (`com.ashura.worl
     (com.ashura.worldoflutin) pour garder les sauvegardes et installer par-dessus.
 - Non testé : sur téléphone.
 
+## v1.3.0 (demandes d'Ashura)
+- Fait : voir CHANGELOG 1.3.0.
+- Preuves : tests GUT verts (nouveau `tests/test_v13.gd` : formes, herses/ponts-levis, lits, chevaux, loisirs,
+  missions, emplacements ; voisins qui grandissent), tous les scripts compilent, captures `build/captures/v13_*`.
+- Choix faits sans Ashura :
+  - formes = « forme × 4 + sens » stockées à part de la grille (1 octet par bloc conservé) ; on marche dessus comme sur
+    un bloc plein ;
+  - herse et pont-levis : blocs invisibles solides quand fermés / baissés, modèle 3D animé ; au départ ouverts ;
+  - le cadenas empêche seulement de les manœuvrer ;
+  - chevaux capturés si mangeoire + abreuvoir ; 1 paille par jour, sinon fuite au bout de 3 jours ;
+  - loisirs : bonus de moral qui baisse de 5 par jour ; le bar fait boire une bière ou un vin ;
+  - lits sans attribution = libres pour tous ;
+  - l'ancienne sauvegarde unique devient l'emplacement 1 ; le tutoriel a son propre emplacement.
+- Non testé : sur téléphone.
+
 ## v1.2.0 (Phase 2 et Phase 3, demandées par Ashura)
 - Fait : voir CHANGELOG 1.2.0 (configuration, orcs, défense, voisins IA, territoires, brouillard, éclaireurs, carte,
   religion et mariages, nourritures, technologies, paramètres, zZz, tutoriel, débug).

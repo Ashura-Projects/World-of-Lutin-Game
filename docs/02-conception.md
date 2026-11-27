@@ -199,5 +199,13 @@
   religion personnalisée (nom, symbole, 2 dogmes) ; prédication chez les voisins, recrutement à 100 % de foi.
 - **Débug** : 5 touchers en 3 s dans le coin haut-droit de l'accueil → menu débug (accueil et ⚙ en partie).
 
+## 12. Ajouts v1.3 (demandés par Ashura)
+- Formes de blocs, cheminée et conduit, remparts avec/sans meurtrière, pont (tablier, piliers), herse 2 × 3 et
+  pont-levis 1-4 × 1-4 (dialogue, cadenas, animation).
+- Meubles, tapis, tapisseries, lumières (torches, braseros), loisirs (jeux, bar ; bière, vin).
+- Chevaux (capture, monture ×2,2, paille), écurie (mangeoire, abreuvoir, sol en paille), fiche des animaux.
+- Champs avec aperçu + Valider ; lits et chambres attribuables ; voisins qui démarrent comme le joueur et grandissent.
+- Menu Jouer, 5 emplacements, nouvelle partie simple/avancée, tutoriel à missions (`data/missions.json`), Info / Retour.
+
 ## Questions ouvertes
 1. Carte aléatoire, ou aussi des cartes dessinées à la main ? (par défaut : aléatoire seedée)

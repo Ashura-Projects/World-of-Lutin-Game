@@ -4,7 +4,17 @@ extends RefCounted
 
 static func run(game: Node, action: String) -> void:
 	if action == "nouvelle":
+		game._show_play(true)
 		game._on_new_game()
+		game._setup_panel.advanced = true
+		game._setup_panel.refresh()
+		return
+	if action == "jouer":
+		game._show_play(true)
+		return
+	if action == "charger":
+		game._show_play(true)
+		game._open_slots()
 		return
 	if "_loading" in game and is_instance_valid(game._loading):  # passer l'écran de chargement
 		game._loading.play_pressed.emit()
@@ -54,6 +64,31 @@ static func run(game: Node, action: String) -> void:
 			pass
 		"formes":
 			formes(game)
+		"objets13":
+			objets13(game)
+		"animal":
+			var h: Dictionary = game.fauna.spawn(
+				"horse", Pathfinder.snap(game.world, game.colony.stock.pos + Vector3i(4, 0, 3))
+			)
+			game.camera.distance = 10.0
+			game.camera.focus(h["pos"])
+			game.hud.object_dialog.show_animal(h)
+		"herse":
+			var g: Dictionary = objets13(game)
+			game.hud.object_dialog.show_gate(g)
+		"apercu_champs":
+			game.hud.menu_button("Zones").button_pressed = true
+			var p0: Vector3i = game.colony.stock.pos + Vector3i(3, -1, 3)
+			var cells: Array = []
+			for x in 4:
+				for z in 3:
+					cells.append(Vector3i(p0.x + x, game.world.surface_y(p0.x + x, p0.z + z) - 1, p0.z + z))
+			game.hud.zones_panel._set_preview(cells)
+			game.camera.distance = 14.0
+			game.camera.focus(Vector3(p0))
+		"construire13":
+			game.hud.menu_button("Construire").button_pressed = true
+			game.hud.build_panel.show_category("light")
 		"tutoriel":
 			game.hud.root.add_child(TutorialPanel.new())
 		"carte":
@@ -372,3 +407,36 @@ static func formes(game: Node) -> void:
 			w.set_shape(c, shape * 4 + int(q[1]))
 	game.camera.distance = 14.0
 	game.camera.focus(Vector3(p) + Vector3(8, 1, 3))
+
+
+static func objets13(game: Node) -> Dictionary:
+	var st: Structures = game.sim.structures
+	var p: Vector3i = game.colony.stock.pos + Vector3i(-4, 0, -6)
+	var kinds := [
+		"fireplace",
+		"standing_torch",
+		"brazier_stone",
+		"brazier_iron",
+		"double_bed",
+		"bookshelf",
+		"armchair",
+		"carpet_red",
+		"carpet_fur",
+		"chess_table",
+		"dice_table",
+		"bar_counter",
+		"water_trough",
+		"feeder",
+		"statue",
+		"candelabra"
+	]
+	for i in kinds.size():
+		var c := Pathfinder.snap(game.world, p + Vector3i(i % 8 * 2, 0, i / 8 * 2))
+		st.add(kinds[i], c, true)
+	var gc := Pathfinder.snap(game.world, p + Vector3i(4, 0, 6))
+	st.add("portcullis", gc, true, {"rot": 0})
+	var g: Dictionary = game.sim.gates.gates.values()[0]
+	game.sim.gates.toggle(g["id"])
+	game.camera.distance = 16.0
+	game.camera.focus(Vector3(p) + Vector3(7, 0, 3))
+	return g
