@@ -89,6 +89,26 @@ func refresh() -> void:
 			["Vitesse ×16", func() -> void: GameClock.set_speed(16)],
 		]
 	)
+	_section(
+		"Monde et factions",
+		[
+			["Révéler la carte", func() -> void: _sim().territory.reveal_all()],
+			["Raid d'orcs maintenant", func() -> void: _say("%d orcs en route." % _sim().orcs.raid())],
+			["Orc ici", func() -> void: DebugTools.spawn_animal(_sim(), "orc", _here())],
+			["Orc brute ici", func() -> void: DebugTools.spawn_animal(_sim(), "orc_brute", _here())],
+			["Camp d'orcs ici", func() -> void: _sim().orcs.add_camp(Pathfinder.snap(game.world, _here()))],
+			["Rencontrer tout le monde", _meet_all],
+			["Victoire", func() -> void: EventBus.alert.emit("victoire", "VICTOIRE (débug) !")],
+		]
+	)
+	var fac := []
+	for st: Dictionary in _sim().rivals.present():
+		var id: String = st["id"]
+		var nm: String = str(Rivals.def(id).get("name", id))
+		fac.append(["Guerre : " + nm, func() -> void: _say(_sim().realm.diplomacy(id, "war"))])
+		fac.append(["Conquérir : " + nm, func() -> void: _sim().rivals.conquer(id)])
+	if not fac.is_empty():
+		_section("Diplomatie", fac)
 	for s: Array in extra_sections:
 		_section(s[0], s[1].call() if s[1] is Callable else s[1])
 	var off := Button.new()
@@ -102,6 +122,12 @@ func refresh() -> void:
 			EventBus.alert.emit("info", "Menu débug désactivé (5 touchers dans le coin de l'accueil pour le remettre).")
 	)
 	_body.add_child(off)
+
+
+func _meet_all() -> void:
+	for st: Dictionary in _sim().rivals.states.values():
+		_sim().territory.explore(st["center"], 1)
+	_sim().rivals.check_meetings()
 
 
 func _toggle_god() -> void:

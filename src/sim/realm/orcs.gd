@@ -296,6 +296,14 @@ func _check_camps() -> void:
 			destroy_camp(c)
 
 
+## Un camp est découvert quand sa zone a été explorée.
+func check_discovery(t: Territory) -> void:
+	for c: Dictionary in camps:
+		if not c["discovered"] and t.explored.has(t.col_of(c["cell"])):
+			c["discovered"] = true
+			EventBus.alert.emit("alerte", "Un camp d'orcs a été repéré %s !" % direction(c["cell"]))
+
+
 func destroy_camp(c: Dictionary) -> void:
 	c["destroyed"] = true
 	var loot: Dictionary = _cfg.get("camp_loot", {})

@@ -11,6 +11,12 @@ static func give(
 	if l.jailed.y >= 0 or not l.can_work():
 		return false
 	match kind:
+		"explore":
+			board.release(l)
+			l.order = {"kind": "explore", "cell": l.cell, "stage": 0, "until": 0, "tries": 0}
+			l.wait_ticks = 0
+			l.state = Lutin.State.IDLE
+			return true
 		"move", "cart":
 			board.release(l)
 			l.order = {"kind": kind, "cell": cell, "stage": 0, "until": 0, "tries": 0}
@@ -86,11 +92,15 @@ static func tick(colony: Colony, l: Lutin) -> bool:
 				return true
 			if Colony._near(l.cell, cell, 1):
 				o["stage"] = 1
-				var hold := float(o.get("hold_s", DataRegistry.get_table("realm").get("orders", {}).get("hold_s", 40)))
+				var hold := float(o.get("hold_s", -1.0))
+				if hold <= 0.0:
+					hold = float(DataRegistry.get_table("realm").get("orders", {}).get("hold_s", 40))
 				o["until"] = GameClock.tick_index + int(hold * GameClock.ticks_per_second())
 				l.state = Lutin.State.IDLE
 				return true
 			return _walk(colony, l, cell)
+		"explore":
+			return Scouting.tick(colony, l)
 		"cart":
 			if int(o["stage"]) == 0:
 				if Colony._near(l.cell, colony.stock.pos, 1):
@@ -107,6 +117,10 @@ static func tick(colony: Colony, l: Lutin) -> bool:
 	return false
 
 
+static func walk(colony: Colony, l: Lutin, cell: Vector3i) -> bool:
+	return _walk(colony, l, cell)
+
+
 static func _walk(colony: Colony, l: Lutin, cell: Vector3i) -> bool:
 	l.order["tries"] = int(l.order["tries"]) + 1
 	if int(l.order["tries"]) > 4:
@@ -121,7 +135,14 @@ static func order_to_dict(o: Dictionary) -> Dictionary:
 	if o.is_empty():
 		return {}
 	var c: Vector3i = o["cell"]
-	return {"kind": o["kind"], "cell": [c.x, c.y, c.z], "stage": o["stage"], "until": o["until"], "tries": o["tries"]}
+	return {
+		"kind": o["kind"],
+		"cell": [c.x, c.y, c.z],
+		"stage": o["stage"],
+		"until": o["until"],
+		"tries": o["tries"],
+		"hold_s": o.get("hold_s", -1.0)
+	}
 
 
 static func order_from_dict(d: Dictionary) -> Dictionary:
@@ -133,5 +154,6 @@ static func order_from_dict(d: Dictionary) -> Dictionary:
 		"cell": Vector3i(int(c[0]), int(c[1]), int(c[2])),
 		"stage": int(d["stage"]),
 		"until": int(d["until"]),
-		"tries": int(d["tries"])
+		"tries": int(d["tries"]),
+		"hold_s": float(d.get("hold_s", -1.0))
 	}

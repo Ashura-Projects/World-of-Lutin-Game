@@ -112,6 +112,8 @@ func command(id: int, kind: String, cell: Vector3i = Vector3i(-1, -1, -1)) -> vo
 			"hold":
 				if not l.mobilized:
 					LutinOrders.give(colony, colony.task_board, l, "move", l.cell, {"hold_s": 600.0})
+			"explore":
+				LutinOrders.give(colony, colony.task_board, l, "explore", l.cell)
 			"return":
 				l.order = {}
 				if combat.alert != "mobilize":

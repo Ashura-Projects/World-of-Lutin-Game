@@ -176,5 +176,17 @@
         "name": "Coin"
       }
     ]
+  },
+  "scouting": {
+    "step": 24,
+    "search_cols": 40,
+    "food_below": 35,
+    "explore_radius_cols": 3,
+    "camp_at_night": true
+  },
+  "fog": {
+    "enabled": true,
+    "color": "1c2028",
+    "alpha": 0.94
   }
 }

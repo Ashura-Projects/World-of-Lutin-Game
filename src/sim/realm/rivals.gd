@@ -147,6 +147,21 @@ func _spawn(kind: String, near: Vector3i, roam: int) -> Dictionary:
 	return a
 
 
+## Brouillard de guerre : on « rencontre » une faction en explorant son village.
+func check_meetings() -> void:
+	for st: Dictionary in states.values():
+		if not st.get("met", false) and territory.explored.has(territory.col_of(st["center"])):
+			st["met"] = true
+			var fd := def(st["id"])
+			EventBus.alert.emit(
+				"faction", "Vous avez rencontré %s : %s" % [fd.get("name", st["id"]), fd.get("desc", "")]
+			)
+
+
+func is_met(id: String) -> bool:
+	return bool(states.get(id, {}).get("met", false))
+
+
 func units_of(id: String, prefix: String) -> Array:
 	return fauna.animals.filter(func(a: Dictionary) -> bool: return a["kind"] == prefix + id)
 

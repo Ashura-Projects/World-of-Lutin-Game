@@ -20,6 +20,8 @@ var _mat_liquid: StandardMaterial3D
 var focus := Vector3.ZERO  # point regardé par la caméra (mis à jour par la scène de jeu)
 var _scanned_at := Vector3(-9999, 0, -9999)
 var _scan_radius: float = -1.0
+var fog: Territory = null  # brouillard de guerre : les colonnes inexplorées ne sont pas maillées
+var _fog_version: int = -1
 
 
 func setup(w: VoxelWorld) -> void:
@@ -61,7 +63,7 @@ func _scan() -> void:
 		for cz in range(maxi(c0.y, 0), c1.y + 1):
 			for cy in ny:
 				var k := Vector3i(cx, cy, cz)
-				if world.chunks.has(k) and not _views.has(k) and _in_range(k, r):
+				if world.chunks.has(k) and not _views.has(k) and _in_range(k, r) and _visible(k):
 					_pending[k] = true
 	for k: Vector3i in _views.keys():
 		if not _in_range(k, r + s * 1.5):
@@ -71,6 +73,10 @@ func _scan() -> void:
 	for k: Vector3i in _pending.keys():
 		if not _in_range(k, r + s * 1.5):
 			_pending.erase(k)
+
+
+func _visible(k: Vector3i) -> bool:
+	return fog == null or fog.explored.has(fog.col_of(Vector3i(k.x * Chunk.SIZE, 0, k.z * Chunk.SIZE)))
 
 
 func remesh_all() -> void:
@@ -99,7 +105,13 @@ func build_all_now() -> void:
 
 
 func _process(_delta: float) -> void:
-	if Vector2(focus.x - _scanned_at.x, focus.z - _scanned_at.z).length() > 8.0 or radius() != _scan_radius:
+	var fog_changed := fog != null and fog.version != _fog_version
+	if (
+		fog_changed
+		or Vector2(focus.x - _scanned_at.x, focus.z - _scanned_at.z).length() > 8.0
+		or radius() != _scan_radius
+	):
+		_fog_version = fog.version if fog != null else -1
 		_scan()
 	# lancer les tâches en attente, les plus proches d'abord (une par chunk)
 	var keys := _pending.keys()

@@ -79,6 +79,7 @@ func _process(delta: float) -> void:
 		m.show_tool(working)
 		m.animate(_time + l.id, walking, l.state == Lutin.State.SLEEP, working)
 		_sleep_label(l, m)
+		_scout_tent(l)
 		if l.id == selected_id:
 			_marker.visible = true
 			_marker.position = m.position + Vector3(0, 0.05, 0)
@@ -125,3 +126,25 @@ func _sleep_label(l: Lutin, m: LutinModel) -> void:
 	z.text = ["z", "zZ", "zZz", "zZzZ"][int(t * 4.0) % 4]
 	z.position = m.position + Vector3(0.15, 1.05 + t * 0.35, 0)
 	z.modulate.a = 1.0 - t * 0.6
+
+
+var _tents: Dictionary = {}  # id lutin -> petite tente d'éclaireur (la nuit)
+
+
+func _scout_tent(l: Lutin) -> void:
+	var camp: bool = l.order.has("camp")
+	var t: Node3D = _tents.get(l.id)
+	if not camp:
+		if t != null:
+			t.queue_free()
+			_tents.erase(l.id)
+		return
+	if t == null:
+		t = MeshInstance3D.new()
+		var pm := PrismMesh.new()
+		pm.size = Vector3(1.0, 0.8, 1.2)
+		t.mesh = pm
+		t.material_override = LutinModel.mat("7a6a4a", 0.95)
+		t.position = Vector3(l.order["camp"]) + Vector3(1.2, 0.4, 0.5)
+		add_child(t)
+		_tents[l.id] = t

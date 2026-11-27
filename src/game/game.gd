@@ -32,6 +32,8 @@ var _loading: LoadingScreen
 var _load_t: float = 0.0
 var _mesh_total: int = 0
 var _cart: Node3D
+var fog_view: FogView
+var fauna_fog: Territory
 
 
 func _ready() -> void:
@@ -71,6 +73,8 @@ func _process(delta: float) -> void:
 		world_view.focus = camera.target
 		flora_view.focus = camera.target
 		fauna_view.focus = camera.target
+		if fog_view != null:
+			fog_view.focus = camera.target
 	if _cart != null and colony != null:
 		for l: Lutin in colony.lutins:
 			if l.order.get("kind", "") == "cart" and int(l.order["stage"]) == 1:
@@ -97,6 +101,12 @@ func _on_world_ready() -> void:
 	add_child(world_view)
 	world_view.setup(world)
 	world_view.focus = Vector3(colony.stock.pos)
+	if bool(DataRegistry.get_table("realm").get("fog", {}).get("enabled", true)):
+		world_view.fog = sim.territory
+		fog_view = FogView.new()
+		add_child(fog_view)
+		fog_view.bind(sim.territory, world.size.y)
+		fauna_fog = sim.territory
 	flora_view = FloraView.new()
 	add_child(flora_view)
 	flora_view.bind(flora)
@@ -113,6 +123,7 @@ func _on_world_ready() -> void:
 	fauna_view = FaunaView.new()
 	add_child(fauna_view)
 	fauna_view.bind(fauna)
+	fauna_view.fog = fauna_fog
 	structures_view = StructuresView.new()
 	add_child(structures_view)
 	structures.set_meta("world", world)

@@ -112,7 +112,9 @@ func tick() -> void:
 		village.check()
 		rivals.check_conquest()
 		for l in colony.lutins:
-			territory.explore(l.cell, 2)
+			territory.explore(l.cell, int(DataRegistry.find("jobs", "jobs", l.job).get("explore_radius", 2)))
+		rivals.check_meetings()
+		orcs.check_discovery(territory)
 
 
 func daily() -> void:

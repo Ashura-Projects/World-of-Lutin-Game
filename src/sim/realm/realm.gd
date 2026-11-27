@@ -169,7 +169,7 @@ func neighbours() -> Array:
 	var all: Array = _cfg.get("diplomacy", {}).get("factions", [])
 	if Rivals.active == null or Rivals.active.states.is_empty():
 		return all
-	return all.filter(func(f: Dictionary) -> bool: return Rivals.active.states.has(f["id"]))
+	return all.filter(func(f: Dictionary) -> bool: return Rivals.active.is_met(f["id"]))
 
 
 func relation(id: String) -> float:

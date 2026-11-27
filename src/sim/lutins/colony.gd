@@ -246,6 +246,7 @@ func _act(l: Lutin) -> void:
 			task_board.call("while_walking", l)
 		var under := DataRegistry.block(world.get_block(l.cell + Vector3i.DOWN))
 		var speed := float(_move.get("walk_speed", 2.2)) * float(under.get("speed_mult", 1.0))
+		speed *= float(DataRegistry.find("jobs", "jobs", l.job).get("walk_mult", 1.0))  # éclaireurs plus rapides
 		if l.state == Lutin.State.WALK and l.walk(speed / GameClock.ticks_per_second()):
 			l.state = Lutin.State.IDLE
 			if task_board != null:

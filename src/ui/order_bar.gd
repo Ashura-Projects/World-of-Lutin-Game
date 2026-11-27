@@ -36,11 +36,18 @@ func setup(h: Hud, g: Node) -> void:
 	for m: Array in MODES:
 		var b := Button.new()
 		b.text = m[1]
-		b.custom_minimum_size = Vector2(150, 52)
+		b.custom_minimum_size = Vector2(138, 52)
 		b.add_theme_font_size_override("font_size", 19)
 		b.pressed.connect(set_mode.bind(str(m[0])))
 		row.add_child(b)
 		_btns[m[0]] = b
+	for e: Array in [["Explorer", _explore], ["Base", _go_home]]:
+		var eb := Button.new()
+		eb.text = e[0]
+		eb.custom_minimum_size = Vector2(120, 52)
+		eb.add_theme_font_size_override("font_size", 19)
+		eb.pressed.connect(e[1])
+		row.add_child(eb)
 	var sheet_btn := Button.new()
 	sheet_btn.text = "Fiche"
 	sheet_btn.custom_minimum_size = Vector2(100, 52)
@@ -68,6 +75,17 @@ func clear() -> void:
 
 func active() -> bool:
 	return lutin != null and _bar.visible
+
+
+## Exploration autonome (éclaireurs) : il part découvrir la carte, campe la nuit, repart au matin.
+func _explore() -> void:
+	if lutin != null and LutinOrders.give(game.colony, game.board, lutin, "explore", lutin.cell):
+		EventBus.alert.emit("ordre", "%s part en exploration." % lutin.name)
+
+
+func _go_home() -> void:
+	if lutin != null and LutinOrders.give(game.colony, game.board, lutin, "move", game.colony.stock.pos):
+		EventBus.alert.emit("ordre", "%s rentre à la base." % lutin.name)
 
 
 func set_mode(m: String) -> void:

@@ -85,6 +85,7 @@ func _add(a: Dictionary) -> void:
 
 
 var focus := Vector3.ZERO
+var fog: Territory = null
 
 
 func _process(delta: float) -> void:
@@ -96,6 +97,8 @@ func _process(delta: float) -> void:
 			continue
 		var p: Vector3 = a["pos"]
 		m.visible = Vector2(p.x - focus.x, p.z - focus.z).length() <= r
+		if m.visible and fog != null:
+			m.visible = fog.explored.has(fog.col_of(Vector3i(p)))
 		if not m.visible:
 			m.position = p
 			continue

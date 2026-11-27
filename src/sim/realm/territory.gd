@@ -5,6 +5,8 @@ extends RefCounted
 
 signal changed
 
+static var active: Territory = null
+
 var world: VoxelWorld
 var owners: Dictionary = {}  # Vector2i (colonne) -> id faction
 var explored: Dictionary = {}  # Vector2i -> true (brouillard de la carte)
@@ -16,6 +18,7 @@ var size: int = 16
 func _init(w: VoxelWorld) -> void:
 	world = w
 	size = int(DataRegistry.get_table("factions").get("territory", {}).get("chunk", 16))
+	active = self
 
 
 func col_of(cell: Vector3i) -> Vector2i:
@@ -147,3 +150,4 @@ func from_dict(d: Dictionary) -> void:
 	for e: Array in d.get("markers", []):
 		markers.append({"cell": Vector2i(int(e[0]), int(e[1])), "icon": str(e[2]), "label": str(e[3])})
 	version += 1
+	active = self

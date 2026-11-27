@@ -31,7 +31,10 @@ func test_villages_et_territoires() -> void:
 	assert_eq(sim.territory.owner_at(Vector3i(128, 2, 128)), "player")
 	assert_eq(sim.territory.owner_at(st["center"]), st["id"])
 	assert_gt(sim.rivals.units_of(st["id"], "villager_").size(), 0, "des villageois se promènent")
-	assert_eq(sim.realm.neighbours().size(), sim.rivals.states.size())
+	assert_eq(sim.realm.neighbours().size(), 0, "brouillard : pas encore rencontrés")
+	sim.territory.reveal_all()
+	sim.rivals.check_meetings()
+	assert_eq(sim.realm.neighbours().size(), sim.rivals.states.size(), "rencontrés après exploration")
 
 
 func test_ia_grandit_et_s_etend() -> void:

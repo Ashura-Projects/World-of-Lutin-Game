@@ -93,7 +93,13 @@ func refresh() -> void:
 		l.add_theme_color_override("font_color", UiStyle.TXT_D)
 		_list.add_child(l)
 		return
-	var orders := {"none": "libre", "move": "en marche", "attack": "à l'attaque", "hold": "tient la position"}
+	var orders := {
+		"none": "libre",
+		"move": "en marche",
+		"attack": "à l'attaque",
+		"hold": "tient la position",
+		"explore": "en exploration"
+	}
 	for u: Dictionary in _units().units.values():
 		var cap := game.colony.find_lutin(u["captain"]) as Lutin
 		var head := Label.new()
@@ -116,10 +122,16 @@ func refresh() -> void:
 		var uid: int = u["id"]
 		f.item_selected.connect(func(i: int) -> void: _units().set_formation(uid, fs[i]["id"]))
 		row.add_child(f)
-		for a: Array in [["move", "Aller à…"], ["attack", "Attaquer…"], ["hold", "Tenir"], ["return", "Rentrer"]]:
+		for a: Array in [
+			["move", "Aller à…"],
+			["attack", "Attaquer…"],
+			["hold", "Tenir"],
+			["explore", "Explorer"],
+			["return", "Rentrer"]
+		]:
 			var b := Button.new()
 			b.text = a[1]
-			b.custom_minimum_size = Vector2(150, 46)
+			b.custom_minimum_size = Vector2(128, 46)
 			b.add_theme_font_size_override("font_size", 17)
 			b.pressed.connect(_order.bind(uid, str(a[0])))
 			row.add_child(b)

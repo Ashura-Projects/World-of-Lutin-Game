@@ -208,6 +208,27 @@
         "heal",
         "craft:potions"
       ]
+    },
+    {
+      "id": "scout",
+      "name": "Éclaireur",
+      "tool": null,
+      "tasks": [
+        "explore"
+      ],
+      "walk_mult": 1.35,
+      "explore_radius": 4,
+      "_note": "ordre « Explorer » : part seul découvrir la carte, campe la nuit, repart au matin"
+    },
+    {
+      "id": "priest",
+      "name": "Prêtre",
+      "tool": null,
+      "tasks": [
+        "preach"
+      ],
+      "requires_building": "chapel",
+      "_note": "célèbre les offices (foi), marie les couples, peut prêcher chez les voisins"
     }
   ],
   "work": {
