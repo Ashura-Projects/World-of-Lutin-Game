@@ -80,6 +80,37 @@
         "vegetables": 4
       },
       "_use": "légumes pour les ragoûts"
+    },
+    {
+      "id": "hops",
+      "name": "Houblon",
+      "seed": {
+        "hops": 1
+      },
+      "sow": [
+        "spring"
+      ],
+      "grow_days": 10,
+      "yield": {
+        "hops": 3
+      },
+      "_use": "brasserie → bière"
+    },
+    {
+      "id": "grapes",
+      "name": "Vigne",
+      "seed": {
+        "grapes": 1
+      },
+      "sow": [
+        "spring",
+        "summer"
+      ],
+      "grow_days": 12,
+      "yield": {
+        "grapes": 4
+      },
+      "_use": "pressoir → vin"
     }
   ],
   "wild": [

@@ -34,6 +34,7 @@ var _mesh_total: int = 0
 var _cart: Node3D
 var fog_view: FogView
 var realm_view: RealmView
+var smoke_view: SmokeView
 var fauna_fog: Territory
 
 
@@ -76,6 +77,8 @@ func _process(delta: float) -> void:
 		fauna_view.focus = camera.target
 		if fog_view != null:
 			fog_view.focus = camera.target
+		if smoke_view != null:
+			smoke_view.focus = camera.target
 	if _cart != null and colony != null:
 		for l: Lutin in colony.lutins:
 			if l.order.get("kind", "") == "cart" and int(l.order["stage"]) == 1:
@@ -93,6 +96,8 @@ func _on_world_ready() -> void:
 	fields = sim.fields
 	production = sim.production
 	sim.register_saves()
+	SaveManager.current_slot = GameSetup.load_slot if GameSetup.load_slot != "" else GameSetup.save_slot
+	SaveManager.meta_provider = _save_meta
 	var loaded := GameSetup.load_slot != "" and SaveManager.load_game(GameSetup.load_slot)
 	if not loaded:
 		sim.new_game(generator, _start_spot(), GameSetup.lutin_count)
@@ -132,6 +137,12 @@ func _on_world_ready() -> void:
 	fields_view = FieldsView.new()
 	add_child(fields_view)
 	fields_view.bind(fields)
+	smoke_view = SmokeView.new()
+	add_child(smoke_view)
+	smoke_view.bind(sim.realm, world)
+	var gates_view := GatesView.new()
+	add_child(gates_view)
+	gates_view.bind(sim.gates)
 	realm_view = RealmView.new()
 	add_child(realm_view)
 	realm_view.bind(sim.orcs, sim.territory, world)
@@ -166,25 +177,50 @@ func _on_world_ready() -> void:
 
 ## Poser des blocs : plans pour les bâtisseurs, ou pose immédiate en « construction libre » (débug).
 func _place(cells: Array, block_id: int, erase: bool) -> int:
-	if sim.rules.free_build:
+	var shape: int = build_tool.shape_code if build_tool.mode != BuildTool.Mode.ROAD else 0
+	if sim.rules.free_build or (erase and sim.rules.free_dig):
 		var into_air: bool = not erase and build_tool.mode != BuildTool.Mode.ROAD
-		return build_tool.history.apply(cells, 0 if erase else block_id, into_air)
-	return board.place_blueprints(cells, block_id, erase)
+		var n := build_tool.history.apply(cells, 0 if erase else block_id, into_air)
+		if not erase and shape > 0:
+			for c: Vector3i in cells:
+				if world.get_block(c) == block_id:
+					world.set_shape(c, shape)
+		return n
+	return board.place_blueprints(cells, block_id, erase, shape)
 
 
 func _place_structure(kind: String, cell: Vector3i) -> bool:
+	var rot := posmod(roundi(-camera.yaw / (PI / 2.0)), 4)  # l'objet fait face à la caméra
+	var extra := {"rot": rot, "gate_w": build_tool.gate_size.x, "gate_l": build_tool.gate_size.y}
 	if sim.rules.free_build:
 		if not structures.at(cell).is_empty():
 			return false
-		structures.add(kind, cell, true)
+		structures.add(kind, cell, true, extra)
 		structures.assign_homes(colony)
 		return true
-	return board.add_structure(kind, cell) >= 0
+	return board.add_structure(kind, cell, extra) >= 0
+
+
+## Résumé affiché dans l'écran « Charger ».
+func _save_meta() -> Dictionary:
+	var modes := {"sandbox": "Bac à sable", "royal": "Aventure Royale", "tutorial": "Tutoriel"}
+	return {
+		"name": sim.faction.name,
+		"mode": modes.get(sim.rules.mode, sim.rules.mode),
+		"day": GameClock.day() + 1,
+		"lutins": colony.lutins.size(),
+		"size": str(GameSetup.size_def().get("name", "")),
+		"version": str(ProjectSettings.get_setting("application/config/version", ""))
+	}
 
 
 func _on_play() -> void:
 	GameClock.running = true
-	if bool(Settings.get_value("tutorial")) and GameSetup.load_slot == "":
+	if sim.rules.mode == "tutorial":
+		var mp := MissionPanel.new()
+		mp.setup(self)
+		hud.root.add_child(mp)
+	elif bool(Settings.get_value("tutorial")) and GameSetup.load_slot == "":
 		hud.root.add_child(TutorialPanel.new())
 
 
@@ -193,14 +229,17 @@ func _on_tick(_i: int) -> void:
 	_autosave_ticks += 1
 	if _autosave_ticks >= int(Settings.get_value("autosave_min")) * 60 * GameClock.ticks_per_second():
 		_autosave_ticks = 0
-		SaveManager.save_game("auto")
+		SaveManager.save_game()
 
 
 ## Sauvegarde quand l'appli passe en arrière-plan ou se ferme (téléphone).
 func _notification(what: int) -> void:
-	if what in [NOTIFICATION_APPLICATION_PAUSED, NOTIFICATION_WM_CLOSE_REQUEST, NOTIFICATION_WM_GO_BACK_REQUEST]:
+	if what == NOTIFICATION_WM_GO_BACK_REQUEST and hud != null and hud.windows != null:
+		hud.back()  # bouton retour du téléphone = « ↩ Retour »
+		return
+	if what in [NOTIFICATION_APPLICATION_PAUSED, NOTIFICATION_WM_CLOSE_REQUEST]:
 		if sim != null:
-			SaveManager.save_game("auto")
+			SaveManager.save_game()
 
 
 ## Point de départ : case de plaine sèche la plus proche du centre de la carte.
@@ -238,6 +277,39 @@ func _on_tap(screen: Vector2) -> void:
 	var l := lutins_view.pick(camera.cam, screen)
 	if l != null:
 		hud.show_lutin(l)
+		return
+	_pick_object(screen)
+
+
+## Toucher un animal, une herse / un pont-levis ou un objet : son dialogue s'ouvre.
+func _pick_object(screen: Vector2) -> void:
+	var best: Dictionary = {}
+	var bd := 45.0
+	for a: Dictionary in fauna.animals:
+		var p: Vector3 = a["pos"] + Vector3(0, 0.5, 0)
+		if camera.cam.is_position_behind(p) or not fauna_view.visible_animal(a):
+			continue
+		var d := camera.cam.unproject_position(p).distance_to(screen)
+		if d < bd:
+			bd = d
+			best = a
+	if not best.is_empty():
+		hud.object_dialog.show_animal(best)
+		return
+	var r := VoxelRaycast.cast(world, camera.cam.project_ray_origin(screen), camera.cam.project_ray_normal(screen))
+	if not r["hit"]:
+		return
+	var cell: Vector3i = r["pos"]
+	for c: Vector3i in [cell, cell + Vector3i.UP]:
+		var g := sim.gates.at(c)
+		if not g.is_empty():
+			hud.object_dialog.show_gate(g)
+			return
+	for c: Vector3i in [cell + r["normal"], cell + Vector3i.UP, cell]:
+		var s := structures.at(c)
+		if not s.is_empty():
+			hud.object_dialog.show_structure(s)
+			return
 
 
 func _exit_tree() -> void:

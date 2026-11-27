@@ -11,6 +11,8 @@ var difficulty: String = "normal"
 var ai_factions: int = 0  # villages voisins (0 à 3)
 var orcs: bool = false
 var raid_days: int = 100  # un raid d'orcs tous les N jours
+var ai_start_lutins: int = 6  # lutins de départ de chaque village voisin (2 à 10)
+var save_slot: String = "slot1"  # emplacement de sauvegarde de la partie (slot1 à slot5)
 
 
 func reset_defaults() -> void:
@@ -20,6 +22,9 @@ func reset_defaults() -> void:
 	seed_value = randi() % 100000
 	load_slot = ""
 	set_mode("sandbox")
+	ai_start_lutins = lutin_count
+	var fs := SaveManager.free_slot()
+	save_slot = fs if fs != "" else "slot1"
 	var dcfg := DataRegistry.get_table("difficulty")
 	difficulty = str(dcfg.get("default", "normal"))
 	raid_days = int(dcfg.get("raid_days_default", 100))
@@ -56,4 +61,11 @@ func set_mode(m: String) -> void:
 
 ## Règles de la partie à créer (copiées dans la simulation et sauvegardées).
 func rules() -> Dictionary:
-	return {"mode": mode, "difficulty": difficulty, "ai_factions": ai_factions, "orcs": orcs, "raid_days": raid_days}
+	return {
+		"mode": mode,
+		"difficulty": difficulty,
+		"ai_factions": ai_factions,
+		"orcs": orcs,
+		"raid_days": raid_days,
+		"ai_start_lutins": ai_start_lutins
+	}

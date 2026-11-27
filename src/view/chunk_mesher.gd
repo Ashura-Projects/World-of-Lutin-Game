@@ -18,7 +18,7 @@ const UV_INSET := 0.002
 
 ## Renvoie {"opaque": Array (ARRAY_MAX) ou [], "liquid": idem, "faces": int}.
 ## Optimisé : copie du chunk + bordure dans un tampon 18³, puis boucle sur des index entiers uniquement.
-static func build(world: VoxelWorld, key: Vector3i, max_y: int = 9999) -> Dictionary:
+static func build(world: VoxelWorld, key: Vector3i, max_y: int = 9999, shapes: Dictionary = {}) -> Dictionary:
 	var t := world.types
 	var chunk: Chunk = world.chunks.get(key)
 	var result := {"opaque": [], "liquid": [], "faces": 0}
@@ -26,8 +26,18 @@ static func build(world: VoxelWorld, key: Vector3i, max_y: int = 9999) -> Dictio
 		return result
 	var origin := key * Chunk.SIZE
 	var pad := _padded(world, chunk, origin, max_y)
-	var solid := t.solid
 	var liquid := t.liquid
+	var invisible := t.invisible
+	# « cache » : 1 si la case cache la face du voisin (bloc plein, non façonné, visible)
+	var solid := PackedByteArray()
+	solid.resize(256)
+	for i in 256:
+		solid[i] = 1 if t.solid[i] == 1 and invisible[i] == 0 else 0
+	var shaped := PackedByteArray()
+	shaped.resize(18 * 18 * 18)
+	for p: Vector3i in shapes:
+		var d := p - origin
+		shaped[(d.x + 1) + (d.z + 1) * 18 + (d.y + 1) * 324] = 1
 	# décalages dans le tampon 18³ (x + 18 z + 324 y) pour les 6 directions de DIRS
 	var offs := PackedInt32Array([324, -324, 1, -1, 18, -18])
 	var acc := [_new_acc(), _new_acc()]
@@ -40,12 +50,19 @@ static func build(world: VoxelWorld, key: Vector3i, max_y: int = 9999) -> Dictio
 			for lx in Chunk.SIZE:
 				var pi := row + lx
 				var id := pad[pi]
-				if id == 0:
+				if id == 0 or invisible[id] == 1:
+					continue
+				if shaped[pi] == 1:
+					var wpos := Vector3(origin.x + lx, origin.y + ly, origin.z + lz)
+					var code: int = shapes[Vector3i(origin.x + lx, origin.y + ly, origin.z + lz)]
+					faces += ShapeMesh.add(
+						acc[0], wpos, code, [t.tile_top[id], t.tile_side[id], t.tile_bottom[id]], cols, rows
+					)
 					continue
 				var is_liq := liquid[id] == 1
 				for di in 6:
 					var nb := pad[pi + offs[di]]
-					if solid[nb] == 1 or (is_liq and nb == id):
+					if (solid[nb] == 1 and shaped[pi + offs[di]] == 0) or (is_liq and nb == id):
 						continue
 					var d: Array = DIRS[di]
 					var kind: int = d[2]

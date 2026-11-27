@@ -11,30 +11,60 @@ const CATEGORIES := [
 	["ground", "Sols et routes"],
 	["furniture", "Meubles"],
 	["decor", "Décoration"],
+	["light", "Lumières"],
+	["leisure", "Loisirs"],
 	["workshops", "Ateliers"],
 	["buildings", "Bâtiments"],
 	["defense", "Défense"],
+	["stable", "Écurie"],
 	["religion", "Religion"],
 ]
+# gdformat: off
 const FURNITURE := [
 	"bed",
 	"wood_bed",
+	"double_bed",
 	"table",
 	"chair",
 	"bench",
+	"stool",
+	"armchair",
 	"chest",
 	"wardrobe",
+	"cupboard",
 	"shelf",
+	"bookshelf",
+	"nightstand",
 	"door",
+	"iron_door",
+	"double_door",
 	"barrel",
 	"crate",
 	"throne",
 	"wood_cage",
 	"iron_cage"
 ]
+const LIGHT := [
+	"torch", "wall_torch", "standing_torch", "brazier_stone", "brazier_iron", "lantern", "candelabra", "fireplace"
+]
+const LEISURE := ["dice_table", "chess_table", "card_table", "bar_counter", "brewery", "wine_press"]
+const STABLE := ["water_trough", "feeder", "straw_floor"]
 const GROUND := ["road_dirt", "road_stone", "dirt_block", "training_ground"]
-const DEFENSE := ["crenel", "rampart", "barracks", "watchtower", "claim_post", "weapon_rack"]
+const DEFENSE := [
+	"crenel",
+	"rampart",
+	"rampart_plain",
+	"pillar",
+	"bridge_deck",
+	"portcullis",
+	"drawbridge",
+	"barracks",
+	"watchtower",
+	"claim_post",
+	"weapon_rack"
+]
 const RELIGION := ["chapel", "church", "altar", "church_bell"]
+# gdformat: on
 
 var tool: BuildTool
 var board: TaskBoard
@@ -46,6 +76,10 @@ var _choice_buttons: Dictionary = {}  # bouton -> id (pour les verrous de techno
 var _mode_buttons: Dictionary = {}
 var _height_label: Label
 var _move_btn: Button
+var _shape_btn: Button
+var _rot_btn: Button
+var _gate_row: HBoxContainer
+var _gate_label: Label
 
 
 func setup(t: BuildTool, b: TaskBoard) -> void:
@@ -57,13 +91,14 @@ func setup(t: BuildTool, b: TaskBoard) -> void:
 	v.add_theme_constant_override("separation", 8)
 	add_child(v)
 	# 1) catégories
-	var tabs := HBoxContainer.new()
-	tabs.add_theme_constant_override("separation", 6)
+	var tabs := HFlowContainer.new()
+	tabs.add_theme_constant_override("h_separation", 6)
+	tabs.add_theme_constant_override("v_separation", 4)
 	v.add_child(tabs)
 	for c: Array in CATEGORIES:
 		var tb := Button.new()
 		tb.text = c[1]
-		tb.custom_minimum_size = Vector2(134, 52)
+		tb.custom_minimum_size = Vector2(168, 46)
 		tb.add_theme_font_size_override("font_size", 16)
 		tb.pressed.connect(show_category.bind(str(c[0])))
 		tabs.add_child(tb)
@@ -73,7 +108,7 @@ func setup(t: BuildTool, b: TaskBoard) -> void:
 	tabs.add_child(close)
 	# 2) choix de la catégorie
 	var scroll := ScrollContainer.new()
-	scroll.custom_minimum_size = Vector2(1210, 150)
+	scroll.custom_minimum_size = Vector2(1210, 130)
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	v.add_child(scroll)
 	_choices = HFlowContainer.new()
@@ -117,6 +152,32 @@ func setup(t: BuildTool, b: TaskBoard) -> void:
 	_move_btn.custom_minimum_size = Vector2(170, 54)
 	_move_btn.toggled.connect(_on_move_toggled)
 	row.add_child(_move_btn)
+	# 4) forme des blocs (escalier, demi-bloc, pente, arrondi…) et sens
+	var srow := HBoxContainer.new()
+	srow.add_theme_constant_override("separation", 6)
+	v.add_child(srow)
+	_shape_btn = Button.new()
+	_shape_btn.custom_minimum_size = Vector2(420, 50)
+	_shape_btn.add_theme_font_size_override("font_size", 18)
+	_shape_btn.pressed.connect(func() -> void: _set_shape(tool.shape_code / 4 + 1, tool.shape_code % 4))
+	srow.add_child(_shape_btn)
+	_rot_btn = Button.new()
+	_rot_btn.custom_minimum_size = Vector2(170, 50)
+	_rot_btn.add_theme_font_size_override("font_size", 18)
+	_rot_btn.pressed.connect(func() -> void: _set_shape(tool.shape_code / 4, tool.shape_code % 4 + 1))
+	srow.add_child(_rot_btn)
+	_gate_row = HBoxContainer.new()
+	srow.add_child(_gate_row)
+	_gate_row.add_child(_small("L−", func() -> void: _gate(-1, 0)))
+	_gate_row.add_child(_small("L+", func() -> void: _gate(1, 0)))
+	_gate_label = Label.new()
+	_gate_label.custom_minimum_size = Vector2(190, 0)
+	_gate_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_gate_row.add_child(_gate_label)
+	_gate_row.add_child(_small("P−", func() -> void: _gate(0, -1)))
+	_gate_row.add_child(_small("P+", func() -> void: _gate(0, 1)))
+	_set_shape(0, 0)
+	_gate(0, 0)
 	_height(0)
 	show_category("blocks")
 	_select_mode(BuildTool.Mode.BLOCK)
@@ -148,17 +209,18 @@ func show_category(cat: String) -> void:
 	match cat:
 		"blocks", "ground":
 			for b: Dictionary in DataRegistry.get_table("blocks").get("blocks", []):
-				if not b.has("cost") or b["id"] == "field_plot" or DEFENSE.has(b["id"]):
+				if not b.has("cost") or b["id"] == "field_plot" or DEFENSE.has(b["id"]) or STABLE.has(b["id"]):
 					continue
 				if (cat == "ground") != (GROUND.has(b["id"]) or b.get("surface", false)):
 					continue
 				_add_block_choice(b)
-		"defense":
+		"defense", "stable":
+			var list: Array = DEFENSE if cat == "defense" else STABLE
 			for b: Dictionary in DataRegistry.get_table("blocks").get("blocks", []):
-				if DEFENSE.has(b["id"]):
+				if list.has(b["id"]):
 					_add_block_choice(b)
 			for b: Dictionary in DataRegistry.get_table("buildings").get("buildings", []):
-				if DEFENSE.has(b["id"]):
+				if list.has(b["id"]):
 					_add_object_choice(b)
 		_:
 			for b: Dictionary in DataRegistry.get_table("buildings").get("buildings", []):
@@ -171,6 +233,12 @@ func show_category(cat: String) -> void:
 static func _building_category(b: Dictionary) -> String:
 	if RELIGION.has(b["id"]):
 		return "religion"
+	if LIGHT.has(b["id"]):
+		return "light"
+	if LEISURE.has(b["id"]):
+		return "leisure"
+	if STABLE.has(b["id"]):
+		return "stable"
 	if DEFENSE.has(b["id"]):
 		return "defense"
 	if FURNITURE.has(b["id"]):
@@ -225,6 +293,7 @@ func _choose_block(n: int, label: String, surface: bool) -> void:
 
 func _choose_object(kind: String, label: String) -> void:
 	tool.object_kind = kind
+	_gate(0, 0)
 	_select_mode(BuildTool.Mode.OBJECT)
 	_selected(label)
 
@@ -246,6 +315,23 @@ func _select_mode(m: int) -> void:
 		_mode_buttons[k].add_theme_stylebox_override("normal", UiStyle.box(UiStyle.BLOOD if k == m else UiStyle.IRON_L))
 	if m == BuildTool.Mode.ERASE:
 		selection_label = "Gomme"
+
+
+## Forme des blocs posés (ShapeMesh) : un toucher passe à la forme suivante ; « Sens » tourne d'un quart de tour.
+func _set_shape(shape: int, rot: int) -> void:
+	shape = shape % ShapeMesh.NAMES.size()
+	rot = rot % 4
+	tool.shape_code = shape * 4 + rot if shape > 0 else 0
+	_shape_btn.text = "Forme : %s" % ShapeMesh.NAMES[shape]
+	_rot_btn.text = "⟳ Sens %d" % (rot + 1)
+	_rot_btn.disabled = shape in [0, 1, 2]
+
+
+## Pont-levis : largeur et longueur (1 à 4), lues quand on le pose.
+func _gate(dw: int, dl: int) -> void:
+	tool.gate_size = Vector2i(clampi(tool.gate_size.x + dw, 1, 4), clampi(tool.gate_size.y + dl, 1, 4))
+	_gate_label.text = "Pont-levis %d × %d" % [tool.gate_size.x, tool.gate_size.y]
+	_gate_row.visible = tool.object_kind == "drawbridge"
 
 
 func _height(d: int) -> void:

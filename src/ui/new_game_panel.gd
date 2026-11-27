@@ -41,11 +41,14 @@ func _ready() -> void:
 	refresh()
 
 
+var advanced: bool = false
+
+
 func refresh() -> void:
 	for c in _rows.get_children():
 		c.queue_free()
 	var cfg := DataRegistry.get_table("difficulty")
-	var modes: Array = cfg.get("modes", [])
+	var modes: Array = cfg.get("modes", []).filter(func(m: Dictionary) -> bool: return not m.get("hidden", false))
 	_row("Mode", _name_of(modes, GameSetup.mode), func() -> void: GameSetup.set_mode(_next_id(modes, GameSetup.mode)))
 	for m: Dictionary in modes:
 		if m["id"] == GameSetup.mode:
@@ -64,28 +67,58 @@ func refresh() -> void:
 		func() -> void: GameSetup.difficulty = _next_id(levels, GameSetup.difficulty)
 	)
 	_row(
+		"Lutins de départ",
+		str(GameSetup.lutin_count),
+		func() -> void: GameSetup.lutin_count = _cycle_int(GameSetup.lutin_count, 2, 10)
+	)
+	var info := SaveManager.slot_info(GameSetup.save_slot)
+	var slot_txt := (
+		"Emplacement %s — %s"
+		% [GameSetup.save_slot.trim_prefix("slot"), "libre" if info.is_empty() else "OCCUPÉ (sera remplacé)"]
+	)
+	_row("Sauvegarde", slot_txt, func() -> void: GameSetup.save_slot = _next_slot())
+	var adv := Button.new()
+	adv.text = "Paramètres avancés ▴" if advanced else "Paramètres avancés ▾"
+	adv.custom_minimum_size = Vector2(860, 46)
+	adv.add_theme_font_size_override("font_size", 18)
+	adv.pressed.connect(
+		func() -> void:
+			advanced = not advanced
+			refresh.call_deferred()
+	)
+	_rows.add_child(adv)
+	if not advanced:
+		return
+	_row(
 		"Villages voisins (IA)",
 		str(GameSetup.ai_factions) if GameSetup.ai_factions > 0 else "aucun",
 		func() -> void: GameSetup.ai_factions = (GameSetup.ai_factions + 1) % 4
 	)
+	if GameSetup.ai_factions > 0:
+		_row(
+			"Lutins de départ des voisins",
+			str(GameSetup.ai_start_lutins),
+			func() -> void: GameSetup.ai_start_lutins = _cycle_int(GameSetup.ai_start_lutins, 2, 10)
+		)
 	_row("Orcs", "oui" if GameSetup.orcs else "non", func() -> void: GameSetup.orcs = not GameSetup.orcs)
 	if GameSetup.orcs:
-		var days: Array = cfg.get("raid_days", [100])
+		var days: Array = cfg.get("raid_days", [20, 50, 100, 200]).map(func(x: Variant) -> int: return int(x))
 		_row(
 			"Raids d'orcs",
 			"tous les %d jours" % GameSetup.raid_days,
-			func() -> void: GameSetup.raid_days = int(days[(days.find(GameSetup.raid_days) + 1) % days.size()])
+			func() -> void: GameSetup.raid_days = days[(days.find(GameSetup.raid_days) + 1) % days.size()]
 		)
-	_row(
-		"Lutins de départ",
-		str(GameSetup.lutin_count),
-		func() -> void:
-			var n := GameSetup.lutin_count + 1
-			GameSetup.lutin_count = (
-				GameSetup.clamp_lutins(n) if GameSetup.clamp_lutins(n) == n else GameSetup.clamp_lutins(0)
-			)
-	)
 	_row("Graine de carte", str(GameSetup.seed_value), func() -> void: GameSetup.seed_value = randi() % 100000)
+
+
+## Valeur suivante, en boucle (… 9, 10, 2, 3 …).
+static func _cycle_int(v: int, lo: int, hi: int) -> int:
+	return lo if v >= hi else v + 1
+
+
+static func _next_slot() -> String:
+	var slots: Array = SaveManager.SLOTS
+	return slots[(slots.find(GameSetup.save_slot) + 1) % slots.size()]
 
 
 func _size_note() -> String:

@@ -6,6 +6,7 @@ const AIR := 0
 
 var solid := PackedByteArray()
 var liquid := PackedByteArray()
+var invisible := PackedByteArray()  # solide mais pas dessiné (herse, pont-levis : un modèle 3D animé les montre)
 var tile_top := PackedInt32Array()
 var tile_side := PackedInt32Array()
 var tile_bottom := PackedInt32Array()
@@ -18,6 +19,7 @@ var atlas_rows: int = 4
 func _init() -> void:
 	solid.resize(256)
 	liquid.resize(256)
+	invisible.resize(256)
 	tile_top.resize(256)
 	tile_side.resize(256)
 	tile_bottom.resize(256)
@@ -33,6 +35,7 @@ func _init() -> void:
 		solid[n] = 1 if b.get("solid", false) else 0
 		speed[n] = float(b.get("speed_mult", 1.0))
 		liquid[n] = 1 if b.get("liquid", false) else 0
+		invisible[n] = 1 if b.get("invisible", false) else 0
 		var t: Dictionary = b.get("tiles", {})
 		tile_top[n] = _tile_index(tiles, t.get("top", ""))
 		tile_side[n] = _tile_index(tiles, t.get("side", ""))

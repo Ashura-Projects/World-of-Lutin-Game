@@ -1167,6 +1167,34 @@
         "compote": 3
       },
       "work": 12
+    },
+    {
+      "id": "brew_beer",
+      "name": "Bière",
+      "station": "brewery",
+      "job": "cook",
+      "in": {
+        "hops": 2,
+        "barley": 2,
+        "water": 2
+      },
+      "out": {
+        "beer": 4
+      },
+      "work": 30
+    },
+    {
+      "id": "press_wine",
+      "name": "Vin",
+      "station": "wine_press",
+      "job": "cook",
+      "in": {
+        "grapes": 4
+      },
+      "out": {
+        "wine": 3
+      },
+      "work": 30
     }
   ]
 }

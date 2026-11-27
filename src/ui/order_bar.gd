@@ -36,15 +36,15 @@ func setup(h: Hud, g: Node) -> void:
 	for m: Array in MODES:
 		var b := Button.new()
 		b.text = m[1]
-		b.custom_minimum_size = Vector2(138, 52)
+		b.custom_minimum_size = Vector2(124, 52)
 		b.add_theme_font_size_override("font_size", 19)
 		b.pressed.connect(set_mode.bind(str(m[0])))
 		row.add_child(b)
 		_btns[m[0]] = b
-	for e: Array in [["Explorer", _explore], ["Base", _go_home]]:
+	for e: Array in [["Explorer", _explore], ["Base", _go_home], ["Cheval", _horse]]:
 		var eb := Button.new()
 		eb.text = e[0]
-		eb.custom_minimum_size = Vector2(120, 52)
+		eb.custom_minimum_size = Vector2(108, 52)
 		eb.add_theme_font_size_override("font_size", 19)
 		eb.pressed.connect(e[1])
 		row.add_child(eb)
@@ -81,6 +81,22 @@ func active() -> bool:
 func _explore() -> void:
 	if lutin != null and LutinOrders.give(game.colony, game.board, lutin, "explore", lutin.cell):
 		EventBus.alert.emit("ordre", "%s part en exploration." % lutin.name)
+
+
+## Monter le cheval libre le plus proche (il va le chercher), ou en descendre.
+func _horse() -> void:
+	if lutin == null:
+		return
+	if lutin.horse >= 0:
+		Horses.dismount(game.sim, lutin)
+		EventBus.alert.emit("ordre", "%s descend de cheval." % lutin.name)
+		return
+	var h := Horses.free_horse_near(game.sim, lutin.cell)
+	if h.is_empty():
+		EventBus.alert.emit("alerte", "Pas de cheval libre : capturez-en un (touchez un cheval sauvage).")
+		return
+	LutinOrders.give(game.colony, game.board, lutin, "mount", h["cell"], {"horse": h["id"]})
+	EventBus.alert.emit("ordre", "%s va chercher un cheval." % lutin.name)
 
 
 func _go_home() -> void:

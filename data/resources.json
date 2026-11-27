@@ -624,6 +624,33 @@
       "category": "food",
       "stack": 40,
       "nutrition": 18
+    },
+    {
+      "id": "hops",
+      "name": "Houblon",
+      "category": "raw",
+      "stack": 40
+    },
+    {
+      "id": "grapes",
+      "name": "Raisin",
+      "category": "food",
+      "stack": 40,
+      "nutrition": 6
+    },
+    {
+      "id": "beer",
+      "name": "Bière",
+      "category": "drink",
+      "stack": 40,
+      "fun": 6
+    },
+    {
+      "id": "wine",
+      "name": "Vin",
+      "category": "drink",
+      "stack": 40,
+      "fun": 8
     }
   ]
 }

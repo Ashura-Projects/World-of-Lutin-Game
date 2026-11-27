@@ -53,7 +53,12 @@ func mood() -> float:
 ## Lit libre dans la même pièce que le couple (maison).
 func _free_bed_in(room: Dictionary) -> Dictionary:
 	for s: Dictionary in structures.items.values():
-		if s["built"] and s["kind"] == "bed" and s["owner"] == -1 and room["cells"].has(s["cell"]):
+		if (
+			s["built"]
+			and int(Structures.def(s["kind"]).get("sleeps", 0)) > 0
+			and s["owner"] == -1
+			and room["cells"].has(s["cell"])
+		):
 			return s
 	return {}
 

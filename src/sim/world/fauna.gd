@@ -10,7 +10,9 @@ var animals: Array[Dictionary] = []
 var next_id: int = 1
 var _defs: Dictionary = {}
 ## Champs en plus sauvegardés (orcs, soldats ennemis, villageois des voisins).
-const EXTRA_KEYS := ["camp", "raid", "home", "goal", "faction", "roam", "faith", "npc_id", "name"]
+const EXTRA_KEYS := [
+	"camp", "raid", "home", "goal", "faction", "roam", "faith", "npc_id", "name", "owned", "rider", "hungry"
+]
 
 
 func _init(w: VoxelWorld) -> void:
@@ -117,7 +119,7 @@ func tick(colony_cells: Array) -> void:
 			var r := int(a.get("roam", 8))
 			dest = a["home"] + Vector3i(Rng.randi_range(-r, r), 0, Rng.randi_range(-r, r))
 		for c: Vector3i in colony_cells:
-			if flee > 0 and Vector3(c).distance_to(Vector3(a["cell"])) < flee:
+			if flee > 0 and not a.get("owned", false) and Vector3(c).distance_to(Vector3(a["cell"])) < flee:
 				var away: Vector3i = a["cell"] - c
 				dest = a["cell"] + Vector3i(signi(away.x) * 8, 0, signi(away.z) * 8)
 				break
@@ -154,6 +156,6 @@ func from_dict(d: Dictionary) -> void:
 			if e.has(k):
 				var v: Variant = e[k]
 				a[k] = Vector3i(int(v[0]), int(v[1]), int(v[2])) if k in ["home", "goal"] else v
-				if v is float and k in ["camp", "npc_id", "roam"]:
+				if v is float and k in ["camp", "npc_id", "roam", "rider", "hungry"]:
 					a[k] = int(v)
 	next_id = int(d.get("next_id", next_id))

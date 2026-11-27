@@ -5,6 +5,7 @@ extends PanelContainer
 const CATEGORIES := [
 	["all", "Tout"],
 	["food", "Nourriture"],
+	["drink", "Boissons"],
 	["raw", "Matières"],
 	["processed", "Transformé"],
 	["tool", "Outils"],

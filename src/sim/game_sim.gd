@@ -23,7 +23,9 @@ const SAVE_KEYS := [
 	"orcs",
 	"territory",
 	"rivals",
-	"religion"
+	"religion",
+	"gates",
+	"missions"
 ]
 
 var world: VoxelWorld
@@ -49,6 +51,8 @@ var orcs: Orcs
 var territory: Territory
 var rivals: Rivals
 var religion: Religion
+var gates: Gates
+var missions: TutorialMissions
 
 
 func _init(w: VoxelWorld) -> void:
@@ -80,6 +84,10 @@ func _init(w: VoxelWorld) -> void:
 	territory = Territory.new(w)
 	rivals = Rivals.new(w, fauna, colony, flora, territory)
 	religion = Religion.new(colony, structures, fauna)
+	gates = Gates.new(w, structures)
+	colony.fauna_ref = fauna
+	missions = TutorialMissions.new(self)
+	structures.changed.connect(gates.sync_with_structures)
 
 
 ## Nouvelle partie sur un monde généré.
@@ -87,10 +95,12 @@ func new_game(gen: WorldGenerator, start: Vector3i, lutins: int) -> void:
 	flora.load_from_generator(gen)
 	colony.spawn_start(start, lutins)
 	colony.auto_assign_jobs()
-	fauna.populate(["deer", "boar"], start)
+	fauna.populate(["deer", "boar", "horse"], start)
 	fauna.populate(["wolf", "bear"], start, 40.0)
 	orcs.setup_new(start)
 	rivals.setup_new(start, rules.ai_factions)
+	if rules.mode == "tutorial":
+		missions.start_current()
 	for c: Dictionary in orcs.camps:
 		territory.claim(
 			c["cell"], int(DataRegistry.get_table("factions").get("territory", {}).get("camp_radius", 1)), "orcs"
@@ -100,6 +110,7 @@ func new_game(gen: WorldGenerator, start: Vector3i, lutins: int) -> void:
 
 func tick() -> void:
 	colony.tick()
+	Horses.tick(self)
 	combat.tick()
 	orcs.tick()
 	var tps := GameClock.ticks_per_second()
@@ -118,6 +129,8 @@ func tick() -> void:
 		for l in colony.lutins:
 			territory.explore(l.cell, int(DataRegistry.find("jobs", "jobs", l.job).get("explore_radius", 2)))
 		_buildings_effects()
+		if rules.mode == "tutorial":
+			missions.check()
 		rivals.check_meetings()
 		orcs.check_discovery(territory)
 
@@ -133,6 +146,8 @@ func daily() -> void:
 	orcs.daily(GameClock.day())
 	rivals.daily(GameClock.day())
 	religion.daily()
+	Horses.daily(self)
+	Leisure.daily(colony)
 
 
 func register_saves() -> void:
@@ -157,7 +172,9 @@ func register_saves() -> void:
 		orcs,
 		territory,
 		rivals,
-		religion
+		religion,
+		gates,
+		missions
 	]
 	for i in SAVE_KEYS.size():
 		SaveManager.register(SAVE_KEYS[i], objs[i])

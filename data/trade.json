@@ -74,7 +74,11 @@
     "roast": 7,
     "potato_cake": 4,
     "mushroom_soup": 3,
-    "compote": 3
+    "compote": 3,
+    "beer": 6,
+    "wine": 9,
+    "hops": 2,
+    "grapes": 2
   },
   "always_offer": [
     "iron_ingot",

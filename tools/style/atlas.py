@@ -21,6 +21,7 @@ TILES = [
     "iron_ore", "coal_ore", "snow", "snow_side", "water", "wood_top", "wood_side", "plank",
     "cobble", "cut_stone", "brick", "thatch_top", "thatch_side", "dirt_packed", "ice", "leaves",
     "gravel", "deep_stone", "beam", "road_stone", "field_wet", "gold_ore", "crenel", "rampart",
+    "rampart_plain", "flue_top", "pillar", "straw",
 ]
 
 PALETTES = {
@@ -229,14 +230,34 @@ def make_tile(name, p, rng):
                         if d < 1.0:
                             hl = 1.12 if (x - cx) + (y - cy) < -2 else (0.86 if (x - cx) + (y - cy) > 3 else 1.0)
                             img.putpixel((x % TILE, y % TILE), shade(p["cobble"], f * hl + rng.uniform(-0.03, 0.03)))
-    elif name in ("crenel", "rampart"):
+    elif name == "straw":
+        c = p["thatch"]
+        noise_fill(img, shade(c, 0.9), 0.05, rng)
+        for _ in range(140):
+            x, y = rng.randrange(TILE), rng.randrange(TILE)
+            f = rng.uniform(0.8, 1.25)
+            for k in range(rng.randint(3, 9)):
+                img.putpixel(((x + k) % TILE, (y + (k * rng.choice((0, 1)))) % TILE), shade(c, f))
+    elif name == "flue_top":
+        c = p["brick"]
+        noise_fill(img, shade(c, 0.9), 0.05, rng)
+        for y in range(8, 24):
+            for x in range(8, 24):
+                img.putpixel((x, y), (20, 18, 18))
+    elif name == "pillar":
         c = p["cut"]
-        bh, bw = (11, 16) if name == "rampart" else (16, 32)
+        for y in range(TILE):
+            for x in range(TILE):
+                f = 0.85 + 0.25 * abs(((x % 8) - 3.5) / 3.5) * -1 + 0.2 + rng.uniform(-0.04, 0.04)
+                img.putpixel((x, y), shade(c, f))
+    elif name in ("crenel", "rampart", "rampart_plain"):
+        c = p["cut"]
+        bh, bw = (11, 16) if name != "crenel" else (16, 32)
         for y in range(TILE):
             row = y // bh
             off = (bw // 2) * (row % 2)
             for x in range(TILE):
-                f = (0.82 if name == "rampart" else 1.0) + rng.uniform(-0.05, 0.05)
+                f = (0.82 if name != "crenel" else 1.0) + rng.uniform(-0.05, 0.05)
                 if y % bh == bh - 1 or (x + off) % bw == bw - 1:
                     img.putpixel((x, y), shade(p["mortar"], 0.85))
                 else:
@@ -246,7 +267,7 @@ def make_tile(name, p, rng):
                 for y in range(0, 12):
                     for x in range(x0 - 4, x0 + 4):
                         img.putpixel((x, y), shade(c, 0.32 + 0.02 * (y % 3)))
-        else:  # meurtrière au milieu
+        elif name == "rampart":  # meurtrière au milieu
             for y in range(9, 24):
                 for x in range(15, 17):
                     img.putpixel((x, y), (24, 22, 26))

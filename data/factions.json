@@ -51,13 +51,15 @@
       20
     ],
     "start_soldiers": [
-      3,
-      6
+      0,
+      1
     ],
     "start_wealth": [
-      50,
-      120
-    ]
+      20,
+      40
+    ],
+    "lutins_per_house": 2,
+    "villagers_shown_max": 8
   },
   "npc": {
     "villager": {
@@ -79,7 +81,7 @@
   },
   "ai": {
     "income_per_pop": 0.4,
-    "growth_per_day": 0.05,
+    "growth_per_day": 0.12,
     "soldier_cost": 15,
     "max_soldiers_ratio": 0.4,
     "war_relation": -50,

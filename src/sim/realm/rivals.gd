@@ -69,18 +69,19 @@ func setup_new(start: Vector3i, n: int) -> void:
 	for i in spots.size():
 		var fd: Dictionary = defs()[i]
 		var center: Vector3i = spots[i]
-		var hr: Array = vcfg.get("houses", [4, 7])
+		# ils démarrent comme le joueur : quelques lutins, une maison pour deux, puis le village grandit
+		var pop := GameRules.active.ai_start_lutins if GameRules.active != null else 6
+		var per := int(vcfg.get("lutins_per_house", 2))
 		var houses := VillageStamp.village(
-			world, flora, center, Rng.randi_range(int(hr[0]), int(hr[1])), int(vcfg.get("spread", 10))
+			world, flora, center, maxi(1, ceili(float(pop) / per)), int(vcfg.get("spread", 10))
 		)
-		var pr: Array = vcfg.get("start_population", [12, 20])
-		var sr: Array = vcfg.get("start_soldiers", [3, 6])
+		var sr: Array = vcfg.get("start_soldiers", [0, 1])
 		var wr: Array = vcfg.get("start_wealth", [50, 120])
 		states[fd["id"]] = {
 			"id": fd["id"],
 			"center": Pathfinder.snap(world, center),
 			"houses": houses,
-			"population": Rng.randi_range(int(pr[0]), int(pr[1])),
+			"population": pop,
 			"soldiers": Rng.randi_range(int(sr[0]), int(sr[1])),
 			"wealth": float(Rng.randi_range(int(wr[0]), int(wr[1]))),
 			"conquered": false,
@@ -127,8 +128,27 @@ func _spots(start: Vector3i, n: int) -> Array:
 
 func _spawn_villagers(st: Dictionary) -> void:
 	var vcfg: Dictionary = _cfg.get("village", {})
-	for _i in mini(int(vcfg.get("villagers_shown", 6)), int(st["population"])):
+	var want := mini(int(vcfg.get("villagers_shown_max", 8)), int(st["population"]))
+	for _i in maxi(0, want - units_of(st["id"], "villager_").size()):
 		_spawn("villager_" + str(st["id"]), st["center"], int(vcfg.get("roam", 12)))
+
+
+## Le village grandit : une nouvelle maison dès que la population dépasse la place.
+func _grow(st: Dictionary) -> void:
+	var vcfg: Dictionary = _cfg.get("village", {})
+	var per := int(vcfg.get("lutins_per_house", 2))
+	if int(st["population"]) > st["houses"].size() * per:
+		var n: int = st["houses"].size()
+		var a := n * 2.39996  # angle d'or : les maisons s'écartent en spirale
+		var r := int(vcfg.get("spread", 10)) * (0.7 + 0.18 * n)
+		var x := clampi(st["center"].x + int(cos(a) * r), 4, world.size.x - 5)
+		var z := clampi(st["center"].z + int(sin(a) * r), 4, world.size.z - 5)
+		var y := world.surface_y(x, z)
+		if y > 0 and y < world.size.y - 7 and world.get_block(Vector3i(x, y - 1, z)) != world.types.num("water"):
+			VillageStamp.house(world, flora, Vector3i(x, y, z))
+			st["houses"].append(Vector3i(x, y, z))
+			territory.claim(Vector3i(x, y, z), 1, st["id"])
+	_spawn_villagers(st)
 
 
 func _spawn(kind: String, near: Vector3i, roam: int) -> Dictionary:
@@ -270,8 +290,9 @@ func daily(day: int) -> void:
 	for st: Dictionary in present():
 		var fd := def(st["id"])
 		st["wealth"] = float(st["wealth"]) + int(st["population"]) * float(ai.get("income_per_pop", 0.4))
-		if Rng.chance(float(ai.get("growth_per_day", 0.05))):
+		if Rng.chance(float(ai.get("growth_per_day", 0.12))):
 			st["population"] = int(st["population"]) + 1
+			_grow(st)
 		var max_s := int(int(st["population"]) * float(ai.get("max_soldiers_ratio", 0.4)))
 		if int(st["soldiers"]) < max_s and float(st["wealth"]) >= float(ai.get("soldier_cost", 15)):
 			st["wealth"] = float(st["wealth"]) - float(ai.get("soldier_cost", 15))

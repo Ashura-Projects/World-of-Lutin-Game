@@ -98,3 +98,12 @@ func test_sauvegarde_territoire_et_voisins() -> void:
 	assert_eq(r2.states.size(), sim.rivals.states.size())
 	var id: String = sim.rivals.states.keys()[0]
 	assert_eq(r2.states[id]["center"], sim.rivals.states[id]["center"])
+
+
+func test_les_voisins_demarrent_petit_et_grandissent() -> void:
+	var st: Dictionary = sim.rivals.states.values()[0]
+	assert_eq(int(st["population"]), GameSetup.ai_start_lutins, "même départ que le joueur")
+	var h0: int = st["houses"].size()
+	st["population"] = h0 * 2 + 1
+	sim.rivals._grow(st)
+	assert_eq(st["houses"].size(), h0 + 1, "une maison de plus")

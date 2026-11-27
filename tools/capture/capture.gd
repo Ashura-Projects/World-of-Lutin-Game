@@ -24,6 +24,9 @@ func _initialize() -> void:
 ## Réglages de la partie une fois les autoloads (données) prêts, puis lancement de la scène.
 func _setup(args: Array) -> void:
 	var gs := root.get_node_or_null("GameSetup")
+	var st := root.get_node_or_null("Settings")
+	if st:
+		st.values["tutorial"] = false  # pas de conseils sur les captures
 	if gs:
 		gs.reset_defaults()
 		if args.size() > 3:

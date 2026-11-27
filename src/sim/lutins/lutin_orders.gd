@@ -17,9 +17,11 @@ static func give(
 			l.wait_ticks = 0
 			l.state = Lutin.State.IDLE
 			return true
-		"move", "cart":
+		"move", "cart", "mount":
 			board.release(l)
-			l.order = {"kind": kind, "cell": cell, "stage": 0, "until": 0, "tries": 0}
+			l.order = {
+				"kind": kind, "cell": cell, "stage": 0, "until": 0, "tries": 0, "horse": int(extra.get("horse", -1))
+			}
 			if extra.has("hold_s"):
 				l.order["hold_s"] = float(extra["hold_s"])
 			l.wait_ticks = 0
@@ -83,7 +85,7 @@ static func tick(colony: Colony, l: Lutin) -> bool:
 		return true
 	var cell: Vector3i = o["cell"]
 	match o["kind"]:
-		"move":
+		"move", "leisure", "mount":
 			if int(o["stage"]) == 1:
 				if GameClock.tick_index >= int(o["until"]):
 					l.order = {}
@@ -92,6 +94,15 @@ static func tick(colony: Colony, l: Lutin) -> bool:
 				return true
 			if Colony._near(l.cell, cell, 1):
 				o["stage"] = 1
+				if o["kind"] == "leisure":
+					Leisure.enjoy(colony, l)
+				elif o["kind"] == "mount":
+					var h := colony.fauna_ref.find(int(o.get("horse", -1))) if colony.fauna_ref != null else {}
+					if not h.is_empty() and int(h.get("rider", -1)) < 0:
+						h["rider"] = l.id
+						l.horse = h["id"]
+					l.order = {}
+					return false
 				var hold := float(o.get("hold_s", -1.0))
 				if hold <= 0.0:
 					hold = float(DataRegistry.get_table("realm").get("orders", {}).get("hold_s", 40))
@@ -141,7 +152,8 @@ static func order_to_dict(o: Dictionary) -> Dictionary:
 		"stage": o["stage"],
 		"until": o["until"],
 		"tries": o["tries"],
-		"hold_s": o.get("hold_s", -1.0)
+		"hold_s": o.get("hold_s", -1.0),
+		"horse": o.get("horse", -1)
 	}
 
 
@@ -155,5 +167,6 @@ static func order_from_dict(d: Dictionary) -> Dictionary:
 		"stage": int(d["stage"]),
 		"until": int(d["until"]),
 		"tries": int(d["tries"]),
-		"hold_s": float(d.get("hold_s", -1.0))
+		"hold_s": float(d.get("hold_s", -1.0)),
+		"horse": int(d.get("horse", -1))
 	}

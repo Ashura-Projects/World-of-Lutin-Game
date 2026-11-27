@@ -74,21 +74,24 @@ func add_dig(cell: Vector3i) -> int:
 	var b := DataRegistry.block(world.get_block(cell))
 	if b.is_empty() or not b.get("solid", false) or b.get("diggable", true) == false:
 		return -1
+	if GameRules.active != null and GameRules.active.free_dig:
+		world.set_block(cell, 0)  # débug : creuser instantané
+		return 0
 	var job := "builder" if b.has("cost") else ("miner" if b.get("tool", "shovel") == "pickaxe" else "digger")
 	return _new_task("dig", cell, job, float(b.get("hardness", b.get("build_time", 2))))
 
 
 ## Plan de bloc : un bâtisseur apportera le matériau (coût du bloc) puis le posera.
-func add_build_block(cell: Vector3i, block_id: int) -> int:
+func add_build_block(cell: Vector3i, block_id: int, shape: int = 0) -> int:
 	var b := DataRegistry.block(block_id)
 	if not b.has("cost") or world.types.solid[world.get_block(cell)] == 1:
 		return -1
 	_clear_tree(cell)
-	return _new_task("build", cell, "builder", float(b.get("build_time", 2)), {"block": block_id})
+	return _new_task("build", cell, "builder", float(b.get("build_time", 2)), {"block": block_id, "shape": shape})
 
 
 ## Objet ou bâtiment à monter (tente, feu de camp, lit…).
-func add_structure(kind: String, cell: Vector3i) -> int:
+func add_structure(kind: String, cell: Vector3i, extra: Dictionary = {}) -> int:
 	if structures == null or not structures.at(cell).is_empty():
 		return -1
 	var on_wall: bool = Structures.def(kind).get("on_wall", false)
@@ -102,7 +105,7 @@ func add_structure(kind: String, cell: Vector3i) -> int:
 		return -1  # il faut un sol solide et sec
 	_clear_tree(cell)
 	var d := Structures.def(kind)
-	var sid := structures.add(kind, cell)
+	var sid := structures.add(kind, cell, false, extra)
 	var tid := _new_task(
 		"build_struct", cell, "builder", float(d.get("build_time", 10)), {"struct_kind": kind, "struct_id": sid}
 	)
@@ -112,7 +115,7 @@ func add_structure(kind: String, cell: Vector3i) -> int:
 
 
 ## Branché sur l'outil de construction : en partie, poser = plans ; gomme = annuler un plan ou démolir.
-func place_blueprints(cells: Array, block_id: int, erase: bool) -> int:
+func place_blueprints(cells: Array, block_id: int, erase: bool, shape: int = 0) -> int:
 	var n := 0
 	var batch := []
 	for p: Vector3i in cells:
@@ -128,7 +131,7 @@ func place_blueprints(cells: Array, block_id: int, erase: bool) -> int:
 					batch.append(id)
 					n += 1
 		else:
-			var id := add_build_block(p, block_id)
+			var id := add_build_block(p, block_id, shape)
 			if id >= 0:
 				batch.append(id)
 				n += 1

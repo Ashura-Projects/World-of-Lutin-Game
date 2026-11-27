@@ -22,6 +22,7 @@ var dashboard: DashboardPanel
 var research_panel: ResearchPanel
 var commerce_panel: CommercePanel
 var debug_panel: DebugPanel
+var object_dialog: ObjectDialog
 var _time_label: Label
 var _fps_label: Label
 var _speed_buttons: Array[Button] = []
@@ -38,6 +39,7 @@ func _ready() -> void:
 	_build_top()
 	_build_bottom()
 	_build_menu()
+	_build_corner()
 	EventBus.speed_changed.connect(func(_s: int) -> void: _refresh_speed())
 
 
@@ -71,6 +73,10 @@ func bind_game(game: Node) -> void:
 	dashboard = _free_panel_add(DashboardPanel.new(), Vector2(390, 80))
 	research_panel = _free_panel_add(ResearchPanel.new(), Vector2(360, 80))
 	debug_panel = _free_panel_add(DebugPanel.new(), Vector2(200, 70))
+	object_dialog = ObjectDialog.new()
+	object_dialog.setup(game)
+	root.add_child(object_dialog)
+	windows.add(object_dialog, func() -> void: object_dialog.visible = false, true)
 	top = HudTop.new()
 	add_child(top)
 	top.setup(self, game)
@@ -233,10 +239,50 @@ func _build_bottom() -> void:
 	for n: String in MENUS:
 		var b := Button.new()
 		b.text = n
-		b.custom_minimum_size = Vector2(162, 76)
+		b.custom_minimum_size = Vector2(158, 76)
 		b.add_theme_font_size_override("font_size", 19)
 		b.name = n
 		row.add_child(b)
+
+
+## Coin bas-droit : Info (aide selon ce qu'on fait) et Retour (revenir en arrière).
+func _build_corner() -> void:
+	var box := VBoxContainer.new()
+	box.position = Vector2(1530, 634)
+	box.add_theme_constant_override("separation", 4)
+	root.add_child(box)
+	for e: Array in [["ℹ", _info], ["↩", back]]:
+		var b := Button.new()
+		b.text = e[0]
+		b.custom_minimum_size = Vector2(62, 38)
+		b.add_theme_font_size_override("font_size", 20)
+		b.pressed.connect(e[1])
+		box.add_child(b)
+
+
+func _info() -> void:
+	var ctx := ""
+	if build_panel != null and (build_panel.visible or tools.bubble.visible):
+		ctx = "build"
+	elif orders != null and orders.active():
+		ctx = "orders"
+	elif zones_panel != null and zones_panel.visible:
+		ctx = "zones"
+	EventBus.alert.emit("info", InfoTexts.game_help(ctx))
+
+
+## Retour : annule le choix d'un endroit, sinon ferme la fenêtre du dessus, sinon quitte le mode en cours.
+func back() -> void:
+	if windows != null and windows.picking():
+		windows.cancel_pick()
+	elif _menu_panel.visible:
+		_menu_panel.visible = false
+	elif windows != null and windows.close_top():
+		pass
+	elif tools != null and tools.bubble.visible:
+		menu_button("Construire").button_pressed = false
+	elif orders != null and orders.active():
+		show_lutin(null)
 
 
 func menu_button(name: String) -> Button:
@@ -292,19 +338,19 @@ func _close_menu() -> void:
 
 
 func _save() -> void:
-	SaveManager.save_game("auto")
+	SaveManager.save_game()
 	_menu_panel.visible = false
 	EventBus.alert.emit("info", "Partie sauvegardée.")
 
 
 func _to_title() -> void:
-	SaveManager.save_game("auto")
+	SaveManager.save_game()
 	GameClock.running = false
 	get_tree().change_scene_to_file("res://src/ui/title_screen.tscn")
 
 
 func _quit() -> void:
-	SaveManager.save_game("auto")
+	SaveManager.save_game()
 	get_tree().quit()
 
 

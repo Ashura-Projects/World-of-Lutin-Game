@@ -100,7 +100,7 @@ func _on_block_changed(p: Vector3i, _old: int, _new: int) -> void:
 ## Maillage synchrone de tout le monde (chargement, tests).
 func build_all_now() -> void:
 	for k: Vector3i in world.chunk_keys():
-		_apply(k, ChunkMesher.build(world, k, max_y))
+		_apply(k, ChunkMesher.build(world, k, max_y, world.shapes_near(k * Chunk.SIZE)))
 	_pending.clear()
 
 
@@ -130,7 +130,8 @@ func _process(_delta: float) -> void:
 		_pending.erase(k)
 		var key := k
 		var my := max_y
-		var id := WorkerThreadPool.add_task(func() -> void: _mesh_task(key, my))
+		var sh := world.shapes_near(k * Chunk.SIZE)  # copie lue sur le fil principal (pas de partage entre threads)
+		var id := WorkerThreadPool.add_task(func() -> void: _mesh_task(key, my, sh))
 		_running[id] = key
 		if _running.size() >= 8:
 			break
@@ -146,8 +147,8 @@ func _process(_delta: float) -> void:
 		_apply(r[0], r[1])
 
 
-func _mesh_task(key: Vector3i, my: int) -> void:
-	var res := ChunkMesher.build(world, key, my)
+func _mesh_task(key: Vector3i, my: int, sh: Dictionary = {}) -> void:
+	var res := ChunkMesher.build(world, key, my, sh)
 	_mutex.lock()
 	_results.append([key, res])
 	_mutex.unlock()

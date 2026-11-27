@@ -17,6 +17,9 @@ var _tabs: Dictionary = {}
 var _choice_buttons: Dictionary = {}
 var _choices: HFlowContainer
 var _rect_btn: Button
+var preview: Array[Vector3i] = []  # cases de champ en aperçu (posées seulement après « Valider »)
+var _preview_mmi: MultiMeshInstance3D
+var _validate_row: HBoxContainer
 
 
 func setup(g: Node) -> void:
@@ -62,6 +65,34 @@ func setup(g: Node) -> void:
 	_info.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_info.custom_minimum_size = Vector2(800, 0)
 	row2.add_child(_info)
+	_validate_row = HBoxContainer.new()
+	_validate_row.add_theme_constant_override("separation", 8)
+	v.add_child(_validate_row)
+	var ok := Button.new()
+	ok.text = "✔ Valider les champs"
+	ok.custom_minimum_size = Vector2(300, 52)
+	UiStyle.make_primary(ok)
+	ok.pressed.connect(_validate_fields)
+	_validate_row.add_child(ok)
+	var clr := Button.new()
+	clr.text = "Effacer l'aperçu"
+	clr.custom_minimum_size = Vector2(240, 52)
+	clr.pressed.connect(func() -> void: _set_preview([]))
+	_validate_row.add_child(clr)
+	_preview_mmi = MultiMeshInstance3D.new()
+	var m := StandardMaterial3D.new()
+	m.albedo_color = Color(0.45, 0.85, 0.35, 0.45)
+	m.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	m.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	var q := PlaneMesh.new()
+	q.size = Vector2(0.9, 0.9)
+	q.material = m
+	var mm := MultiMesh.new()
+	mm.transform_format = MultiMesh.TRANSFORM_3D
+	mm.mesh = q
+	_preview_mmi.multimesh = mm
+	g.add_child.call_deferred(_preview_mmi)
+	visibility_changed.connect(func() -> void: _preview_mmi.visible = visible)
 	filter_panel = StoreFilterPanel.new()
 	filter_panel.setup(g)
 	filter_panel.visible = false
@@ -77,6 +108,8 @@ func show_tab(t: String) -> void:
 		c.queue_free()
 	_choice_buttons.clear()
 	_rect_btn.visible = t != "cart"
+	if _validate_row != null:
+		_validate_row.visible = t == "fields"
 	match t:
 		"fields":
 			for c: Dictionary in DataRegistry.get_table("crops").get("crops", []):
@@ -167,13 +200,39 @@ func on_tap(screen: Vector2) -> void:
 	if zone_mode != "crop":
 		_store(cells)
 		return
-	var n := 0
+	var list := preview.duplicate()
 	for p in cells:
 		var top := Vector3i(p.x, game.world.surface_y(p.x, p.z) - 1, p.z)
 		if farmable(game.world, top):
+			if list.has(top):
+				list.erase(top)  # toucher une case en aperçu l'enlève
+			else:
+				list.append(top)
+	_set_preview(list)
+	_info.text = (
+		"Aperçu : %d case(s) de %s. Touchez « Valider » pour les planter."
+		% [preview.size(), Fields.crop(crop_id).get("name", crop_id)]
+	)
+
+
+func _set_preview(list: Array) -> void:
+	preview.assign(list)
+	var mm := _preview_mmi.multimesh
+	mm.instance_count = preview.size()
+	for i in preview.size():
+		mm.set_instance_transform(i, Transform3D(Basis(), Vector3(preview[i]) + Vector3(0.5, 1.06, 0.5)))
+	_validate_row.visible = tab == "fields"
+
+
+## Valider : les cases en aperçu deviennent des champs de la culture choisie.
+func _validate_fields() -> void:
+	var n := 0
+	for top in preview:
+		if farmable(game.world, top):
 			game.fields.plan(top, crop_id)
 			n += 1
-	_info.text = "%d case(s) de %s prévue(s)." % [n, Fields.crop(crop_id).get("name", crop_id)]
+	_set_preview([])
+	_info.text = "%d case(s) de %s plantée(s)." % [n, Fields.crop(crop_id).get("name", crop_id)]
 
 
 func _store(cells: Array[Vector3i]) -> void:

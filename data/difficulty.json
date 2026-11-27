@@ -59,12 +59,21 @@
       "ai_factions": 3,
       "orcs": true,
       "victory": true
+    },
+    {
+      "id": "tutorial",
+      "name": "Tutoriel",
+      "desc": "Missions pas à pas pour bien débuter.",
+      "ai_factions": 0,
+      "orcs": false,
+      "victory": false,
+      "hidden": true
     }
   ],
   "raid_days": [
+    20,
     50,
     100,
-    150,
     200
   ],
   "raid_days_default": 100

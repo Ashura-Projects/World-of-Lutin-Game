@@ -444,6 +444,96 @@
       },
       "_note": "mur épais : les orcs mettent longtemps à le casser",
       "num": 33
+    },
+    {
+      "id": "rampart_plain",
+      "name": "Rempart (plein)",
+      "solid": true,
+      "cost": {
+        "stone": 3
+      },
+      "build_time": 4,
+      "tiles": {
+        "top": "cut_stone",
+        "side": "rampart_plain",
+        "bottom": "cut_stone"
+      },
+      "num": 34
+    },
+    {
+      "id": "chimney_flue",
+      "name": "Conduit de cheminée",
+      "solid": true,
+      "cost": {
+        "stone": 1,
+        "clay": 1
+      },
+      "build_time": 3,
+      "tiles": {
+        "top": "flue_top",
+        "side": "brick",
+        "bottom": "brick"
+      },
+      "_note": "une fumée sort du conduit le plus haut",
+      "num": 35
+    },
+    {
+      "id": "pillar",
+      "name": "Pilier de pont",
+      "solid": true,
+      "cost": {
+        "stone": 2
+      },
+      "build_time": 3,
+      "tiles": {
+        "top": "cut_stone",
+        "side": "pillar",
+        "bottom": "cut_stone"
+      },
+      "num": 36
+    },
+    {
+      "id": "bridge_deck",
+      "name": "Tablier de pont",
+      "solid": true,
+      "cost": {
+        "plank": 1
+      },
+      "build_time": 2,
+      "tiles": {
+        "top": "plank",
+        "side": "beam",
+        "bottom": "beam"
+      },
+      "_note": "se pose dans le vide à côté d'un bloc ; à mettre en demi-bloc pour un pont fin",
+      "num": 37
+    },
+    {
+      "id": "straw_floor",
+      "name": "Sol en paille",
+      "solid": true,
+      "surface": true,
+      "cost": {
+        "straw": 1
+      },
+      "build_time": 1,
+      "speed_mult": 1.0,
+      "tiles": {
+        "top": "straw",
+        "side": "dirt",
+        "bottom": "dirt"
+      },
+      "_note": "litière pour les box des chevaux",
+      "num": 38
+    },
+    {
+      "id": "gate_solid",
+      "name": "Herse / pont-levis",
+      "solid": true,
+      "invisible": true,
+      "diggable": false,
+      "_note": "cases occupées par une herse fermée ou un pont-levis baissé (dessinés par un modèle animé)",
+      "num": 39
     }
   ]
 }

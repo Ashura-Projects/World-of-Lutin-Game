@@ -38,6 +38,8 @@ var jailed := Vector3i(-1, -1, -1)  # cage où il est enfermé
 var unit_id: int = -1  # unité militaire (Units)
 var spouse: int = -1  # conjoint (mariage)
 var faith: float = 30.0  # foi (0..100) dans la religion du village
+var horse: int = -1  # cheval monté (id d'animal)
+var fun: float = 0.0  # bonus de moral des loisirs (jeux, bar), baisse chaque jour
 
 
 func place_at(c: Vector3i) -> void:
@@ -143,6 +145,8 @@ func to_dict() -> Dictionary:
 		"unit": unit_id,
 		"spouse": spouse,
 		"faith": faith,
+		"horse": horse,
+		"fun": fun,
 	}
 
 
@@ -198,3 +202,5 @@ func from_dict(d: Dictionary) -> void:
 	unit_id = int(d.get("unit", -1))
 	spouse = int(d.get("spouse", -1))
 	faith = float(d.get("faith", 30.0))
+	horse = int(d.get("horse", -1))
+	fun = float(d.get("fun", 0.0))

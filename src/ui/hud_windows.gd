@@ -8,7 +8,7 @@ const AREA := Rect2(8, 66, 1516, 556)  # zone libre (barre du haut 62 px, barre 
 
 var root: Control
 var game: Node
-var _items: Array = []  # [fenêtre, bouton ✕ ou null, était visible]
+var _items: Array = []  # [fenêtre, bouton ✕ ou null, était visible, fermeture]
 var _pick_cb: Callable
 var _pick_bar: PanelContainer
 var _pick_label: Label
@@ -39,7 +39,7 @@ func add(panel: Control, on_close: Callable, own_close: bool = false) -> void:
 		x.custom_minimum_size = Vector2(50, 46)
 		x.visible = false
 		root.add_child(x)
-	_items.append([panel, x, false])
+	_items.append([panel, x, false, on_close])
 
 
 func _process(_d: float) -> void:
@@ -69,6 +69,25 @@ func _clamp(p: Control) -> void:
 	pos.y = clampf(pos.y, AREA.position.y, maxf(AREA.position.y, AREA.end.y - p.size.y))
 	if pos != p.position:
 		p.position = pos
+
+
+## Bouton « Retour » : ferme la fenêtre ouverte la plus au premier plan. Renvoie false s'il n'y en a pas.
+func close_top() -> bool:
+	var best: Array = []
+	var best_i := -1
+	for it: Array in _items:
+		var p: Control = it[0]
+		if is_instance_valid(p) and p.is_visible_in_tree() and p.get_parent() == root and p.get_index() > best_i:
+			best_i = p.get_index()
+			best = it
+	if best.is_empty():
+		return false
+	var cb: Callable = best[3]
+	if cb.is_valid():
+		cb.call()
+	else:
+		best[0].visible = false
+	return true
 
 
 # --- toucher la carte pour choisir un endroit ----------------------------------------------------

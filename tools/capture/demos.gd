@@ -52,6 +52,8 @@ static func run(game: Node, action: String) -> void:
 			game.hud.tools._floor_panel.visible = true
 		"chargement":
 			pass
+		"formes":
+			formes(game)
 		"tutoriel":
 			game.hud.root.add_child(TutorialPanel.new())
 		"carte":
@@ -345,3 +347,28 @@ static func marchand(game: Node) -> void:
 	game.colony.stock.add("log", 30)
 	game.sim.trade.daily(game.sim.trade.next_day)
 	game.hud.menu_button("Commerce").button_pressed = true
+
+
+static func formes(game: Node) -> void:
+	var w: VoxelWorld = game.world
+	var p: Vector3i = game.colony.stock.pos + Vector3i(-6, 0, -8)
+	var plank := w.types.num("plank_block")
+	var stone := w.types.num("cut_stone_block")
+	var thatch := w.types.num("thatch_block")
+	for i in range(1, ShapeMesh.NAMES.size()):
+		var c := p + Vector3i(i * 2 - 2, 0, 0)
+		c.y = w.surface_y(c.x, c.z)
+		w.set_block(c, plank if i < 7 else stone)
+		w.set_shape(c, i * 4)
+	# tour ronde 2×2 : 4 angles arrondis sur 3 étages et un toit conique
+	var t := p + Vector3i(4, 0, 6)
+	t.y = w.surface_y(t.x, t.z)
+	var quarters := [[Vector3i(1, 0, 1), 0], [Vector3i(0, 0, 1), 1], [Vector3i(0, 0, 0), 2], [Vector3i(1, 0, 0), 3]]
+	for y in 4:
+		for q: Array in quarters:
+			var c: Vector3i = t + q[0] + Vector3i(0, y, 0)
+			var shape := ShapeMesh.Shape.ROUND if y < 3 else ShapeMesh.Shape.CONE
+			w.set_block(c, stone if y < 3 else thatch)
+			w.set_shape(c, shape * 4 + int(q[1]))
+	game.camera.distance = 14.0
+	game.camera.focus(Vector3(p) + Vector3(8, 1, 3))

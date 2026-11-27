@@ -10,8 +10,10 @@ var difficulty: String = "normal"
 var ai_factions: int = 0
 var orcs: bool = false
 var raid_days: int = 100
+var ai_start_lutins: int = 6
 var god_mode: bool = false  # débug : lutins invincibles
 var free_build: bool = false  # débug : construction instantanée et gratuite
+var free_dig: bool = false  # débug : creuser (gomme, récolte « creuser ») instantané
 
 
 func _init(d: Dictionary = {}) -> void:
@@ -42,8 +44,10 @@ func to_dict() -> Dictionary:
 		"ai_factions": ai_factions,
 		"orcs": orcs,
 		"raid_days": raid_days,
+		"ai_start_lutins": ai_start_lutins,
 		"god_mode": god_mode,
-		"free_build": free_build
+		"free_build": free_build,
+		"free_dig": free_dig
 	}
 
 
@@ -53,6 +57,8 @@ func from_dict(d: Dictionary) -> void:
 	ai_factions = int(d.get("ai_factions", 0))
 	orcs = bool(d.get("orcs", false))
 	raid_days = int(d.get("raid_days", 100))
+	ai_start_lutins = int(d.get("ai_start_lutins", 6))
 	god_mode = bool(d.get("god_mode", false))
 	free_build = bool(d.get("free_build", false))
+	free_dig = bool(d.get("free_dig", false))
 	active = self

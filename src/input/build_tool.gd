@@ -15,6 +15,8 @@ var wall_height: int = 3
 var world: VoxelWorld
 var camera: CameraController
 var history: EditHistory
+var shape_code: int = 0  # forme des blocs posés (ShapeMesh) × 4 + sens
+var gate_size := Vector2i(2, 2)  # pont-levis : largeur × longueur
 var max_y: int = 9999
 ## Appelé à la place d'une pose instantanée (J5 : plans pour les bâtisseurs). Signature : (cells, id, erase).
 var place_handler: Callable

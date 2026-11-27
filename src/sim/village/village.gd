@@ -118,6 +118,7 @@ func update_mood() -> void:
 			m += Realm.active.mood_for(l)  # lois, taxes, titre, seigneur, prison
 		if Religion.active != null:
 			m += Religion.active.mood_for(l)  # foi et dogmes
+		m += l.fun  # loisirs (jeux, bar)
 		l.needs["mood"] = clampf(m, 0.0, 100.0)
 
 

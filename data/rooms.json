@@ -99,6 +99,20 @@
       "bonus": {
         "mood": 2
       }
+    },
+    {
+      "id": "bedroom",
+      "name": "Chambre",
+      "priority": 35,
+      "requires": [
+        "bed",
+        "storage"
+      ],
+      "max_beds": 2,
+      "bonus": {
+        "mood": 10
+      },
+      "_note": "un lit simple ou double et au moins un coffre ; attribuable à des lutins"
     }
   ],
   "warmth_sources": [

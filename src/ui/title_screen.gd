@@ -5,6 +5,9 @@ const GAME_SCENE := "res://src/game/game.tscn"
 
 var _setup_panel: NewGamePanel
 var _debug_btn: Button
+var _main: VBoxContainer
+var _play: VBoxContainer
+var _slots: SlotsPanel
 var _taps: Array = []  # 5 touchers rapides dans le coin droit = menu débug
 
 
@@ -38,19 +41,31 @@ func _build() -> void:
 	col.add_theme_constant_override("separation", 12)
 	frame.add_child(col)
 
-	var cont := _menu_button(col, "Continuer", _on_continue)
-	cont.disabled = not SaveManager.has_save("auto")
-	if not cont.disabled:
-		UiStyle.make_primary(cont)
-	var newb := _menu_button(col, "Nouvelle partie", _on_new_game)
-	if cont.disabled:
-		UiStyle.make_primary(newb)
-	_menu_button(col, "Paramètres", func() -> void: _popup(SettingsPanel.new()))
-	_menu_button(col, "Crédits", func() -> void: _popup(CreditsPanel.new()))
-	_debug_btn = _menu_button(col, "Débug", _debug_menu)
+	# menu principal : Jouer, Paramètres, Crédits, (Débug), Quitter
+	_main = VBoxContainer.new()
+	_main.add_theme_constant_override("separation", 12)
+	col.add_child(_main)
+	UiStyle.make_primary(_menu_button(_main, "Jouer", func() -> void: _show_play(true)))
+	_menu_button(_main, "Paramètres", func() -> void: _popup(SettingsPanel.new()))
+	_menu_button(_main, "Crédits", func() -> void: _popup(CreditsPanel.new()))
+	_debug_btn = _menu_button(_main, "Débug", _debug_menu)
 	_debug_btn.add_theme_color_override("font_color", Color("ff8a7a"))
 	_debug_btn.visible = bool(Settings.get_value("debug"))
-	_menu_button(col, "Quitter", func() -> void: get_tree().quit())
+	_menu_button(_main, "Quitter", func() -> void: get_tree().quit())
+	# sous-menu Jouer : Continuer, Nouvelle partie, Charger, Tutoriel, Retour
+	_play = VBoxContainer.new()
+	_play.add_theme_constant_override("separation", 12)
+	_play.visible = false
+	col.add_child(_play)
+	var cont := _menu_button(_play, "Continuer", _on_continue)
+	cont.disabled = SaveManager.last_slot() == ""
+	if not cont.disabled:
+		UiStyle.make_primary(cont)
+	_menu_button(_play, "Nouvelle partie", _on_new_game)
+	_menu_button(_play, "Charger", _open_slots)
+	_menu_button(_play, "Tutoriel", _start_tutorial)
+	_menu_button(_play, "← Retour", func() -> void: _show_play(false))
+	_build_corner_buttons()
 
 	var ver := Label.new()
 	ver.text = "v%s · projet d'Ashura" % ProjectSettings.get_setting("application/config/version", "1.0.0")
@@ -112,17 +127,87 @@ func _small_button(text: String, cb: Callable) -> Button:
 
 
 func _on_new_game() -> void:
+	if _slots != null:
+		_slots.visible = false
 	_setup_panel.visible = not _setup_panel.visible
+	_setup_panel.refresh()
 
 
 func _on_continue() -> void:
-	GameSetup.load_slot = "auto"
+	load_slot(SaveManager.last_slot())
+
+
+func load_slot(slot: String) -> void:
+	if slot == "" or not SaveManager.has_save(slot):
+		return
+	GameSetup.load_slot = slot
 	get_tree().change_scene_to_file(GAME_SCENE)
 
 
 func _start_game() -> void:
 	GameSetup.load_slot = ""
 	get_tree().change_scene_to_file(GAME_SCENE)
+
+
+## Tutoriel : petite carte paisible, 4 lutins, missions pas à pas (construire, cultiver, se défendre…).
+func _start_tutorial() -> void:
+	GameSetup.reset_defaults()
+	GameSetup.set_mode("tutorial")
+	GameSetup.map_size = "small"
+	GameSetup.lutin_count = 4
+	GameSetup.save_slot = "tutoriel"
+	_start_game()
+
+
+func _show_play(on: bool) -> void:
+	_main.visible = not on
+	_play.visible = on
+	_setup_panel.visible = false
+	if _slots != null:
+		_slots.visible = false
+
+
+func _open_slots() -> void:
+	if _slots == null:
+		_slots = SlotsPanel.new()
+		_slots.position = Vector2(560, 120)
+		add_child(_slots)
+		_slots.load_requested.connect(load_slot)
+	_setup_panel.visible = false
+	_slots.visible = true
+	_slots.refresh()
+
+
+## Coin bas-droit : Info (aide) et Retour (revenir en arrière facilement).
+func _build_corner_buttons() -> void:
+	var box := HBoxContainer.new()
+	box.position = Vector2(1300, 640)
+	box.add_theme_constant_override("separation", 10)
+	add_child(box)
+	var info := Button.new()
+	info.text = "ℹ Info"
+	info.custom_minimum_size = Vector2(130, 60)
+	info.pressed.connect(func() -> void: _dialog("Info", InfoTexts.title_help()))
+	box.add_child(info)
+	var back := Button.new()
+	back.text = "↩ Retour"
+	back.custom_minimum_size = Vector2(150, 60)
+	back.pressed.connect(_back)
+	box.add_child(back)
+
+
+func _back() -> void:
+	for c in get_children():
+		if c is PanelContainer and c.visible and c != _setup_panel and c != _slots and c.get_index() > 2:
+			if c is SettingsPanel or c is CreditsPanel or c is FactionEditor:
+				c.queue_free()
+				return
+	if _slots != null and _slots.visible:
+		_slots.visible = false
+	elif _setup_panel.visible:
+		_setup_panel.visible = false
+	else:
+		_show_play(false)
 
 
 func _popup(p: Control) -> void:

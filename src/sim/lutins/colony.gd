@@ -17,6 +17,7 @@ var structures: Structures = null  # sources de chaleur (J6)
 var heating_ok: bool = true  # faux si le bois de chauffage manque
 var combat: RefCounted = null  # Combat (J7) : mobilisation, cachette
 var education: RefCounted = null  # Education (J8) : école des enfants
+var fauna_ref: Fauna = null  # chevaux montés (1.3)
 var _pop: Dictionary
 var _move: Dictionary
 var _needs: Dictionary
@@ -224,7 +225,7 @@ func _decide_normal(l: Lutin, night: bool) -> void:
 		return
 	if task_board != null and task_board.call("assign", l):
 		return
-	if Realm.active != null and Realm.active.soldier_idle(l):
+	if (Realm.active != null and Realm.active.soldier_idle(l)) or Leisure.try(self, l):
 		return
 	# flâner autour du camp
 	l.state = Lutin.State.IDLE
@@ -249,6 +250,7 @@ func _act(l: Lutin) -> void:
 		var under := DataRegistry.block(world.get_block(l.cell + Vector3i.DOWN))
 		var speed := float(_move.get("walk_speed", 2.2)) * float(under.get("speed_mult", 1.0))
 		speed *= float(DataRegistry.find("jobs", "jobs", l.job).get("walk_mult", 1.0))  # éclaireurs plus rapides
+		speed *= Horses.speed_mult(l)  # à cheval
 		if l.state == Lutin.State.WALK and l.walk(speed / GameClock.ticks_per_second()):
 			l.state = Lutin.State.IDLE
 			if task_board != null:

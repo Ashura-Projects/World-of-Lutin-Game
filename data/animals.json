@@ -171,6 +171,32 @@
       "aggro_radius": 10,
       "breaks_blocks": true,
       "break_mult": 2.0
+    },
+    {
+      "id": "horse",
+      "name": "Cheval",
+      "biome": [
+        "plain"
+      ],
+      "herd": [
+        2,
+        4
+      ],
+      "per_1000": 0.08,
+      "hp": 60,
+      "flees": true,
+      "flee_radius": 6,
+      "speed": 3.2,
+      "drop": {
+        "meat": 5,
+        "hide": 2
+      },
+      "respawn_days": 15,
+      "mount_speed": 2.2,
+      "eats_per_day": {
+        "straw": 1
+      },
+      "_note": "capturable avec un abreuvoir et une mangeoire bâtis ; un lutin monté va 2,2 × plus vite"
     }
   ]
 }

@@ -7,6 +7,7 @@ signal block_changed(pos: Vector3i, old_id: int, new_id: int)
 var size: Vector3i  # x, y (hauteur), z
 var chunks: Dictionary = {}  # Vector3i -> Chunk
 var types: BlockTypes
+var shapes: Dictionary = {}  # Vector3i -> forme × 4 + sens (escalier, demi-bloc, pente…) ; absent = cube
 
 
 func _init(world_size: Vector3i = Vector3i(64, 32, 64)) -> void:
@@ -53,8 +54,35 @@ func set_block(p: Vector3i, id: int) -> bool:
 	if old == id:
 		return false
 	set_raw(p, id)
+	shapes.erase(p)  # un nouveau bloc repart en cube (la forme est posée ensuite)
 	block_changed.emit(p, old, id)
 	return true
+
+
+## Forme d'un bloc (0 = cube). code = forme × 4 + sens (0 à 3, quart de tour).
+func get_shape(p: Vector3i) -> int:
+	return int(shapes.get(p, 0))
+
+
+func set_shape(p: Vector3i, code: int) -> void:
+	if code <= 0 or get_block(p) == 0:
+		shapes.erase(p)
+	else:
+		shapes[p] = code
+	var id := get_block(p)
+	block_changed.emit(p, id, id)
+
+
+## Formes autour d'un chunk (chunk + bordure d'un bloc), copiées pour le maillage sur un thread.
+func shapes_near(origin: Vector3i) -> Dictionary:
+	var out := {}
+	if shapes.is_empty():
+		return out
+	for p: Vector3i in shapes:
+		var d := p - origin
+		if d.x >= -1 and d.y >= -1 and d.z >= -1 and d.x <= 16 and d.y <= 16 and d.z <= 16:
+			out[p] = shapes[p]
+	return out
 
 
 func is_solid(p: Vector3i) -> bool:
@@ -89,7 +117,10 @@ func to_dict() -> Dictionary:
 		var c: Chunk = chunks[k]
 		if not c.is_empty():
 			cs["%d,%d,%d" % [k.x, k.y, k.z]] = Marshalls.raw_to_base64(c.to_rle())
-	return {"size": [size.x, size.y, size.z], "chunks": cs}
+	var sh := []
+	for p: Vector3i in shapes:
+		sh.append([p.x, p.y, p.z, shapes[p]])
+	return {"size": [size.x, size.y, size.z], "chunks": cs, "shapes": sh}
 
 
 func from_dict(d: Dictionary) -> void:
@@ -103,3 +134,6 @@ func from_dict(d: Dictionary) -> void:
 		var c := Chunk.new(k)
 		c.from_rle(Marshalls.base64_to_raw(cs[key_str]))
 		chunks[k] = c
+	shapes.clear()
+	for e: Array in d.get("shapes", []):
+		shapes[Vector3i(int(e[0]), int(e[1]), int(e[2]))] = int(e[3])

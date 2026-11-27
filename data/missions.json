@@ -1,0 +1,78 @@
+{
+  "_doc": "Missions du tutoriel (mode « tutorial »). Chaque mission : objectif vérifié par TutorialMissions, aide affichée.",
+  "missions": [
+    {
+      "id": "wood",
+      "title": "Couper du bois",
+      "goal": "Rapportez 6 bûches à la réserve.",
+      "hint": "Récolter › Couper, puis touchez des arbres (cercle) et « Valider ». Le bûcheron s'en charge.",
+      "kind": "stock_gain",
+      "res": "log",
+      "n": 6
+    },
+    {
+      "id": "tents",
+      "title": "Monter le camp",
+      "goal": "Construisez 2 tentes.",
+      "hint": "Construire › Bâtiments › Tente, puis touchez le sol. Les bâtisseurs la montent.",
+      "kind": "built",
+      "what": "tent",
+      "n": 2
+    },
+    {
+      "id": "fire",
+      "title": "Allumer un feu",
+      "goal": "Construisez un feu de camp.",
+      "hint": "Construire › Bâtiments › Feu de camp. Il réchauffe les lutins l'hiver.",
+      "kind": "built",
+      "what": "campfire",
+      "n": 1
+    },
+    {
+      "id": "store",
+      "title": "Ranger les réserves",
+      "goal": "Créez une zone de réserve.",
+      "hint": "Zones › Réserves › Nouvelle réserve, puis touchez le sol.",
+      "kind": "store_zone",
+      "n": 1
+    },
+    {
+      "id": "house",
+      "title": "Une vraie maison",
+      "goal": "Un lutin dort dans une pièce fermée (murs, toit, porte, lit).",
+      "hint": "Construire › Blocs : des murs de planches (mode Mur), un toit (Remplir, ou Forme « Pente »), une porte et un lit (Meubles).",
+      "kind": "home_in_room",
+      "n": 1
+    },
+    {
+      "id": "fields",
+      "title": "Cultiver",
+      "goal": "Semez 4 cases de champ.",
+      "hint": "Zones › Champs : choisissez une culture, touchez des cases (aperçu) puis « Valider les champs ». Le fermier sème.",
+      "kind": "sown",
+      "n": 4
+    },
+    {
+      "id": "wolves",
+      "title": "Défendre le village",
+      "goal": "Abattez les 2 loups qui rôdent.",
+      "hint": "Militaire › Mobiliser : vos lutins prennent les armes. Ou touchez un loup › Attaquer.",
+      "kind": "kills",
+      "what": "wolf",
+      "n": 2,
+      "spawn": {
+        "wolf": 2
+      }
+    },
+    {
+      "id": "explore",
+      "title": "Explorer",
+      "goal": "Découvrez 12 nouvelles zones de la carte.",
+      "hint": "Touchez un lutin › Explorer (un éclaireur va plus vite). Ouvrez la Carte pour suivre.",
+      "kind": "explored",
+      "n": 12
+    }
+  ],
+  "done_title": "Tutoriel terminé !",
+  "done_text": "Bravo, votre village est lancé. Vous pouvez continuer à jouer cette partie ou revenir au menu."
+}

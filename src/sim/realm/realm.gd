@@ -14,6 +14,8 @@ var tax: String = "low"
 var laws: Dictionary = {}  # id -> true
 var relations: Dictionary = {}  # id faction -> {"relation": float, "status": String}
 var training_cells: Dictionary = {}  # case au-dessus d'un sol d'entraînement -> true
+var flue_cells: Dictionary = {}  # conduits de cheminée (fumée au plus haut)
+var _flue_block: int = -1
 var gold_frac: float = 0.0
 var _cfg: Dictionary
 var _training_block: int = -1
@@ -26,6 +28,7 @@ func _init(c: Colony, s: Structures, w: VoxelWorld) -> void:
 	_cfg = DataRegistry.get_table("realm")
 	tax = str(_cfg.get("tax", {}).get("default", "low"))
 	_training_block = w.types.num("training_ground")
+	_flue_block = w.types.num("chimney_flue")
 	for f: Dictionary in _cfg.get("diplomacy", {}).get("factions", []):
 		relations[f["id"]] = {"relation": float(f.get("relation", 0)), "status": str(f.get("status", "neutral"))}
 	w.block_changed.connect(_on_block)
@@ -286,6 +289,10 @@ func discharge(l: Lutin) -> void:
 
 
 func _on_block(cell: Vector3i, _old: int, new: int) -> void:
+	if new == _flue_block and _flue_block > 0:
+		flue_cells[cell] = true
+	elif flue_cells.has(cell) and new != _flue_block:
+		flue_cells.erase(cell)
 	if _training_block < 0:
 		return
 	if new == _training_block:
@@ -341,8 +348,17 @@ func to_dict() -> Dictionary:
 	var tc := []
 	for c: Vector3i in training_cells:
 		tc.append([c.x, c.y, c.z])
+	var fl := []
+	for c: Vector3i in flue_cells:
+		fl.append([c.x, c.y, c.z])
 	return {
-		"lord": lord_id, "tax": tax, "laws": laws.keys(), "relations": relations, "training": tc, "gold_frac": gold_frac
+		"lord": lord_id,
+		"tax": tax,
+		"laws": laws.keys(),
+		"relations": relations,
+		"training": tc,
+		"gold_frac": gold_frac,
+		"flues": fl
 	}
 
 
@@ -359,4 +375,7 @@ func from_dict(d: Dictionary) -> void:
 	for e: Array in d.get("training", []):
 		training_cells[Vector3i(int(e[0]), int(e[1]), int(e[2]))] = true
 	gold_frac = float(d.get("gold_frac", 0.0))
+	flue_cells.clear()
+	for e: Array in d.get("flues", []):
+		flue_cells[Vector3i(int(e[0]), int(e[1]), int(e[2]))] = true
 	active = self

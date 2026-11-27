@@ -123,6 +123,8 @@ func complete(l: Lutin, t: Dictionary) -> void:
 			t["progress"] = 0.0
 			return
 		board.world.set_block(t["cell"], int(t["block"]))
+		if int(t.get("shape", 0)) > 0:
+			board.world.set_shape(t["cell"], int(t["shape"]))
 	elif board.structures != null:
 		board.structures.set_built(int(t["struct_id"]))
 		board.structures.assign_homes(board.colony)

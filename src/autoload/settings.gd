@@ -18,6 +18,7 @@ var values: Dictionary = {
 	"tutorial": true,
 	"autosave_min": 5,
 	"camera_speed": 1.0,
+	"last_slot": "",
 	"debug": false,  # menu débug caché (5 touchers dans le coin de l'accueil)
 	"language": "fr",
 	"text_size": "large",

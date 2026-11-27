@@ -1,7 +1,7 @@
 {
  "tile": 32,
  "cols": 8,
- "rows": 4,
+ "rows": 5,
  "tiles": {
   "bedrock": [
    0,
@@ -130,6 +130,22 @@
   "rampart": [
    7,
    3
+  ],
+  "rampart_plain": [
+   0,
+   4
+  ],
+  "flue_top": [
+   1,
+   4
+  ],
+  "pillar": [
+   2,
+   4
+  ],
+  "straw": [
+   3,
+   4
   ]
  },
  "_doc": "Disposition de assets/textures/blocks_atlas.png (généré par tools/style/atlas.py, palette B validée)."

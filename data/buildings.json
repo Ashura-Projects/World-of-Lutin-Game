@@ -1049,6 +1049,667 @@
         "claim"
       ],
       "_note": "revendique les colonnes autour (coûte de l'or)"
+    },
+    {
+      "id": "fireplace",
+      "name": "Cheminée (foyer)",
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "cost": {
+        "stone": 6,
+        "clay": 2
+      },
+      "build_time": 12,
+      "available_from_start": true,
+      "object": true,
+      "tags": [
+        "hearth",
+        "light",
+        "decor"
+      ],
+      "warmth": 1,
+      "_note": "chauffe la pièce ; posez des conduits de cheminée au-dessus"
+    },
+    {
+      "id": "wall_torch",
+      "name": "Torche murale",
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "cost": {
+        "log": 1
+      },
+      "build_time": 6,
+      "available_from_start": true,
+      "object": true,
+      "tags": [
+        "light"
+      ],
+      "on_wall": true
+    },
+    {
+      "id": "standing_torch",
+      "name": "Torche sur pied",
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "cost": {
+        "log": 1,
+        "iron_ingot": 1
+      },
+      "build_time": 6,
+      "available_from_start": true,
+      "object": true,
+      "tags": [
+        "light",
+        "decor"
+      ]
+    },
+    {
+      "id": "brazier_stone",
+      "name": "Brasero en pierre",
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "cost": {
+        "stone": 4,
+        "log": 2
+      },
+      "build_time": 6,
+      "available_from_start": true,
+      "object": true,
+      "tags": [
+        "light",
+        "decor"
+      ],
+      "warmth": 1
+    },
+    {
+      "id": "brazier_iron",
+      "name": "Brasero en fer",
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "cost": {
+        "iron_ingot": 2,
+        "log": 2
+      },
+      "build_time": 6,
+      "available_from_start": true,
+      "object": true,
+      "tags": [
+        "light",
+        "decor"
+      ],
+      "warmth": 1
+    },
+    {
+      "id": "double_bed",
+      "name": "Lit double",
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "cost": {
+        "plank": 6,
+        "cloth": 3
+      },
+      "build_time": 10,
+      "available_from_start": true,
+      "object": true,
+      "tags": [
+        "bed",
+        "decor"
+      ],
+      "sleeps": 2
+    },
+    {
+      "id": "nightstand",
+      "name": "Table de chevet",
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "cost": {
+        "plank": 2
+      },
+      "build_time": 6,
+      "available_from_start": true,
+      "object": true,
+      "tags": [
+        "decor"
+      ]
+    },
+    {
+      "id": "bookshelf",
+      "name": "Bibliothèque",
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "cost": {
+        "plank": 5
+      },
+      "build_time": 6,
+      "available_from_start": true,
+      "object": true,
+      "tags": [
+        "decor",
+        "storage"
+      ]
+    },
+    {
+      "id": "stool",
+      "name": "Tabouret",
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "cost": {
+        "plank": 1
+      },
+      "build_time": 6,
+      "available_from_start": true,
+      "object": true,
+      "tags": [
+        "seat"
+      ]
+    },
+    {
+      "id": "armchair",
+      "name": "Fauteuil",
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "cost": {
+        "plank": 2,
+        "cloth": 2
+      },
+      "build_time": 6,
+      "available_from_start": true,
+      "object": true,
+      "tags": [
+        "seat",
+        "decor"
+      ]
+    },
+    {
+      "id": "cupboard",
+      "name": "Buffet",
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "cost": {
+        "plank": 4
+      },
+      "build_time": 6,
+      "available_from_start": true,
+      "object": true,
+      "tags": [
+        "storage",
+        "decor"
+      ]
+    },
+    {
+      "id": "candelabra",
+      "name": "Candélabre",
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "cost": {
+        "iron_ingot": 1
+      },
+      "build_time": 6,
+      "available_from_start": true,
+      "object": true,
+      "tags": [
+        "light",
+        "decor"
+      ]
+    },
+    {
+      "id": "statue",
+      "name": "Statue",
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "cost": {
+        "cut_stone": 6
+      },
+      "build_time": 15,
+      "available_from_start": true,
+      "object": true,
+      "tags": [
+        "decor"
+      ]
+    },
+    {
+      "id": "iron_door",
+      "name": "Porte en fer",
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "cost": {
+        "iron_ingot": 3
+      },
+      "build_time": 6,
+      "available_from_start": true,
+      "object": true,
+      "tags": [
+        "door"
+      ]
+    },
+    {
+      "id": "double_door",
+      "name": "Grande porte",
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "cost": {
+        "plank": 6,
+        "iron_ingot": 1
+      },
+      "build_time": 6,
+      "available_from_start": true,
+      "object": true,
+      "tags": [
+        "door"
+      ]
+    },
+    {
+      "id": "carpet_red",
+      "name": "Tapis rouge",
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "cost": {
+        "cloth": 2
+      },
+      "build_time": 6,
+      "available_from_start": true,
+      "object": true,
+      "tags": [
+        "decor"
+      ]
+    },
+    {
+      "id": "carpet_blue",
+      "name": "Tapis bleu",
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "cost": {
+        "cloth": 2
+      },
+      "build_time": 6,
+      "available_from_start": true,
+      "object": true,
+      "tags": [
+        "decor"
+      ]
+    },
+    {
+      "id": "carpet_green",
+      "name": "Tapis vert",
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "cost": {
+        "cloth": 2
+      },
+      "build_time": 6,
+      "available_from_start": true,
+      "object": true,
+      "tags": [
+        "decor"
+      ]
+    },
+    {
+      "id": "carpet_fur",
+      "name": "Tapis de fourrure",
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "cost": {
+        "hide": 2
+      },
+      "build_time": 6,
+      "available_from_start": true,
+      "object": true,
+      "tags": [
+        "decor"
+      ]
+    },
+    {
+      "id": "tapestry_red",
+      "name": "Tapisserie rouge",
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "cost": {
+        "cloth": 3
+      },
+      "build_time": 6,
+      "available_from_start": true,
+      "object": true,
+      "tags": [
+        "decor"
+      ],
+      "on_wall": true
+    },
+    {
+      "id": "tapestry_blue",
+      "name": "Tapisserie bleue",
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "cost": {
+        "cloth": 3
+      },
+      "build_time": 6,
+      "available_from_start": true,
+      "object": true,
+      "tags": [
+        "decor"
+      ],
+      "on_wall": true
+    },
+    {
+      "id": "tapestry_gold",
+      "name": "Tapisserie dorée",
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "cost": {
+        "cloth": 3,
+        "gold": 1
+      },
+      "build_time": 6,
+      "available_from_start": true,
+      "object": true,
+      "tags": [
+        "decor"
+      ],
+      "on_wall": true
+    },
+    {
+      "id": "tapestry_hunt",
+      "name": "Tapisserie de chasse",
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "cost": {
+        "cloth": 4
+      },
+      "build_time": 6,
+      "available_from_start": true,
+      "object": true,
+      "tags": [
+        "decor"
+      ],
+      "on_wall": true
+    },
+    {
+      "id": "tapestry_faction",
+      "name": "Tapisserie aux armes",
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "cost": {
+        "cloth": 3
+      },
+      "build_time": 6,
+      "available_from_start": true,
+      "object": true,
+      "tags": [
+        "decor",
+        "banner"
+      ],
+      "on_wall": true
+    },
+    {
+      "id": "dice_table",
+      "name": "Table de dés",
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "cost": {
+        "plank": 3
+      },
+      "build_time": 6,
+      "available_from_start": true,
+      "object": true,
+      "tags": [
+        "leisure"
+      ]
+    },
+    {
+      "id": "chess_table",
+      "name": "Table d'échecs",
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "cost": {
+        "plank": 3,
+        "stone": 1
+      },
+      "build_time": 6,
+      "available_from_start": true,
+      "object": true,
+      "tags": [
+        "leisure"
+      ]
+    },
+    {
+      "id": "card_table",
+      "name": "Table de cartes",
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "cost": {
+        "plank": 3,
+        "cloth": 1
+      },
+      "build_time": 6,
+      "available_from_start": true,
+      "object": true,
+      "tags": [
+        "leisure"
+      ]
+    },
+    {
+      "id": "bar_counter",
+      "name": "Comptoir de bar",
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "cost": {
+        "plank": 5,
+        "barrel_item": 1
+      },
+      "build_time": 10,
+      "available_from_start": true,
+      "object": true,
+      "tags": [
+        "bar",
+        "leisure"
+      ]
+    },
+    {
+      "id": "water_trough",
+      "name": "Abreuvoir",
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "cost": {
+        "plank": 3
+      },
+      "build_time": 6,
+      "available_from_start": true,
+      "object": true,
+      "tags": [
+        "trough"
+      ]
+    },
+    {
+      "id": "feeder",
+      "name": "Mangeoire",
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "cost": {
+        "plank": 3
+      },
+      "build_time": 6,
+      "available_from_start": true,
+      "object": true,
+      "tags": [
+        "feeder"
+      ]
+    },
+    {
+      "id": "portcullis",
+      "name": "Herse (2 × 3)",
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "cost": {
+        "iron_ingot": 6,
+        "beam": 2
+      },
+      "build_time": 30,
+      "available_from_start": true,
+      "object": true,
+      "tags": [
+        "gate"
+      ],
+      "gate": "portcullis",
+      "_note": "se pose au pied d'une ouverture de 2 de large et 3 de haut ; toucher = ouvrir/fermer/verrouiller"
+    },
+    {
+      "id": "drawbridge",
+      "name": "Pont-levis",
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "cost": {
+        "plank": 4,
+        "beam": 2,
+        "iron_ingot": 2
+      },
+      "build_time": 30,
+      "available_from_start": true,
+      "object": true,
+      "tags": [
+        "gate"
+      ],
+      "gate": "drawbridge",
+      "_note": "largeur et longueur 1 à 4 (boutons L/P) ; se pose au bord ; toucher = baisser/lever/verrouiller"
+    },
+    {
+      "id": "brewery",
+      "name": "Brasserie",
+      "size": [
+        2,
+        2,
+        2
+      ],
+      "cost": {
+        "plank": 10,
+        "barrel_item": 2,
+        "stone": 4
+      },
+      "station": "brewery",
+      "staff": 1,
+      "job": "cook",
+      "build_time": 20,
+      "tags": [
+        "workstation"
+      ],
+      "available_from_start": true
+    },
+    {
+      "id": "wine_press",
+      "name": "Pressoir",
+      "size": [
+        2,
+        2,
+        2
+      ],
+      "cost": {
+        "plank": 8,
+        "beam": 2,
+        "barrel_item": 1
+      },
+      "station": "wine_press",
+      "staff": 1,
+      "job": "cook",
+      "build_time": 20,
+      "tags": [
+        "workstation"
+      ],
+      "available_from_start": true
     }
   ]
 }

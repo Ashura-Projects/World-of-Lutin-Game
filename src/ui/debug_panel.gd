@@ -69,6 +69,7 @@ func refresh() -> void:
 		[
 			["Mode dieu : %s" % ("OUI" if r.god_mode else "non"), _toggle_god],
 			["Construction libre : %s" % ("OUI" if r.free_build else "non"), _toggle_free],
+			["Creuser instantané : %s" % ("OUI" if r.free_dig else "non"), _toggle_dig],
 			[
 				"Finir les constructions",
 				func() -> void: _say("%d plan(s) terminé(s)." % DebugTools.finish_builds(_sim()))
@@ -132,6 +133,11 @@ func _meet_all() -> void:
 
 func _toggle_god() -> void:
 	_sim().rules.god_mode = not _sim().rules.god_mode
+	refresh.call_deferred()
+
+
+func _toggle_dig() -> void:
+	_sim().rules.free_dig = not _sim().rules.free_dig
 	refresh.call_deferred()
 
 
