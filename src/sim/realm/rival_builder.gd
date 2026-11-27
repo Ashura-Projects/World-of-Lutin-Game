@@ -21,7 +21,7 @@ static func schema(id: String) -> Dictionary:
 static func effect(st: Dictionary, key: String) -> float:
 	var v := 0.0
 	for b: Dictionary in st.get("buildings", []):
-		v += float(schema(str(b["id"])).get("effects", {}).get(key, 0.0))
+		v += float(schema(str(b["id"])).get("effects", {}).get(key, 0.0)) * int(b.get("level", 1))  # amélioré : × niveau
 	return v
 
 
@@ -65,18 +65,27 @@ static func daily(rv: Rivals, st: Dictionary) -> void:
 	if not st.has("buildings"):
 		st["buildings"] = []
 		st["plan_i"] = 0
+	RivalEconomy.daily(st)  # 1.4.1 : métiers, production, repas, ventes
 	var order: Array = cfg().get("build_order", [])
 	if order.is_empty() or int(st["population"]) < int(r.get("build_min_population", 4)):
 		return
-	var sc := schema(str(order[int(st["plan_i"]) % order.size()]))
-	if not sc.is_empty() and float(st["wealth"]) >= float(sc.get("cost", 30)):
-		var spot := _spot(rv, st, int(r.get("spacing", 9)))
-		if spot.y > 0:
-			stamp(rv.world, rv.flora, spot, sc)
-			st["wealth"] = float(st["wealth"]) - float(sc.get("cost", 30))
-			st["buildings"].append({"id": sc["id"], "cell": [spot.x, spot.y, spot.z]})
-			st["plan_i"] = int(st["plan_i"]) + 1
-			rv.territory.claim(spot, 1, st["id"])
+	var done := int(st["plan_i"]) >= order.size()
+	if done and RivalEconomy.upgrade(st) != "":
+		pass  # plan fini : on améliore d'abord ce qu'on a
+	else:
+		var sc := schema(str(order[int(st["plan_i"]) % order.size()]))
+		var mats: Dictionary = sc.get("materials", {})
+		if not sc.is_empty() and float(st["wealth"]) >= float(sc.get("cost", 30)) and RivalEconomy.pay(st, mats):
+			var spot := _spot(rv, st, int(r.get("spacing", 9)))
+			if spot.y > 0:
+				stamp(rv.world, rv.flora, spot, sc)
+				st["wealth"] = float(st["wealth"]) - float(sc.get("cost", 30))
+				st["buildings"].append({"id": sc["id"], "cell": [spot.x, spot.y, spot.z], "level": 1})
+				st["plan_i"] = int(st["plan_i"]) + 1
+				rv.territory.claim(spot, 1, st["id"])
+			else:
+				for k: String in mats:  # pas de place : matériaux rendus
+					st["stock"][k] = float(st["stock"].get(k, 0.0)) + float(mats[k])
 	# règles : revenus et soldats en plus selon les bâtiments, ville avec un château
 	st["wealth"] = float(st["wealth"]) + effect(st, "wealth")
 	st["city"] = int(st["population"]) >= int(r.get("city_population", 50)) and effect(st, "city") > 0.0
@@ -84,7 +93,10 @@ static func daily(rv: Rivals, st: Dictionary) -> void:
 
 ## Bonus de croissance (nourriture des champs et greniers) pour Rivals.daily.
 static func growth_bonus(st: Dictionary) -> float:
-	return effect(st, "food") * float(cfg().get("ai_rules", {}).get("food_growth_mult", 1.0))
+	return (
+		effect(st, "food") * float(cfg().get("ai_rules", {}).get("food_growth_mult", 1.0))
+		+ RivalEconomy.growth_bonus(st)
+	)
 
 
 ## Emplacement en spirale autour du centre, sur un sol plat et sec.

@@ -82,6 +82,10 @@ static func _faction(p: RealmPanel, r: Realm, f: Dictionary, acts: Array) -> voi
 			info.text += " · PROPOSE LA PAIX"
 	info.add_theme_color_override("font_color", Color(str(lv.get("color", "a0a0a0"))))
 	row.add_child(info)
+	if Rivals.active != null and Rivals.active.states.has(id):
+		var st2: Dictionary = Rivals.active.states[id]
+		var town := "Ville" if st2.get("city", false) else "Village"
+		p._label("%s · %s" % [town, RivalEconomy.summary(st2)], 15, UiStyle.TXT_D)
 	if r.status(id) == "conquered":
 		return
 	var flow := HFlowContainer.new()

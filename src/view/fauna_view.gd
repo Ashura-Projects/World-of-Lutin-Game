@@ -9,7 +9,7 @@ var _t: float = 0.0
 
 func bind(f: Fauna) -> void:
 	_fauna = f
-	f.animal_added.connect(_add)
+	f.animal_added.connect(_add, CONNECT_DEFERRED)  # différé : le métier d'un villageois est connu ensuite
 	f.animal_removed.connect(
 		func(id: int) -> void:
 			if _nodes.has(id):
@@ -82,7 +82,11 @@ static func model(kind: String) -> Node3D:
 
 
 func _add(a: Dictionary) -> void:
+	if not _fauna.animals.has(a):
+		return  # déjà retiré avant d'être affiché
 	var m := HorseModel.build(int(a["id"]), a.get("owned", false)) if a["kind"] == "horse" else model(a["kind"])
+	if a.has("npc_job") and NpcLook.is_npc(a["kind"]):
+		m = NpcLook.build(a["kind"], str(a["npc_job"]))
 	m.position = a["pos"]
 	add_child(m)
 	_nodes[a["id"]] = m

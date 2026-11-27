@@ -133,7 +133,21 @@ func _spawn_villagers(st: Dictionary) -> void:
 	var vcfg: Dictionary = _cfg.get("village", {})
 	var want := mini(int(vcfg.get("villagers_shown_max", 8)), int(st["population"]))
 	for _i in maxi(0, want - units_of(st["id"], "villager_").size()):
-		_spawn("villager_" + str(st["id"]), st["center"], int(vcfg.get("roam", 12)))
+		var a := _spawn("villager_" + str(st["id"]), st["center"], int(vcfg.get("roam", 12)))
+		if not a.is_empty():
+			a["npc_job"] = _pick_job(st)  # 1.4.1 : chaque villageois a un métier (tenue et outil)
+
+
+## Métier d'un villageois tiré selon la répartition du village (RivalEconomy).
+func _pick_job(st: Dictionary) -> String:
+	if not st.has("jobs"):
+		RivalEconomy.assign_jobs(st)
+	var pool := []
+	for k: String in st["jobs"]:
+		if k != "soldier":
+			for _i in int(st["jobs"][k]):
+				pool.append(k)
+	return str(pool[Rng.randi_range(0, pool.size() - 1)]) if not pool.is_empty() else "farmer"
 
 
 ## Le village grandit : une nouvelle maison dès que la population dépasse la place.
@@ -383,6 +397,15 @@ func from_dict(d: Dictionary) -> void:
 		for k: String in ["population", "soldiers", "war_days", "last_raid"]:
 			st[k] = int(e.get(k, 0))
 		st["wealth"] = float(e.get("wealth", 0))
+		if e.has("jobs"):
+			var jobs := {}
+			for k: String in e["jobs"]:
+				jobs[k] = int(e["jobs"][k])
+			st["jobs"] = jobs
+		if e.has("plan_i"):
+			st["plan_i"] = int(e["plan_i"])
+		for b: Dictionary in st.get("buildings", []):
+			b["level"] = int(b.get("level", 1))
 		states[st["id"]] = st
 	won = bool(d.get("won", false))
 	active = self

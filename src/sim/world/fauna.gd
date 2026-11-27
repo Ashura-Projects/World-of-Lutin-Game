@@ -24,6 +24,7 @@ const EXTRA_KEYS := [
 	"rider",
 	"hungry",
 	"target_faction",
+	"npc_job",
 	"battle"
 ]
 

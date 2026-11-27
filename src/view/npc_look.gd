@@ -13,7 +13,8 @@ static func is_npc(kind: String) -> bool:
 	)
 
 
-static func build(kind: String) -> Node3D:
+## job : métier d'un villageois (farmer, woodcutter, miner, artisan, builder) : sa tenue et son chapeau.
+static func build(kind: String, job: String = "") -> Node3D:
 	if kind.begins_with("bandit"):  # bandits : lutins gris, capuche et haillons sombres
 		var b := LutinModel.new()
 		b.skin_override = "9a9a9e"
@@ -26,5 +27,10 @@ static func build(kind: String) -> Node3D:
 	m.skin_override = str(fd.get("skin", "466ca0"))
 	var soldier := parts[0] == "soldier"
 	m.tunic_override = str(fd.get("color", "888888")) if soldier else str(fd.get("tunic", "6a5a48"))
-	m.build("militia" if soldier else ("farmer" if parts[0] == "villager" else "hauler"))
+	var outfit := {
+		"farmer": "farmer", "woodcutter": "woodcutter", "miner": "miner", "artisan": "smith", "builder": "builder"
+	}
+	m.build("militia" if soldier else (str(outfit.get(job, "farmer")) if parts[0] == "villager" else "hauler"))
+	if job != "" and not soldier:
+		m.set_meta("npc_job", job)
 	return m
