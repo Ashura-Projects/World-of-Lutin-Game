@@ -21,7 +21,7 @@ TILES = [
     "iron_ore", "coal_ore", "snow", "snow_side", "water", "wood_top", "wood_side", "plank",
     "cobble", "cut_stone", "brick", "thatch_top", "thatch_side", "dirt_packed", "ice", "leaves",
     "gravel", "deep_stone", "beam", "road_stone", "field_wet", "gold_ore", "crenel", "rampart",
-    "rampart_plain", "flue_top", "pillar", "straw",
+    "rampart_plain", "flue_top", "pillar", "straw", "glass", "stained",
 ]
 
 PALETTES = {
@@ -230,6 +230,24 @@ def make_tile(name, p, rng):
                         if d < 1.0:
                             hl = 1.12 if (x - cx) + (y - cy) < -2 else (0.86 if (x - cx) + (y - cy) > 3 else 1.0)
                             img.putpixel((x % TILE, y % TILE), shade(p["cobble"], f * hl + rng.uniform(-0.03, 0.03)))
+    elif name == "glass":
+        for y in range(TILE):
+            for x in range(TILE):
+                f = 1.0 + 0.08 * ((x + y) % 11 == 0) + rng.uniform(-0.02, 0.02)
+                img.putpixel((x, y), shade((178, 210, 222), f))
+        for i in range(TILE):
+            img.putpixel((i, TILE // 2), (90, 90, 96))
+            img.putpixel((TILE // 2, i), (90, 90, 96))
+    elif name == "stained":
+        cols = [(170, 40, 40), (40, 70, 170), (200, 170, 50), (50, 130, 70), (130, 50, 140)]
+        for y in range(TILE):
+            for x in range(TILE):
+                cell = ((x // 6) * 3 + (y // 6) * 5) % len(cols)
+                img.putpixel((x, y), shade(cols[cell], 1.0 + rng.uniform(-0.05, 0.05)))
+        for i in range(TILE):
+            for k in range(0, TILE, 6):
+                img.putpixel((i, k), (40, 36, 40))
+                img.putpixel((k, i), (40, 36, 40))
     elif name == "straw":
         c = p["thatch"]
         noise_fill(img, shade(c, 0.9), 0.05, rng)

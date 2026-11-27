@@ -16,7 +16,8 @@ var world: VoxelWorld
 var camera: CameraController
 var history: EditHistory
 var shape_code: int = 0  # forme des blocs posés (ShapeMesh) × 4 + sens
-var gate_size := Vector2i(2, 2)  # pont-levis : largeur × longueur
+var gate_size := Vector2i(2, 2)
+var last_normal := Vector3i.UP  # face touchée (la gomme retire l'objet posé devant)  # pont-levis : largeur × longueur
 var max_y: int = 9999
 ## Appelé à la place d'une pose instantanée (J5 : plans pour les bâtisseurs). Signature : (cells, id, erase).
 var place_handler: Callable
@@ -69,7 +70,11 @@ func target_cell(screen: Vector2) -> Dictionary:
 	if not r["hit"]:
 		return {"ok": false}
 	var p: Vector3i = r["pos"]
-	return {"ok": true, "cell": p if mode in [Mode.ERASE, Mode.ROAD] else p + r["normal"]}
+	var into: bool = (
+		mode in [Mode.ERASE, Mode.ROAD] or (mode != Mode.OBJECT and shape_code / 4 >= ShapeMesh.Shape.WINDOW_OPEN)
+	)
+	last_normal = r["normal"]
+	return {"ok": true, "cell": p if into else p + r["normal"], "normal": r["normal"]}  # fenêtre : dans le mur touché
 
 
 ## Case sous le doigt dans le plan horizontal du début du tracé (lignes, rectangles, murs).

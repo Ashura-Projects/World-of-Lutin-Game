@@ -31,11 +31,11 @@ static func fill(p: RealmPanel) -> void:
 	var couples: int = game.colony.lutins.filter(func(l: Lutin) -> bool: return l.sex == "f" and l.spouse >= 0).size()
 	p._label(
 		(
-			"Chapelles %d · Églises %d · Autels %d — %d fidèles par office · Foi moyenne %d %% · Couples mariés %d"
+			"Chapelles %d · Églises %d · Cathédrales %d — %d fidèles par office · Foi moyenne %d %% · Couples mariés %d"
 			% [
-				game.sim.structures.built_with_tag("chapel").size(),
-				game.sim.structures.built_with_tag("church").size(),
-				game.sim.structures.built_with_tag("altar").size(),
+				rel.temples().count("chapel_room"),
+				rel.temples().count("church_room"),
+				rel.temples().count("cathedral_room"),
 				rel.capacity(),
 				int(faith),
 				couples
@@ -44,10 +44,16 @@ static func fill(p: RealmPanel) -> void:
 		19
 	)
 	if not rel.has_temple():
-		p._label(
-			"Construisez une chapelle ou une église (Construire › Bâtiments) pour ordonner des prêtres.",
-			18,
-			UiStyle.TXT_D
+		(
+			p
+			. _label(
+				(
+					"Lieu de culte = pièce fermée : chapelle (2 bancs d'église, 1 pupitre, 1 autel) ; église (6 bancs, "
+					+ "pupitre, autel, 1 vitrail) ; cathédrale (12 bancs, pupitre, autel, cloche, 4 vitraux). Voir ⚙ › Guide."
+				),
+				18,
+				UiStyle.TXT_D
+			)
 		)
 	_clergy(p, game, rel)
 	if rel.can_customize():

@@ -130,6 +130,8 @@ func place_blueprints(cells: Array, block_id: int, erase: bool, shape: int = 0) 
 				if id >= 0:
 					batch.append(id)
 					n += 1
+		elif shape / 4 >= 10 and world.is_solid(p):
+			n += int(WindowMaker.make(self, p, block_id, shape))
 		else:
 			var id := add_build_block(p, block_id, shape)
 			if id >= 0:

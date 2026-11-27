@@ -415,7 +415,7 @@
     },
     {
       "id": "crenel",
-      "name": "Créneau",
+      "name": "Créneau (demi-bloc)",
       "solid": true,
       "cost": {
         "stone": 2
@@ -426,8 +426,9 @@
         "side": "crenel",
         "bottom": "cut_stone"
       },
-      "_note": "un soldat posté à côté d'un créneau prend moitié moins de dégâts et tire plus loin",
-      "num": 32
+      "_note": "demi-hauteur : on tire par-dessus ; un soldat à côté prend moitié moins de dégâts et tire plus loin",
+      "num": 32,
+      "default_shape": 1
     },
     {
       "id": "rampart",

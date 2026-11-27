@@ -17,6 +17,7 @@ const CATEGORIES := [
 	["buildings", "Bâtiments"],
 	["defense", "Défense"],
 	["stable", "Écurie"],
+	["windows", "Fenêtres"],
 	["religion", "Religion"],
 ]
 # gdformat: off
@@ -58,12 +59,13 @@ const DEFENSE := [
 	"bridge_deck",
 	"portcullis",
 	"drawbridge",
-	"barracks",
+	"catapult",
 	"watchtower",
 	"claim_post",
 	"weapon_rack"
 ]
-const RELIGION := ["chapel", "church", "altar", "church_bell"]
+const WINDOW_FRAMES := ["plank_block", "wood_block", "stone_block", "cut_stone_block", "brick_block"]
+const RELIGION := ["pew", "lectern", "small_altar", "altar", "church_bell"]
 # gdformat: on
 
 var tool: BuildTool
@@ -76,6 +78,7 @@ var _choice_buttons: Dictionary = {}  # bouton -> id (pour les verrous de techno
 var _mode_buttons: Dictionary = {}
 var _height_label: Label
 var _move_btn: Button
+var window_type: int = ShapeMesh.Shape.WINDOW_GLASS
 var _shape_btn: Button
 var _rot_btn: Button
 var _gate_row: HBoxContainer
@@ -131,7 +134,7 @@ func setup(t: BuildTool, b: TaskBoard) -> void:
 		b2.text = m[1]
 		b2.custom_minimum_size = Vector2(118, 54)
 		b2.add_theme_font_size_override("font_size", 19)
-		b2.pressed.connect(_select_mode.bind(int(m[0])))
+		b2.pressed.connect(_on_mode.bind(int(m[0])))
 		row.add_child(b2)
 		_mode_buttons[int(m[0])] = b2
 	row.add_child(_small("−", func() -> void: _height(-1)))
@@ -214,6 +217,27 @@ func show_category(cat: String) -> void:
 				if (cat == "ground") != (GROUND.has(b["id"]) or b.get("surface", false)):
 					continue
 				_add_block_choice(b)
+		"windows":
+			for wt: Array in [
+				[ShapeMesh.Shape.WINDOW_OPEN, "Ouverture"],
+				[ShapeMesh.Shape.WINDOW_GLASS, "Vitre"],
+				[ShapeMesh.Shape.WINDOW_STAINED, "Vitrail"]
+			]:
+				var tb := Button.new()
+				tb.text = "Type : %s" % wt[1]
+				tb.custom_minimum_size = Vector2(230, 62)
+				var wid: int = wt[0]
+				tb.pressed.connect(
+					func() -> void:
+						window_type = wid
+						show_category("windows")
+				)
+				if wid == window_type:
+					tb.add_theme_stylebox_override("normal", UiStyle.box(UiStyle.BLOOD, UiStyle.GOLD))
+				_choices.add_child(tb)
+			for b: Dictionary in DataRegistry.get_table("blocks").get("blocks", []):
+				if WINDOW_FRAMES.has(b["id"]):
+					_add_block_choice(b)
 		"defense", "stable":
 			var list: Array = DEFENSE if cat == "defense" else STABLE
 			for b: Dictionary in DataRegistry.get_table("blocks").get("blocks", []):
@@ -270,6 +294,8 @@ func _add_block_choice(b: Dictionary) -> void:
 
 
 func _add_object_choice(b: Dictionary) -> void:
+	if b.get("hidden", false):
+		return  # anciens bâtiments entiers (chapelle, église, caserne, cimetière) : remplacés par des pièces
 	var btn := Button.new()
 	var cost := []
 	for k: String in b.get("cost", {}):
@@ -284,6 +310,13 @@ func _add_object_choice(b: Dictionary) -> void:
 
 func _choose_block(n: int, label: String, surface: bool) -> void:
 	tool.material_id = n
+	if category == "windows":
+		# fenêtre : le cadre dans ce matériau ; « Ligne » / « Remplir » sur un mur = fenêtre de la taille voulue
+		var rot := posmod(roundi(-tool.camera.yaw / (PI / 2.0)), 2)
+		_set_shape(window_type, rot)
+		label = "%s (%s)" % [ShapeMesh.NAMES[window_type], label]
+	elif tool.shape_code / 4 >= ShapeMesh.BUILD_SHAPES:
+		_set_shape(0, 0)
 	if surface:
 		_select_mode(BuildTool.Mode.ROAD)
 	elif tool.mode in [BuildTool.Mode.ROAD, BuildTool.Mode.OBJECT, BuildTool.Mode.ERASE]:
@@ -319,12 +352,19 @@ func _select_mode(m: int) -> void:
 
 ## Forme des blocs posés (ShapeMesh) : un toucher passe à la forme suivante ; « Sens » tourne d'un quart de tour.
 func _set_shape(shape: int, rot: int) -> void:
-	shape = shape % ShapeMesh.NAMES.size()
+	shape = shape % (ShapeMesh.BUILD_SHAPES if shape < ShapeMesh.BUILD_SHAPES else ShapeMesh.NAMES.size())
 	rot = rot % 4
 	tool.shape_code = shape * 4 + rot if shape > 0 else 0
 	_shape_btn.text = "Forme : %s" % ShapeMesh.NAMES[shape]
 	_rot_btn.text = "⟳ Sens %d" % (rot + 1)
 	_rot_btn.disabled = shape in [0, 1, 2]
+
+
+## Bouton de mode : la Gomme réduit aussi le menu en bulle (on voit ce qu'on gomme).
+func _on_mode(m: int) -> void:
+	_select_mode(m)
+	if m == BuildTool.Mode.ERASE:
+		_selected("Gomme")
 
 
 ## Pont-levis : largeur et longueur (1 à 4), lues quand on le pose.

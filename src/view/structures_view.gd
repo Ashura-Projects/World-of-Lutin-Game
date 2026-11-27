@@ -28,6 +28,19 @@ func bind(s: Structures) -> void:
 	refresh()
 
 
+## Les catapultes bougent (poussées) et tournent : position et orientation suivies à chaque image.
+func _process(delta: float) -> void:
+	if _st == null:
+		return
+	for id: int in _nodes:
+		var s: Dictionary = _st.items.get(id, {})
+		if s.is_empty() or s["kind"] != "catapult":
+			continue
+		var n: Node3D = _nodes[id][0]
+		n.position = n.position.lerp(Vector3(s["cell"]) + Vector3(0.5, 0, 0.5), minf(1.0, delta * 5.0))
+		n.rotation.y = lerp_angle(n.rotation.y, float(s.get("yaw", 0.0)), minf(1.0, delta * 5.0))
+
+
 func refresh() -> void:
 	for id: int in _nodes.keys():
 		if not _st.items.has(id) or _nodes[id][1] != _st.items[id]["built"]:
@@ -39,6 +52,10 @@ func refresh() -> void:
 		var n := model(s["kind"])
 		n.position = Vector3(s["cell"]) + Vector3(0.5, 0, 0.5)
 		n.rotation.y = _facing(s["cell"])
+		if Structures.def(s["kind"]).get("tags", []).has("door"):
+			n.rotation.y = 0.0 if int(s.get("rot", 0)) % 2 == 0 else -PI / 2.0  # dans l'axe de la porte animée
+		elif s["kind"] == "catapult":
+			n.rotation.y = float(s.get("yaw", 0.0))
 		if not s["built"]:
 			_ghostify(n)
 		add_child(n)
@@ -84,6 +101,8 @@ static func model(kind: String) -> Node3D:
 	var bm := BuildingModels.build(kind)
 	if bm != null:
 		return bm
+	if Structures.def(kind).get("tags", []).has("door"):
+		return DecorModels.door_frame(kind)  # le battant animé est dessiné par GatesView
 	var dm := DecorModels.build(kind)
 	if dm != null:
 		return dm

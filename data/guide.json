@@ -1,0 +1,55 @@
+{
+  "_doc": "Guide du jeu (menu pause ⚙ › Guide et accueil › Guide). La section « Pièces » est complétée automatiquement depuis data/rooms.json.",
+  "sections": [
+    {
+      "id": "start",
+      "title": "Bien débuter",
+      "text": "Vos lutins arrivent avec une charrette (la réserve principale). Montez des tentes et un feu de camp, coupez du bois (Récolter), puis construisez une maison : murs, toit, porte et lit. Une pièce fermée (murs + toit, porte comprise) est reconnue automatiquement selon ce qu'elle contient. Le Tutoriel (accueil › Jouer) guide pas à pas."
+    },
+    {
+      "id": "rooms",
+      "title": "Pièces et bâtiments",
+      "text": "Les bâtiments se construisent en blocs : c'est le contenu d'une pièce fermée qui en fait une chapelle, une église, une caserne… Seule la tour de guet est un bâtiment tout fait. Règles :"
+    },
+    {
+      "id": "barracks",
+      "title": "Caserne et soldats",
+      "text": "Une caserne = deux pièces : une Garnison (au moins 3 lits, un coffre, un râtelier d'armes) et un Réfectoire (foyer, table, bancs). Elle donne 4 places de soldats en plus. Les soldats libres s'entraînent sur le Sol d'entraînement ; postés derrière des créneaux (demi-blocs), ils prennent moitié moins de dégâts et tirent plus loin. À cheval, les lanciers chargent (plus de dégâts et d'allonge)."
+    },
+    {
+      "id": "faith",
+      "title": "Religion",
+      "text": "Chapelle : 2 bancs d'église, 1 pupitre, 1 autel (10 fidèles par office). Église : 6 bancs, pupitre, autel et au moins 1 vitrail (40). Cathédrale : 12 bancs, pupitre, autel, cloche et 4 vitraux (120). Les vitraux sont des fenêtres « Vitrail » posées dans les murs de la pièce. Il faut un lieu de culte pour ordonner des prêtres."
+    },
+    {
+      "id": "windows",
+      "title": "Fenêtres",
+      "text": "Construire › Fenêtres : choisissez le type (Ouverture, Vitre, Vitrail) puis le matériau du cadre ; touchez un mur construit pour y percer la fenêtre. En mode Ligne ou Remplir, faites des fenêtres de la taille voulue (1×1, 2×1, 2×2…). Vitre et vitrail coûtent 1 verre."
+    },
+    {
+      "id": "doors",
+      "title": "Portes, herses, ponts-levis",
+      "text": "Touchez une porte, une herse ou un pont-levis : ouvrir, fermer, verrouiller (🔒), démonter. Une porte non verrouillée laisse passer les lutins (elle s'ouvre toute seule). Verrouillée, plus personne ne passe : les orcs doivent la casser. La Gomme démonte aussi les objets touchés."
+    },
+    {
+      "id": "cemetery",
+      "title": "Cimetière",
+      "text": "Zones › Cimetière : désignez des cases. Les lutins morts y sont enterrés et une pierre tombale apparaît (touchez-la pour lire le nom)."
+    },
+    {
+      "id": "defense",
+      "title": "Défense et siège",
+      "text": "Orcs et ennemis cassent les blocs construits pour entrer ; ce qui n'a plus d'appui s'effondre. Remparts (avec ou sans meurtrière), créneaux, herses et ponts-levis protègent. La catapulte (Construire › Défense) : touchez-la pour Charger (2 pierres), Tirer sur un endroit dans son angle, Tourner ou Déplacer (2 lutins la poussent et l'orientent)."
+    },
+    {
+      "id": "horses",
+      "title": "Chevaux et loisirs",
+      "text": "Capturez un cheval sauvage (touchez-le) si une mangeoire et un abreuvoir sont bâtis ; donnez de la paille chaque jour. Barre d'ordres › Cheval pour monter. Jeux (dés, échecs, cartes) et bar (bière, vin) remontent le moral des lutins."
+    },
+    {
+      "id": "tips",
+      "title": "Conseils",
+      "text": "• Construisez toujours un toit : sans lui, pas de pièce. • Gardez des réserves de nourriture pour l'hiver. • Des éclaireurs découvrent la carte et les voisins. • Les lits sont libres pour tous ; touchez un lit pour l'attribuer, ou toute une chambre (lit + coffre). • ↩ Retour (en bas à droite ou bouton retour du téléphone) ferme la fenêtre ouverte."
+    }
+  ]
+}

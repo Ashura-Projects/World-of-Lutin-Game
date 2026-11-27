@@ -1,5 +1,24 @@
 # Journal des versions
 
+## 1.3.1 — Pièces, fenêtres, catapultes (2026-11-27)
+- **Portes** : on les touche pour ouvrir, fermer, verrouiller 🔒 ou démonter ; non verrouillées, les lutins passent
+  (elles s'ouvrent devant eux) ; verrouillées, personne ne passe. La **Gomme** démonte portes, grandes portes, herses,
+  ponts-levis et objets touchés ; choisir la Gomme réduit le menu en bulle.
+- **Bâtiments = pièces** (seule la tour de guet reste un bâtiment entier) : chapelle (2 bancs d'église, pupitre,
+  autel), église (6 bancs, pupitre, autel, 1 vitrail), cathédrale (12 bancs, pupitre, autel, cloche, 4 vitraux) ;
+  caserne = garnison (lits, coffre, râtelier) + réfectoire (foyer, table, bancs). Nouveaux objets : banc d'église,
+  pupitre, petit autel. École, bibliothèque et atelier de maître deviennent des objets à poser dans une pièce.
+- **Cimetière** : zone à désigner (Zones › Cimetière) ; les morts y sont enterrés sous une pierre tombale à leur nom.
+- **Créneaux** en demi-bloc. **Fenêtres** (Construire › Fenêtres) : ouverture, vitre ou vitrail, cadre en planches,
+  bois, pierre, pierre taillée ou brique, de la taille voulue (Ligne / Remplir sur un mur).
+- **Chevaux** redessinés (robes variées, crinière, sabots, selle) ; lanciers et soldats **à cheval** : plus de dégâts
+  et d'allonge.
+- **Catapulte** : charger (2 pierres), tirer sur un point dans son angle (le rocher casse les constructions et blesse
+  les ennemis), tourner, déplacer (2 lutins la poussent et l'orientent).
+- **Charrette** orientée dans le sens de la marche, et posée dans cette direction.
+- **Guide** complet (accueil et ⚙) : pièces et règles, bâtiments, fenêtres, portes, défense, religion, conseils.
+- Crédits : **by Ashura**.
+
 ## 1.3.0 — Bâtir, meubler, chevaucher (2026-11-27)
 - **Formes de blocs** (Construire › Forme + Sens) : demi-bloc sol et plafond, escalier, pente de toit, coins de toit
   extérieur et intérieur, angle arrondi, quart de cône et quart de dôme (tours rondes, toits pointus, coupoles).

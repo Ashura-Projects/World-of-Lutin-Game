@@ -139,7 +139,9 @@ func show_gate(g: Dictionary) -> void:
 	_label("État : " + gates.state_text(g), 21)
 	var row := _row()
 	var verb := ""
-	if g["kind"] == "portcullis":
+	if g["kind"] == "door":
+		verb = "Fermer" if g["open"] else "Ouvrir"
+	elif g["kind"] == "portcullis":
 		verb = "Baisser (fermer)" if g["open"] else "Lever (ouvrir)"
 	else:
 		verb = "Lever (couper)" if g["open"] else "Baisser (passer)"
@@ -151,8 +153,14 @@ func show_gate(g: Dictionary) -> void:
 		func() -> void: _act(func() -> void: gates.set_locked(g["id"], not g["locked"])),
 		260
 	)
+	var row2 := _row()
+	_button(row2, "Démonter", func() -> void: _remove_gate(g), 200)
 	if g["locked"]:
-		_label("Verrouillé : impossible de le manœuvrer tant que le cadenas est mis.", 17, UiStyle.TXT_D)
+		_label(
+			"Verrouillé : personne ne passe et on ne peut pas le manœuvrer tant que le cadenas est mis.",
+			17,
+			UiStyle.TXT_D
+		)
 	visible = true
 
 
@@ -171,6 +179,10 @@ func show_structure(s: Dictionary) -> void:
 	_label("Construit" if s["built"] else "En plan (en attente des bâtisseurs)", 19, UiStyle.TXT_D)
 	if s["built"] and int(d.get("sleeps", 0)) > 0:
 		_bed(s, d)
+	if s["built"] and s["kind"] == "catapult":
+		_catapult(s)
+	if str(s.get("epitaph", "")) != "":
+		_label("Ici repose %s." % s["epitaph"], 20, UiStyle.PARCH)
 	var row := _row()
 	_button(row, "Démonter", func() -> void: _remove(s), 200)
 	visible = true
@@ -224,6 +236,51 @@ func _bed(s: Dictionary, d: Dictionary) -> void:
 	_button(
 		row, "Libre pour tous", func() -> void: _act(func() -> void: game.structures.assign_bed(s["id"], [], col)), 200
 	)
+
+
+func _remove_gate(g: Dictionary) -> void:
+	var s: Dictionary = game.structures.items.get(int(g["struct_id"]), {})
+	if not s.is_empty():
+		_remove(s)
+	visible = false
+
+
+## Catapulte : charger, tirer (toucher la cible), tourner, déplacer (2 lutins).
+func _catapult(s: Dictionary) -> void:
+	var cat: Catapults = game.sim.catapults
+	_label(
+		(
+			"État : %s · tir à %d° de chaque côté de l'avant"
+			% [
+				"chargée" if s.get("loaded", false) else "vide",
+				int(DataRegistry.get_table("military")["catapult"].get("arc_deg", 40))
+			]
+		),
+		19
+	)
+	var row := _row()
+	_button(row, "Charger", func() -> void: _say(cat.load(s)), 140)
+	_button(
+		row,
+		"Tirer…",
+		func() -> void:
+			_pick("Touchez la cible", func(c: Vector3i) -> void: EventBus.alert.emit("info", cat.fire(s, c))),
+		140
+	)
+	_button(row, "⟲", func() -> void: _act(func() -> void: cat.rotate(s, 1)), 70)
+	_button(row, "⟳", func() -> void: _act(func() -> void: cat.rotate(s, -1)), 70)
+	_button(
+		row,
+		"Déplacer…",
+		func() -> void:
+			_pick("Touchez où la pousser", func(c: Vector3i) -> void: EventBus.alert.emit("info", cat.move(s, c))),
+		170
+	)
+
+
+func _pick(prompt: String, cb: Callable) -> void:
+	visible = false
+	game.hud.windows.pick_cell(prompt, cb)
 
 
 func _remove(s: Dictionary) -> void:

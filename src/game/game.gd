@@ -80,9 +80,13 @@ func _process(delta: float) -> void:
 		if smoke_view != null:
 			smoke_view.focus = camera.target
 	if _cart != null and colony != null:
+		# la charrette suit le lutin (derrière lui) et s'oriente dans le sens de la marche
+		var yaw := colony.cart_yaw
+		_cart.rotation.y = lerp_angle(_cart.rotation.y, yaw + PI / 2.0, minf(1.0, delta * 5.0))
 		for l: Lutin in colony.lutins:
 			if l.order.get("kind", "") == "cart" and int(l.order["stage"]) == 1:
-				_cart.position = _cart.position.lerp(l.pos + Vector3(0.9, 0, 0), minf(1.0, delta * 6.0))
+				var behind := Vector3(sin(yaw), 0, cos(yaw)) * 1.3
+				_cart.position = _cart.position.lerp(l.pos + behind, minf(1.0, delta * 6.0))
 
 
 func _on_world_ready() -> void:
@@ -120,9 +124,8 @@ func _on_world_ready() -> void:
 	add_child(props_view)
 	_cart = PropsView.cart()
 	props_view.place(_cart, colony.stock.pos + Vector3i(2, 0, 0))
-	colony.cart_moved.connect(
-		func(p: Vector3i) -> void: _cart.position = Vector3(p + Vector3i(2, 0, 0)) + Vector3(0.5, 0, 0.5)
-	)
+	_cart.rotation.y = colony.cart_yaw + PI / 2.0
+	colony.cart_moved.connect(func(p: Vector3i) -> void: _cart.position = Vector3(p) + Vector3(0.5, 0, 0.5))
 	items_view = ItemsView.new()
 	add_child(items_view)
 	items_view.bind(ground)
@@ -143,6 +146,10 @@ func _on_world_ready() -> void:
 	var gates_view := GatesView.new()
 	add_child(gates_view)
 	gates_view.bind(sim.gates)
+	gates_view.colony = colony
+	var shots := ShotsView.new()
+	shots.catapults = sim.catapults
+	add_child(shots)
 	realm_view = RealmView.new()
 	add_child(realm_view)
 	realm_view.bind(sim.orcs, sim.territory, world)
@@ -177,6 +184,10 @@ func _on_world_ready() -> void:
 
 ## Poser des blocs : plans pour les bâtisseurs, ou pose immédiate en « construction libre » (débug).
 func _place(cells: Array, block_id: int, erase: bool) -> int:
+	if erase:
+		cells = cells.filter(func(c: Vector3i) -> bool: return not _erase_object(c))  # portes, objets, herses d'abord
+		if cells.is_empty():
+			return 1
 	var shape: int = build_tool.shape_code if build_tool.mode != BuildTool.Mode.ROAD else 0
 	if sim.rules.free_build or (erase and sim.rules.free_dig):
 		var into_air: bool = not erase and build_tool.mode != BuildTool.Mode.ROAD
@@ -279,6 +290,18 @@ func _on_tap(screen: Vector2) -> void:
 		hud.show_lutin(l)
 		return
 	_pick_object(screen)
+
+
+## Gomme sur un objet (porte, meuble, herse, pont-levis) : il est démonté (matériaux rendus). true si fait.
+func _erase_object(c: Vector3i) -> bool:
+	for q: Vector3i in [c + build_tool.last_normal, c + Vector3i.UP, c]:
+		var g := sim.gates.at(q)
+		if not g.is_empty() and structures.items.has(int(g["struct_id"])):
+			return TaskCancel.remove_structure_at(board, structures.items[int(g["struct_id"])]["cell"])
+		var s := structures.at(q)
+		if not s.is_empty():
+			return TaskCancel.remove_structure_at(board, s["cell"])
+	return false
 
 
 ## Toucher un animal, une herse / un pont-levis ou un objet : son dialogue s'ouvre.

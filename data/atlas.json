@@ -146,6 +146,14 @@
   "straw": [
    3,
    4
+  ],
+  "glass": [
+   4,
+   4
+  ],
+  "stained": [
+   5,
+   4
   ]
  },
  "_doc": "Disposition de assets/textures/blocks_atlas.png (généré par tools/style/atlas.py, palette B validée)."

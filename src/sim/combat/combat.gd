@@ -25,6 +25,19 @@ static func weapon_def(id: String) -> Dictionary:
 
 
 func _weapon_stats(l: Lutin) -> Dictionary:
+	var st := _weapon_stats_base(l)
+	if l.horse >= 0:  # cavalerie : charge à cheval (lance surtout)
+		var cav: Dictionary = _cfg.get("cavalry", {})
+		var m := (
+			float(cav.get("damage_mult", 1.6))
+			* (float(cav.get("spear_bonus_mult", 1.25)) if l.weapon == "spear" else 1.0)
+		)
+		st["attack"] = float(st["attack"]) * m
+		st["reach"] = float(st["reach"]) + float(cav.get("reach_bonus", 0.6))
+	return st
+
+
+func _weapon_stats_base(l: Lutin) -> Dictionary:
 	if l.weapon != "":
 		var w := weapon_def(l.weapon)
 		return {

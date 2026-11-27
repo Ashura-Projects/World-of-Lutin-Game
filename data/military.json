@@ -77,5 +77,22 @@
   "victory": {
     "destroy_all_camps": true,
     "territory_share": 0.5
+  },
+  "catapult": {
+    "ammo": {
+      "stone": 2
+    },
+    "range": [
+      8,
+      45
+    ],
+    "arc_deg": 40,
+    "break_radius": 1,
+    "damage": 45,
+    "damage_radius": 2.5,
+    "speed": 14.0,
+    "rotate_step_deg": 15,
+    "pushers": 2,
+    "push_speed_mult": 0.6
   }
 }

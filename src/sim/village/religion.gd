@@ -35,16 +35,35 @@ func _init(c: Colony, s: Structures, f: Fauna) -> void:
 
 
 # --- lieux de culte et clergé --------------------------------------------------------------------
+## Lieux de culte = pièces (chapelle, église, cathédrale) reconnues autour des autels (data/rooms.json).
+func temples() -> Array:
+	var out := []
+	var seen := {}
+	if colony.world == null:
+		return out
+	for s: Dictionary in structures.built_with_tag("altar"):
+		var room := RoomDetector.room_at(colony.world, structures, s["cell"])
+		if room.is_empty() or seen.has(room["cells"].keys()[0]):
+			continue
+		var t := str(room["type"])
+		if t in ["chapel_room", "church_room", "cathedral_room"]:
+			seen[room["cells"].keys()[0]] = true
+			out.append(t)
+	return out
+
+
 func capacity() -> int:
-	var cap: Dictionary = _cfg.get("capacity", {})
 	var n := 0
-	for k: String in ["chapel", "church", "altar"]:
+	for t: String in temples():
+		n += int(DataRegistry.find("rooms", "room_types", t).get("faith_capacity", 10))
+	var cap: Dictionary = _cfg.get("capacity", {})
+	for k: String in ["chapel", "church"]:  # anciens bâtiments entiers (parties d'avant la 1.3.1)
 		n += structures.built_with_tag(k).size() * int(cap.get(k, 0))
 	return n
 
 
 func has_temple() -> bool:
-	return not structures.built_with_tag("chapel").is_empty() or not structures.built_with_tag("church").is_empty()
+	return capacity() > 0
 
 
 func rank_name(id: String) -> String:

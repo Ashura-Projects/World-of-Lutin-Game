@@ -82,6 +82,29 @@ static func build(kind: String) -> Node3D:
 			for e: Vector3 in [Vector3(0, 5.4, -1.05), Vector3(0, 5.4, 1.05)]:
 				_b(r, Vector3(2.2, 0.7, 0.1), "6a4a2e", c + e)
 			_roof(r, Vector3(2.6, 1.2, 2.6), "5a3e2c", c + Vector3(0, 6.6, 0))
+		"catapult":
+			var c := Vector3(0.5, 0, 0.5)
+			for sx: float in [-0.7, 0.7]:
+				_b(r, Vector3(0.14, 0.14, 2.0), "5a3e28", c + Vector3(sx, 0.35, 0))
+				for sz: float in [-0.7, 0.7]:
+					var wheel := MeshInstance3D.new()
+					var cm := CylinderMesh.new()
+					cm.top_radius = 0.3
+					cm.bottom_radius = 0.3
+					cm.height = 0.1
+					wheel.mesh = cm
+					wheel.material_override = LutinModel.mat("4a3420", 0.8)
+					wheel.position = c + Vector3(sx * 1.1, 0.3, sz)
+					wheel.rotation.z = PI / 2.0
+					r.add_child(wheel)
+			for sz: float in [-0.7, 0.7]:
+				_b(r, Vector3(1.5, 0.14, 0.14), "5a3e28", c + Vector3(0, 0.35, sz))
+			for sx: float in [-0.5, 0.5]:
+				_b(r, Vector3(0.12, 1.2, 0.12), "6a4a2e", c + Vector3(sx, 0.95, 0.2))
+			_b(r, Vector3(1.1, 0.1, 0.1), "6a4a2e", c + Vector3(0, 1.5, 0.2))
+			_b(r, Vector3(0.12, 0.12, 2.2), "7a5836", c + Vector3(0, 1.1, -0.1), Vector3(0.55, 0, 0))
+			_b(r, Vector3(0.4, 0.2, 0.4), "5a3e28", c + Vector3(0, 1.85, -0.75))
+			_b(r, Vector3(0.6, 0.6, 0.6), "6a6a6a", c + Vector3(0, 0.75, 0.75))
 		"claim_post":
 			var col := Faction.current.color1 if Faction.current != null else "2c4a96"
 			_b(r, Vector3(0.3, 0.3, 0.3), "8a8278", Vector3(0, 0.15, 0))

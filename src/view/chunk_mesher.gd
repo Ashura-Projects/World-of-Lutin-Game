@@ -38,6 +38,10 @@ static func build(world: VoxelWorld, key: Vector3i, max_y: int = 9999, shapes: D
 	for p: Vector3i in shapes:
 		var d := p - origin
 		shaped[(d.x + 1) + (d.z + 1) * 18 + (d.y + 1) * 324] = 1
+	var dshape := t.default_shape
+	for i in pad.size():
+		if dshape[pad[i]] > 0:
+			shaped[i] = 1  # bloc façonné par défaut (créneau = demi-bloc)
 	# décalages dans le tampon 18³ (x + 18 z + 324 y) pour les 6 directions de DIRS
 	var offs := PackedInt32Array([324, -324, 1, -1, 18, -18])
 	var acc := [_new_acc(), _new_acc()]
@@ -54,10 +58,13 @@ static func build(world: VoxelWorld, key: Vector3i, max_y: int = 9999, shapes: D
 					continue
 				if shaped[pi] == 1:
 					var wpos := Vector3(origin.x + lx, origin.y + ly, origin.z + lz)
-					var code: int = shapes[Vector3i(origin.x + lx, origin.y + ly, origin.z + lz)]
+					var code: int = shapes.get(Vector3i(origin.x + lx, origin.y + ly, origin.z + lz), dshape[id] * 4)
 					faces += ShapeMesh.add(
 						acc[0], wpos, code, [t.tile_top[id], t.tile_side[id], t.tile_bottom[id]], cols, rows
 					)
+					if code / 4 == ShapeMesh.Shape.WINDOW_GLASS or code / 4 == ShapeMesh.Shape.WINDOW_STAINED:
+						var gt := t.glass_tile if code / 4 == ShapeMesh.Shape.WINDOW_GLASS else t.stained_tile
+						ShapeMesh.add_pane(acc[1], wpos, code, gt, cols, rows)
 					continue
 				var is_liq := liquid[id] == 1
 				for di in 6:

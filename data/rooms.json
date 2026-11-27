@@ -1,5 +1,5 @@
 {
-  "_doc": "Une pièce = volume d'air fermé (murs + toit). Type = première règle satisfaite par priorité décroissante.",
+  "_doc": "Une pièce = volume d'air fermé (murs + toit). Type = règle satisfaite de plus haute priorité (requires = objets présents, min_counts = nombres minimums, min_beds/max_beds). Vitraux = fenêtres « vitrail » dans les murs.",
   "room_types": [
     {
       "id": "kitchen",
@@ -113,6 +113,84 @@
         "mood": 10
       },
       "_note": "un lit simple ou double et au moins un coffre ; attribuable à des lutins"
+    },
+    {
+      "id": "chapel_room",
+      "name": "Chapelle",
+      "priority": 80,
+      "requires": [
+        "lectern",
+        "altar"
+      ],
+      "min_counts": {
+        "pew": 2
+      },
+      "bonus": {
+        "mood": 4
+      },
+      "faith_capacity": 10
+    },
+    {
+      "id": "church_room",
+      "name": "Église",
+      "priority": 82,
+      "requires": [
+        "lectern",
+        "altar"
+      ],
+      "min_counts": {
+        "pew": 6,
+        "stained_glass": 1
+      },
+      "bonus": {
+        "mood": 6
+      },
+      "faith_capacity": 40
+    },
+    {
+      "id": "cathedral_room",
+      "name": "Cathédrale",
+      "priority": 84,
+      "requires": [
+        "lectern",
+        "altar",
+        "bell"
+      ],
+      "min_counts": {
+        "pew": 12,
+        "stained_glass": 4
+      },
+      "bonus": {
+        "mood": 10
+      },
+      "faith_capacity": 120
+    },
+    {
+      "id": "refectory",
+      "name": "Réfectoire",
+      "priority": 55,
+      "requires": [
+        "hearth",
+        "table"
+      ],
+      "min_counts": {
+        "seat": 2
+      },
+      "bonus": {
+        "mood": 4
+      }
+    },
+    {
+      "id": "classroom",
+      "name": "Salle de classe",
+      "priority": 45,
+      "requires": [
+        "school"
+      ],
+      "min_counts": {
+        "seat": 2
+      },
+      "bonus": {}
     }
   ],
   "warmth_sources": [

@@ -53,6 +53,7 @@ var rivals: Rivals
 var religion: Religion
 var gates: Gates
 var missions: TutorialMissions
+var catapults: Catapults
 
 
 func _init(w: VoxelWorld) -> void:
@@ -87,6 +88,7 @@ func _init(w: VoxelWorld) -> void:
 	gates = Gates.new(w, structures)
 	colony.fauna_ref = fauna
 	missions = TutorialMissions.new(self)
+	catapults = Catapults.new(self)
 	structures.changed.connect(gates.sync_with_structures)
 
 
@@ -111,6 +113,8 @@ func new_game(gen: WorldGenerator, start: Vector3i, lutins: int) -> void:
 func tick() -> void:
 	colony.tick()
 	Horses.tick(self)
+	Hauling.tick(self)
+	catapults.tick()
 	combat.tick()
 	orcs.tick()
 	var tps := GameClock.ticks_per_second()

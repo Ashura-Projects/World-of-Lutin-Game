@@ -262,10 +262,21 @@ func garrison_capacity() -> int:
 	var m: Dictionary = _cfg.get("military", {})
 	var n := int(m.get("max_soldiers_without_garrison", 2))
 	n += structures.built_with_tag("barracks").size() * int(m.get("barracks_places", 4))
+	if barracks_ok():
+		n += int(m.get("barracks_places", 4))
 	for s: Dictionary in structures.built_with_tag("bed"):
 		if RoomDetector.room_at(world, structures, s["cell"]).get("type", "") == "garrison":
 			n += int(m.get("soldier_per_bed", 1))
 	return n
+
+
+## Caserne = deux pièces : une garnison (lits, coffre, râtelier) et un réfectoire (foyer, table, bancs).
+func barracks_ok() -> bool:
+	var types := {}
+	for tag: String in ["bed", "hearth"]:
+		for s: Dictionary in structures.built_with_tag(tag):
+			types[str(RoomDetector.room_at(world, structures, s["cell"]).get("type", ""))] = true
+	return types.has("garrison") and types.has("refectory")
 
 
 func enroll(l: Lutin) -> bool:

@@ -74,7 +74,7 @@ func _process(delta: float) -> void:
 		if dir.length() > 0.01:
 			m.rotation.y = lerp_angle(m.rotation.y, atan2(-dir.x, -dir.z), minf(1.0, delta * 10.0))
 		if l.horse >= 0:
-			target += Vector3(0, 0.75, 0)  # en selle
+			target += Vector3(0, 0.92, 0)  # en selle
 		m.position = m.position.lerp(target, minf(1.0, delta * 12.0))
 		var walking := l.state == Lutin.State.WALK
 		var working := l.state == Lutin.State.WORK

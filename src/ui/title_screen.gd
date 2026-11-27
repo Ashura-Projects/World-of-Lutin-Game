@@ -46,6 +46,7 @@ func _build() -> void:
 	_main.add_theme_constant_override("separation", 12)
 	col.add_child(_main)
 	UiStyle.make_primary(_menu_button(_main, "Jouer", func() -> void: _show_play(true)))
+	_menu_button(_main, "Guide", func() -> void: _popup(GuidePanel.new(), Vector2(200, 60)))
 	_menu_button(_main, "Paramètres", func() -> void: _popup(SettingsPanel.new()))
 	_menu_button(_main, "Crédits", func() -> void: _popup(CreditsPanel.new()))
 	_debug_btn = _menu_button(_main, "Débug", _debug_menu)
@@ -68,7 +69,7 @@ func _build() -> void:
 	_build_corner_buttons()
 
 	var ver := Label.new()
-	ver.text = "v%s · projet d'Ashura" % ProjectSettings.get_setting("application/config/version", "1.0.0")
+	ver.text = "v%s · by Ashura" % ProjectSettings.get_setting("application/config/version", "1.0.0")
 	ver.add_theme_color_override("font_color", UiStyle.TXT_D)
 	ver.add_theme_font_size_override("font_size", 16)
 	ver.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
@@ -199,7 +200,7 @@ func _build_corner_buttons() -> void:
 func _back() -> void:
 	for c in get_children():
 		if c is PanelContainer and c.visible and c != _setup_panel and c != _slots and c.get_index() > 2:
-			if c is SettingsPanel or c is CreditsPanel or c is FactionEditor:
+			if c is SettingsPanel or c is CreditsPanel or c is FactionEditor or c is GuidePanel:
 				c.queue_free()
 				return
 	if _slots != null and _slots.visible:
@@ -210,8 +211,8 @@ func _back() -> void:
 		_show_play(false)
 
 
-func _popup(p: Control) -> void:
-	p.position = Vector2(560, 120)
+func _popup(p: Control, at: Vector2 = Vector2(560, 120)) -> void:
+	p.position = at
 	add_child(p)
 
 

@@ -83,6 +83,12 @@
       "attack": 3,
       "reach": 1.0,
       "every_s": 1.2
+    },
+    "cavalry": {
+      "damage_mult": 1.6,
+      "reach_bonus": 0.6,
+      "spear_bonus_mult": 1.25,
+      "_note": "lutin à cheval : plus de dégâts et d'allonge ; lance encore mieux (charge)"
     }
   },
   "movement": {

@@ -15,6 +15,7 @@ func _ready() -> void:
 		"\n"
 		. join(
 			[
+				"by Ashura",
 				"Un projet d'Ashura.",
 				"",
 				"Modèles, textures, ambiances et bruitages faits pour le jeu (Blender, scripts).",

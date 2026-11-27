@@ -36,6 +36,10 @@ func cells(g: Dictionary) -> Array[Vector3i]:
 		for i in 2:
 			for j in 3:
 				out.append(c + ax[0] * i + Vector3i.UP * j)
+	elif g["kind"] == "door":
+		for i in int(g["w"]):
+			for j in 2:
+				out.append(c + ax[0] * i + Vector3i.UP * j)
 	else:
 		for k in range(1, int(g["l"]) + 1):
 			for i in int(g["w"]):
@@ -47,6 +51,8 @@ func cells(g: Dictionary) -> Array[Vector3i]:
 func sync_with_structures() -> void:
 	for s: Dictionary in structures.items.values():
 		var kind := str(Structures.def(s["kind"]).get("gate", ""))
+		if kind == "" and Structures.def(s["kind"]).get("tags", []).has("door"):
+			kind = "door"  # portes : ouvrir, fermer, verrouiller ; les lutins passent si elles ne sont pas verrouillées
 		if (
 			kind == ""
 			or not s["built"]
@@ -59,7 +65,8 @@ func sync_with_structures() -> void:
 			"kind": kind,
 			"cell": s["cell"],
 			"rot": int(s.get("rot", 0)),
-			"w": int(s.get("gate_w", 2)),
+			"w": (2 if s["kind"] == "double_door" else 1) if kind == "door" else int(s.get("gate_w", 2)),
+			"door": s["kind"],
 			"l": int(s.get("gate_l", 2)),
 			"open": true,  # au départ : herse levée, pont baissé (on passe)
 			"locked": false
@@ -76,6 +83,8 @@ func sync_with_structures() -> void:
 ## Pose ou retire les blocs selon l'état.
 func _apply(g: Dictionary) -> void:
 	var filled: bool = (g["kind"] == "portcullis" and not g["open"]) or (g["kind"] == "drawbridge" and g["open"])
+	if g["kind"] == "door":
+		filled = g["locked"]  # porte non verrouillée : les lutins l'ouvrent pour passer
 	for c in cells(g):
 		var cur := world.get_block(c)
 		if filled and cur == 0:
@@ -103,7 +112,9 @@ func toggle(id: int) -> bool:
 func set_locked(id: int, on: bool) -> void:
 	if gates.has(id):
 		gates[id]["locked"] = on
-		changed.emit(id)
+		if on and gates[id]["kind"] == "door":
+			gates[id]["open"] = false
+		_apply(gates[id])
 
 
 ## Herse ou pont-levis à cette case (case du tablier, de l'ouverture ou de l'objet), sinon {}.
@@ -124,12 +135,16 @@ func at(cell: Vector3i) -> Dictionary:
 
 
 static func name_of(g: Dictionary) -> String:
+	if g["kind"] == "door":
+		return str(Structures.def(str(g.get("door", "door"))).get("name", "Porte"))
 	return "Herse" if g["kind"] == "portcullis" else "Pont-levis %d × %d" % [int(g["w"]), int(g["l"])]
 
 
 func state_text(g: Dictionary) -> String:
 	var s: String
-	if g["kind"] == "portcullis":
+	if g["kind"] == "door":
+		s = "ouverte" if g["open"] else "fermée (les lutins l'ouvrent pour passer)"
+	elif g["kind"] == "portcullis":
 		s = "levée (ouverte)" if g["open"] else "baissée (fermée)"
 	else:
 		s = "baissé (on passe)" if g["open"] else "levé (passage coupé)"

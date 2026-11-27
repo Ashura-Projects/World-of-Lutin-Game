@@ -314,6 +314,7 @@ func _build_menu() -> void:
 		["Reprendre", _close_menu],
 		["Sauvegarder", _save],
 		["Paramètres", _settings],
+		["Guide", _guide],
 		["Menu principal", _to_title],
 		["Quitter", _quit]
 	]:
@@ -331,6 +332,14 @@ func _settings() -> void:
 	var sp := SettingsPanel.new()
 	sp.position = Vector2(260, 80)
 	root.add_child(sp)
+
+
+func _guide() -> void:
+	_menu_panel.visible = false
+	var g := GuidePanel.new()
+	g.position = Vector2(200, 70)
+	root.add_child(g)
+	windows.add(g, g.queue_free, true)
 
 
 func _close_menu() -> void:

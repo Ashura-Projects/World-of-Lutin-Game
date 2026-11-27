@@ -207,5 +207,10 @@
 - Champs avec aperçu + Valider ; lits et chambres attribuables ; voisins qui démarrent comme le joueur et grandissent.
 - Menu Jouer, 5 emplacements, nouvelle partie simple/avancée, tutoriel à missions (`data/missions.json`), Info / Retour.
 
+## 13. Ajouts v1.3.1
+- Bâtiments = pièces (règles dans `data/rooms.json`, affichées dans le Guide) ; seule la tour de guet est un bâtiment
+  entier. Portes en « gates » (verrou = bloc invisible solide). Cimetière en zone. Créneau = demi-bloc par défaut.
+  Fenêtres (formes 10-12). Catapulte (`data/military.json › catapult`). Cavalerie (`population.json › combat.cavalry`).
+
 ## Questions ouvertes
 1. Carte aléatoire, ou aussi des cartes dessinées à la main ? (par défaut : aléatoire seedée)

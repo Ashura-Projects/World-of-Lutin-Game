@@ -120,6 +120,14 @@ Settings, GameSetup), GUT 9.7.1 headless, export Android arm64 (`com.ashura.worl
     (com.ashura.worldoflutin) pour garder les sauvegardes et installer par-dessus.
 - Non testé : sur téléphone.
 
+## v1.3.1 (corrections et demandes d'Ashura)
+- Fait : voir CHANGELOG 1.3.1. Preuves : 141 tests GUT verts (nouveau `tests/test_v131.gd`), captures `build/captures/v131_*`.
+- Choix faits sans Ashura : école, bibliothèque, atelier de maître et meule deviennent des objets (pas des bâtiments) ;
+  fenêtre = forme posée sur un bloc de mur construit (coût : le matériau, +1 verre pour vitre/vitrail) ; catapulte :
+  angle de tir ±40°, portée 8 à 45 blocs ; lanciers à cheval ×1,6 (×1,25 en plus à la lance) ; les anciens bâtiments
+  entiers (chapelle, église, caserne, cimetière) restent valables dans les vieilles parties mais ne se construisent plus.
+- Non testé : sur téléphone.
+
 ## v1.3.0 (demandes d'Ashura)
 - Fait : voir CHANGELOG 1.3.0.
 - Preuves : tests GUT verts (nouveau `tests/test_v13.gd` : formes, herses/ponts-levis, lits, chevaux, loisirs,

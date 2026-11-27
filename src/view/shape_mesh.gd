@@ -4,7 +4,21 @@ extends RefCounted
 ## quart de dôme. Triangles dans un cube unité, tournés par quarts de tour autour de l'axe vertical.
 ## Les UV sont projetées à plat dans la tuile du bloc (dessus, côté, dessous selon la normale).
 
-enum Shape { CUBE, SLAB, SLAB_TOP, STAIRS, SLOPE, SLOPE_OUT, SLOPE_IN, ROUND, CONE, DOME }
+enum Shape {
+	CUBE,
+	SLAB,
+	SLAB_TOP,
+	STAIRS,
+	SLOPE,
+	SLOPE_OUT,
+	SLOPE_IN,
+	ROUND,
+	CONE,
+	DOME,
+	WINDOW_OPEN,
+	WINDOW_GLASS,
+	WINDOW_STAINED
+}
 
 const NAMES := [
 	"Cube",
@@ -16,8 +30,13 @@ const NAMES := [
 	"Coin de toit intérieur",
 	"Angle arrondi",
 	"Quart de cône (toit rond)",
-	"Quart de dôme (coupole)"
+	"Quart de dôme (coupole)",
+	"Fenêtre ouverte",
+	"Fenêtre vitrée",
+	"Vitrail"
 ]
+const BUILD_SHAPES := 10  # formes 1 à 9 dans « Forme » ; les fenêtres ont leur propre menu
+const FRAME := 0.16  # épaisseur du cadre des fenêtres
 const ARC := 6  # segments d'un quart de cercle
 
 static var _cache: Dictionary = {}
@@ -90,6 +109,12 @@ static func triangles(shape: int) -> Array:
 			_tri(t, p000, d, c)
 		Shape.ROUND, Shape.CONE, Shape.DOME:
 			_round(t, shape)
+		Shape.WINDOW_OPEN, Shape.WINDOW_GLASS, Shape.WINDOW_STAINED:
+			var f := FRAME
+			_box(t, Vector3(0, 0, 0), Vector3(1, f, 1))  # appui
+			_box(t, Vector3(0, 1 - f, 0), Vector3(1, 1, 1))  # linteau
+			_box(t, Vector3(0, f, 0), Vector3(f, 1 - f, 1))
+			_box(t, Vector3(1 - f, f, 0), Vector3(1, 1 - f, 1))
 	_cache[shape] = t
 	return t
 
@@ -139,6 +164,29 @@ static func _round(t: Array, shape: int) -> void:
 		for i in range(1, side_x.size() - 1):
 			_tri(t, side_x[0], side_x[i], side_x[i + 1])
 			_tri(t, side_z[0], side_z[i + 1], side_z[i])
+
+
+## Vitre ou vitrail : un panneau au milieu de l'ouverture (dessiné avec les surfaces transparentes).
+static func add_pane(acc: Dictionary, base: Vector3, code: int, tile: int, cols: float, rows: float) -> void:
+	var f := FRAME
+	var basis := Basis(Vector3.UP, -PI / 2.0 * (code % 4))
+	var center := Vector3(0.5, 0, 0.5)
+	var c := float(tile % int(cols))
+	var r := float(tile / int(cols))
+	var quads := [
+		[Vector3(f, f, 0.5), Vector3(1 - f, f, 0.5), Vector3(1 - f, 1 - f, 0.5), Vector3(f, 1 - f, 0.5)],
+		[Vector3(1 - f, f, 0.5), Vector3(f, f, 0.5), Vector3(f, 1 - f, 0.5), Vector3(1 - f, 1 - f, 0.5)]
+	]
+	for q: Array in quads:
+		var start: int = acc["v"].size()
+		var v := q.map(func(p: Vector3) -> Vector3: return basis * (p - center) + center)
+		var n: Vector3 = ((v[1] - v[0]).cross(v[2] - v[0])).normalized() * -1.0
+		for k in 4:
+			var p: Vector3 = q[k]
+			acc["v"].append(base + v[k])
+			acc["n"].append(n)
+			acc["uv"].append(Vector2((c + 0.02 + p.x * 0.96) / cols, (r + 0.02 + (1.0 - p.y) * 0.96) / rows))
+		acc["i"].append_array(PackedInt32Array([start, start + 1, start + 2, start, start + 2, start + 3]))
 
 
 ## Ajoute un bloc façonné au maillage. code = forme × 4 + sens.

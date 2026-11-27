@@ -64,6 +64,10 @@ static func run(game: Node, action: String) -> void:
 			pass
 		"formes":
 			formes(game)
+		"v131":
+			v131(game)
+		"guide":
+			game.hud._guide()
 		"objets13":
 			objets13(game)
 		"animal":
@@ -440,3 +444,39 @@ static func objets13(game: Node) -> Dictionary:
 	game.camera.distance = 16.0
 	game.camera.focus(Vector3(p) + Vector3(7, 0, 3))
 	return g
+
+
+static func v131(game: Node) -> void:
+	var w: VoxelWorld = game.world
+	var st: Structures = game.sim.structures
+	var p: Vector3i = game.colony.stock.pos + Vector3i(-6, 0, -8)
+	var stone := w.types.num("cut_stone_block")
+	# un mur avec fenêtres (ouverture, vitre, vitrail 2×2), une porte, des créneaux
+	for x in 10:
+		for y in 4:
+			var c := Vector3i(p.x + x, p.y + y, p.z)
+			w.set_block(c, stone)
+	for e: Array in [
+		[Vector3i(1, 1, 0), ShapeMesh.Shape.WINDOW_OPEN],
+		[Vector3i(3, 1, 0), ShapeMesh.Shape.WINDOW_GLASS],
+		[Vector3i(6, 1, 0), ShapeMesh.Shape.WINDOW_STAINED],
+		[Vector3i(7, 1, 0), ShapeMesh.Shape.WINDOW_STAINED],
+		[Vector3i(6, 2, 0), ShapeMesh.Shape.WINDOW_STAINED],
+		[Vector3i(7, 2, 0), ShapeMesh.Shape.WINDOW_STAINED]
+	]:
+		w.set_shape(p + e[0], int(e[1]) * 4)
+	w.set_block(p + Vector3i(9, 0, 0), 0)
+	w.set_block(p + Vector3i(9, 1, 0), 0)
+	st.add("door", p + Vector3i(9, 0, 0), true, {"rot": 0})
+	for x in 10:
+		w.set_block(Vector3i(p.x + x, p.y + 4, p.z), w.types.num("crenel") if x % 2 == 0 else stone)
+	st.add("catapult", Pathfinder.snap(w, p + Vector3i(4, 0, 6)), true, {"yaw": 0.6})
+	st.add("pew", Pathfinder.snap(w, p + Vector3i(12, 0, 3)), true)
+	st.add("lectern", Pathfinder.snap(w, p + Vector3i(13, 0, 3)), true)
+	st.add("small_altar", Pathfinder.snap(w, p + Vector3i(14, 0, 3)), true)
+	st.add("tombstone", Pathfinder.snap(w, p + Vector3i(12, 0, 6)), true, {"epitaph": "Silex"})
+	var h: Dictionary = game.fauna.spawn("horse", Pathfinder.snap(w, p + Vector3i(9, 0, 7)))
+	h["owned"] = true
+	game.camera.distance = 17.0
+	game.camera.yaw = 0.3
+	game.camera.focus(Vector3(p) + Vector3(6, 1, 5))

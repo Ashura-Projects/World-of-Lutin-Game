@@ -18,6 +18,8 @@ var heating_ok: bool = true  # faux si le bois de chauffage manque
 var combat: RefCounted = null  # Combat (J7) : mobilisation, cachette
 var education: RefCounted = null  # Education (J8) : école des enfants
 var fauna_ref: Fauna = null  # chevaux montés (1.3)
+var cart_yaw: float = 0.0  # orientation de la charrette (sens de la dernière marche)
+var cemetery: Array[Vector3i] = []  # zone de cimetière : les morts y sont enterrés (pierre tombale)
 var _pop: Dictionary
 var _move: Dictionary
 var _needs: Dictionary
@@ -344,6 +346,19 @@ func remove_lutin(l: Lutin) -> void:
 		stock.add(str(tool), 1)
 	lutins.erase(l)
 	lutin_removed.emit(l.id)
+	bury(l)
+
+
+## Enterre un lutin mort dans la première case libre du cimetière (une pierre tombale apparaît).
+func bury(l: Lutin) -> void:
+	if structures == null:
+		return
+	for c: Vector3i in cemetery:
+		if structures.at(c).is_empty():
+			structures.add("tombstone", c, true, {"epitaph": l.name})
+			EventBus.alert.emit("mort", "%s repose au cimetière." % l.name)
+			return
+	EventBus.alert.emit("alerte", "Pas de place au cimetière pour %s (Zones › Cimetière)." % l.name)
 
 
 ## Point de réserve le plus proche qui accepte l'objet (charrette ou zone de réserve). "" = n'importe quoi.
@@ -376,7 +391,15 @@ func to_dict() -> Dictionary:
 	var ls := []
 	for l in lutins:
 		ls.append(l.to_dict())
-	return {"lutins": ls, "stock": stock.to_dict(), "next_id": next_id, "zones": stores.to_dict()}
+	var cem := cemetery.map(func(c: Vector3i) -> Array: return [c.x, c.y, c.z])
+	return {
+		"lutins": ls,
+		"stock": stock.to_dict(),
+		"next_id": next_id,
+		"zones": stores.to_dict(),
+		"cemetery": cem,
+		"cart_yaw": cart_yaw
+	}
 
 
 func from_dict(d: Dictionary) -> void:
@@ -389,5 +412,9 @@ func from_dict(d: Dictionary) -> void:
 	stock.from_dict(d.get("stock", {}))
 	next_id = int(d.get("next_id", lutins.size() + 1))
 	stores.from_dict(d.get("zones", []))
+	cart_yaw = float(d.get("cart_yaw", 0.0))
+	cemetery.clear()
+	for e: Array in d.get("cemetery", []):
+		cemetery.append(Vector3i(int(e[0]), int(e[1]), int(e[2])))
 	if d.has("stores"):  # sauvegarde 1.0.1 : une seule zone qui accepte tout
 		stores.add_zone(d["stores"].map(func(e: Array) -> Vector3i: return Vector3i(int(e[0]), int(e[1]), int(e[2]))))

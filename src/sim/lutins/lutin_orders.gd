@@ -17,11 +17,14 @@ static func give(
 			l.wait_ticks = 0
 			l.state = Lutin.State.IDLE
 			return true
-		"move", "cart", "mount":
+		"move", "cart", "mount", "push":
 			board.release(l)
 			l.order = {
 				"kind": kind, "cell": cell, "stage": 0, "until": 0, "tries": 0, "horse": int(extra.get("horse", -1))
 			}
+			if kind == "push":
+				l.order["struct"] = int(extra.get("struct", -1))
+				l.order["lead"] = bool(extra.get("lead", false))
 			if extra.has("hold_s"):
 				l.order["hold_s"] = float(extra["hold_s"])
 			l.wait_ticks = 0
@@ -112,6 +115,27 @@ static func tick(colony: Colony, l: Lutin) -> bool:
 			return _walk(colony, l, cell)
 		"explore":
 			return Scouting.tick(colony, l)
+		"push":
+			var st: Dictionary = (
+				colony.structures.items.get(int(o.get("struct", -1)), {}) if colony.structures != null else {}
+			)
+			if st.is_empty():
+				l.order = {}
+				return false
+			if int(o["stage"]) == 0:
+				if Colony._near(l.cell, st["cell"], 1):
+					o["stage"] = 1
+					o["tries"] = 0
+				else:
+					return _walk(colony, l, st["cell"])
+			if Colony._near(l.cell, cell, 1):
+				if o.get("lead", false):
+					var c := Pathfinder.snap(colony.world, cell)
+					st["cell"] = c if c.y >= 0 else cell
+					colony.structures.changed.emit()
+				l.order = {}
+				return false
+			return _walk(colony, l, cell)
 		"cart":
 			if int(o["stage"]) == 0:
 				if Colony._near(l.cell, colony.stock.pos, 1):
@@ -153,7 +177,9 @@ static func order_to_dict(o: Dictionary) -> Dictionary:
 		"until": o["until"],
 		"tries": o["tries"],
 		"hold_s": o.get("hold_s", -1.0),
-		"horse": o.get("horse", -1)
+		"horse": o.get("horse", -1),
+		"struct": o.get("struct", -1),
+		"lead": o.get("lead", false)
 	}
 
 
@@ -168,5 +194,7 @@ static func order_from_dict(d: Dictionary) -> Dictionary:
 		"until": int(d["until"]),
 		"tries": int(d["tries"]),
 		"hold_s": float(d.get("hold_s", -1.0)),
-		"horse": int(d.get("horse", -1))
+		"horse": int(d.get("horse", -1)),
+		"struct": int(d.get("struct", -1)),
+		"lead": bool(d.get("lead", false))
 	}

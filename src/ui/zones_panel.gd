@@ -3,7 +3,7 @@ extends PanelContainer
 ## Menu Zones : onglets Champs (culture par case ; « Rectangle » = deux taps), Réserves (zones de stockage
 ## avec filtre : tout, catégories ou objets) et Charrette (un lutin la déplace où l'on veut).
 
-const TABS := [["fields", "Champs"], ["stores", "Réserves"], ["cart", "Charrette"]]
+const TABS := [["fields", "Champs"], ["stores", "Réserves"], ["cemetery", "Cimetière"], ["cart", "Charrette"]]
 
 var game: Node
 var crop_id: String = "wheat"
@@ -120,6 +120,10 @@ func show_tab(t: String) -> void:
 			_choice("edit", "Régler une réserve")
 			_choice("unstore", "Retirer")
 			_select("store")
+		"cemetery":
+			_choice("grave_add", "Ajouter au cimetière")
+			_choice("grave_del", "Retirer")
+			_select("grave_add")
 		"cart":
 			var b := Button.new()
 			b.text = "Déplacer la charrette…"
@@ -141,7 +145,7 @@ func _choice(id: String, label: String) -> void:
 
 
 func _select(id: String) -> void:
-	zone_mode = id if id in ["store", "edit", "unstore"] else "crop"
+	zone_mode = id if id in ["store", "edit", "unstore", "grave_add", "grave_del"] else "crop"
 	if zone_mode == "crop":
 		crop_id = id
 	for k: String in _choice_buttons:
@@ -155,6 +159,8 @@ func _select(id: String) -> void:
 			_info.text = "Touchez une réserve (dalles dorées) pour choisir ce qu'elle garde."
 		"unstore":
 			_info.text = "Touchez les cases de réserve à retirer (ou 2 coins en Rectangle)."
+		"grave_add", "grave_del":
+			_info.text = "Cimetière : touchez le sol (ou 2 coins). Les morts y sont enterrés sous une pierre tombale."
 		_:
 			var c := Fields.crop(id)
 			_info.text = (
@@ -197,6 +203,16 @@ func on_tap(screen: Vector2) -> void:
 			return
 		cells = Shapes.rect(_first, Vector3i(cell.x, _first.y, cell.z))
 		_first = Vector3i(-1, -1, -1)
+	if zone_mode in ["grave_add", "grave_del"]:
+		for p in cells:
+			var top := Vector3i(p.x, game.world.surface_y(p.x, p.z), p.z)
+			if zone_mode == "grave_add" and not game.colony.cemetery.has(top):
+				game.colony.cemetery.append(top)
+			elif zone_mode == "grave_del":
+				game.colony.cemetery.erase(top)
+		game.colony.stores.version += 1  # redessine les zones
+		_info.text = "Cimetière : %d case(s)." % game.colony.cemetery.size()
+		return
 	if zone_mode != "crop":
 		_store(cells)
 		return

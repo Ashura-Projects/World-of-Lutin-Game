@@ -133,7 +133,10 @@ func to_dict() -> Dictionary:
 				"rot": s.get("rot", 0),
 				"gate_w": s.get("gate_w", 2),
 				"gate_l": s.get("gate_l", 2),
-				"assigned": s.get("assigned", [])
+				"assigned": s.get("assigned", []),
+				"epitaph": s.get("epitaph", ""),
+				"yaw": s.get("yaw", 0.0),
+				"loaded": s.get("loaded", false)
 			}
 		)
 	return {"items": out, "next_id": next_id}
@@ -153,7 +156,10 @@ func from_dict(d: Dictionary) -> void:
 			"rot": int(e.get("rot", 0)),
 			"gate_w": int(e.get("gate_w", 2)),
 			"gate_l": int(e.get("gate_l", 2)),
-			"assigned": Array(e.get("assigned", [])).map(func(x: Variant) -> int: return int(x))
+			"assigned": Array(e.get("assigned", [])).map(func(x: Variant) -> int: return int(x)),
+			"epitaph": str(e.get("epitaph", "")),
+			"yaw": float(e.get("yaw", 0.0)),
+			"loaded": bool(e.get("loaded", false))
 		}
 	next_id = int(d.get("next_id", items.size() + 1))
 	changed.emit()

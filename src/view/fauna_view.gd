@@ -36,7 +36,7 @@ static func model(kind: String) -> Node3D:
 	if kind.begins_with("orc"):
 		return OrcModel.build(kind)
 	if kind == "horse":
-		return horse_model()
+		return HorseModel.build()
 	if NpcLook.is_npc(kind):
 		return NpcLook.build(kind)
 	var root := Node3D.new()
@@ -80,7 +80,7 @@ static func model(kind: String) -> Node3D:
 
 
 func _add(a: Dictionary) -> void:
-	var m := model(a["kind"])
+	var m := HorseModel.build(int(a["id"]), a.get("owned", false)) if a["kind"] == "horse" else model(a["kind"])
 	m.position = a["pos"]
 	add_child(m)
 	_nodes[a["id"]] = m
@@ -116,24 +116,3 @@ func _process(delta: float) -> void:
 		if dir.length() > 0.02:
 			m.rotation.y = lerp_angle(m.rotation.y, atan2(-dir.x, -dir.z), minf(1.0, delta * 6.0))
 		m.position = m.position.lerp(a["pos"], minf(1.0, delta * 8.0))
-
-
-static func horse_model() -> Node3D:
-	var root := Node3D.new()
-	var sph := SphereMesh.new()
-	sph.radial_segments = 10
-	sph.rings = 5
-	var leg := CylinderMesh.new()
-	leg.top_radius = 0.06
-	leg.bottom_radius = 0.05
-	leg.height = 0.75
-	leg.radial_segments = 6
-	_part(root, sph, "7a4e30", Vector3(0, 0.95, 0), Vector3(0.5, 0.5, 1.2))
-	_part(root, sph, "7a4e30", Vector3(0, 1.35, -0.62), Vector3(0.26, 0.5, 0.26), Vector3(-0.5, 0, 0))
-	_part(root, sph, "7a4e30", Vector3(0, 1.6, -0.85), Vector3(0.22, 0.24, 0.42))
-	_part(root, sph, "2a1a12", Vector3(0, 1.55, -0.55), Vector3(0.06, 0.4, 0.3), Vector3(-0.4, 0, 0))
-	_part(root, sph, "2a1a12", Vector3(0, 1.0, 0.62), Vector3(0.08, 0.35, 0.1), Vector3(0.6, 0, 0))
-	for sx: float in [-1.0, 1.0]:
-		for sz: float in [-1.0, 1.0]:
-			_part(root, leg, "6a4028", Vector3(sx * 0.18, 0.38, sz * 0.42))
-	return root

@@ -38,6 +38,29 @@ const TAPESTRIES := {
 }
 
 
+## Encadrement d'une porte (le battant est animé par GatesView).
+static func door_frame(kind: String) -> Node3D:
+	var r := Node3D.new()
+	var w := 2.0 if kind == "double_door" else 1.0
+	var col := "4a4a52" if kind == "iron_door" else "5a3e28"
+	_b(r, Vector3(0.1, 2.1, 0.16), col, Vector3(-0.5, 1.05, 0))
+	_b(r, Vector3(0.1, 2.1, 0.16), col, Vector3(w - 0.5, 1.05, 0))
+	_b(r, Vector3(w + 0.1, 0.12, 0.16), col, Vector3(w / 2.0 - 0.5, 2.06, 0))
+	return r
+
+
+## Battant de porte (charnière à gauche) : bois, fer ou grande porte.
+static func door_leaf(kind: String) -> Node3D:
+	var r := Node3D.new()
+	var w := 1.9 if kind == "double_door" else 0.9
+	var col := "4a4a52" if kind == "iron_door" else "6e4e30"
+	_b(r, Vector3(w, 1.95, 0.08), col, Vector3(w / 2.0, 0.98, 0))
+	for y: float in [0.4, 1.5]:
+		_b(r, Vector3(w, 0.06, 0.1), "2a2a30" if kind == "iron_door" else "4a3420", Vector3(w / 2.0, y, 0))
+	_b(r, Vector3(0.08, 0.08, 0.14), "c49e54", Vector3(w - 0.15, 1.0, 0))
+	return r
+
+
 static func build(kind: String) -> Node3D:
 	var r := Node3D.new()
 	if CARPETS.has(kind):
@@ -171,6 +194,23 @@ static func build(kind: String) -> Node3D:
 		"portcullis", "drawbridge":
 			# objet porteur : la herse / le pont animés sont dessinés par GatesView une fois bâtis
 			_b(r, Vector3(0.25, 0.4, 0.25), "3a3a40", Vector3(0, 0.2, 0))
+		"pew":
+			_b(r, Vector3(0.95, 0.08, 0.4), "6e4e30", Vector3(0, 0.45, 0))
+			_b(r, Vector3(0.95, 0.6, 0.06), "5a3e28", Vector3(0, 0.75, 0.2))
+			for x: float in [-0.42, 0.42]:
+				_b(r, Vector3(0.06, 0.45, 0.38), "5a3e28", Vector3(x, 0.22, 0))
+		"lectern":
+			_b(r, Vector3(0.12, 1.0, 0.12), "5a3e28", Vector3(0, 0.5, 0))
+			_b(r, Vector3(0.5, 0.06, 0.4), "6e4e30", Vector3(0, 1.05, 0), Vector3(-0.4, 0, 0))
+			_b(r, Vector3(0.36, 0.04, 0.26), "e8dcc4", Vector3(0, 1.1, 0), Vector3(-0.4, 0, 0))
+		"small_altar":
+			_b(r, Vector3(0.7, 0.8, 0.45), "c8c0b0", Vector3(0, 0.4, 0))
+			_b(r, Vector3(0.75, 0.05, 0.5), "c49e54", Vector3(0, 0.82, 0))
+			_b(r, Vector3(0.06, 0.2, 0.06), "f0e0a0", Vector3(0, 0.95, 0), Vector3.ZERO, 3.0)
+		"tombstone":
+			_b(r, Vector3(0.7, 0.04, 0.9), "4a6a3a", Vector3(0, 0.02, 0))
+			_b(r, Vector3(0.5, 0.75, 0.12), "8a8a8a", Vector3(0, 0.38, 0.3))
+			_b(r, Vector3(0.36, 0.06, 0.14), "6a6a6a", Vector3(0, 0.6, 0.3))
 		"water_trough":
 			_b(r, Vector3(1.0, 0.4, 0.5), "6e4e30", Vector3(0, 0.2, 0))
 			_b(r, Vector3(0.9, 0.05, 0.4), "3a6aa8", Vector3(0, 0.38, 0))

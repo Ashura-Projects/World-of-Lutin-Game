@@ -17,7 +17,11 @@ func _model(g: Dictionary) -> Array:
 	var fwd: Vector3 = Vector3(ax[1])
 	var moving := Node3D.new()
 	root.add_child(moving)
-	if g["kind"] == "portcullis":
+	if g["kind"] == "door":
+		root.position = Vector3(g["cell"]) + Vector3(0.5, 0, 0.5) - across * 0.5
+		root.basis = Basis(across, Vector3.UP, across.cross(Vector3.UP))
+		moving.add_child(DecorModels.door_leaf(str(g.get("door", "door"))))
+	elif g["kind"] == "portcullis":
 		root.position = Vector3(g["cell"]) + Vector3(0.5, 0, 0.5) - across * 0.5 + across
 		root.basis = Basis.looking_at(fwd, Vector3.UP)
 		for i in 5:
@@ -54,14 +58,33 @@ func _process(delta: float) -> void:
 			_snap(g)
 		var m: Node3D = _nodes[g["id"]][1]
 		var k := minf(1.0, delta * 2.0)
-		if g["kind"] == "portcullis":
+		if g["kind"] == "door":
+			var open: bool = g["open"] or (not g["locked"] and _someone_near(g))
+			m.rotation.y = lerp_angle(m.rotation.y, -PI / 2.0 if open else 0.0, minf(1.0, delta * 6.0))
+		elif g["kind"] == "portcullis":
 			m.position.y = lerpf(m.position.y, 2.8 if g["open"] else 0.0, k)
 		else:
 			m.rotation.x = lerp_angle(m.rotation.x, 0.0 if g["open"] else PI / 2.0, k)
 
 
+var colony: Colony
+
+
+## Un lutin juste à côté : la porte s'ouvre pour le laisser passer.
+func _someone_near(g: Dictionary) -> bool:
+	if colony == null:
+		return false
+	var c := Vector3(g["cell"]) + Vector3(0.5, 0, 0.5)
+	for l: Lutin in colony.lutins:
+		if l.pos.distance_to(c) < 1.4:
+			return true
+	return false
+
+
 func _snap(g: Dictionary) -> void:
 	var m: Node3D = _nodes[g["id"]][1]
+	if g["kind"] == "door":
+		return
 	if g["kind"] == "portcullis":
 		m.position.y = 2.8 if g["open"] else 0.0
 	else:

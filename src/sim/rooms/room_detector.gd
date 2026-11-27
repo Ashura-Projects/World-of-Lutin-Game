@@ -34,6 +34,15 @@ static func room_at(world: VoxelWorld, structures: Structures, cell: Vector3i) -
 		if s["built"] and seen.has(s["cell"]):
 			for t: String in Structures.def(s["kind"]).get("tags", []):
 				tags.append(t)
+	# vitraux : fenêtres « vitrail » dans les murs de la pièce
+	if not world.shapes.is_empty():
+		var glass := {}
+		for p: Vector3i in seen:
+			for d: Vector3i in [Vector3i.LEFT, Vector3i.RIGHT, Vector3i.FORWARD, Vector3i.BACK]:
+				if world.get_shape(p + d) / 4 == ShapeMesh.Shape.WINDOW_STAINED:
+					glass[p + d] = true
+		for _g in glass:
+			tags.append("stained_glass")
 	return {"cells": seen, "type": room_type(tags), "tags": tags}
 
 
@@ -47,6 +56,10 @@ static func room_type(tags: Array) -> String:
 				ok = false
 		if r.has("requires_any_tag") and not tags.has(r["requires_any_tag"]):
 			ok = false
+		var counts: Dictionary = r.get("min_counts", {})
+		for t: String in counts:
+			if tags.count(t) < int(counts[t]):
+				ok = false
 		var beds := tags.count("bed")
 		if r.has("min_beds") and beds < int(r["min_beds"]):
 			ok = false
