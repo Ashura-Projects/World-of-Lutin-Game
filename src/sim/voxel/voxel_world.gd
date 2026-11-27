@@ -8,6 +8,8 @@ var size: Vector3i  # x, y (hauteur), z
 var chunks: Dictionary = {}  # Vector3i -> Chunk
 var types: BlockTypes
 var shapes: Dictionary = {}  # Vector3i -> forme × 4 + sens (escalier, demi-bloc, pente…) ; absent = cube
+## Campagne Impériale : ne sauvegarder que certains chunks (zones modifiées). Vide = tout.
+var keep_chunk: Callable
 
 
 func _init(world_size: Vector3i = Vector3i(64, 32, 64)) -> void:
@@ -115,7 +117,7 @@ func to_dict() -> Dictionary:
 	var cs := {}
 	for k: Vector3i in chunks:
 		var c: Chunk = chunks[k]
-		if not c.is_empty():
+		if not c.is_empty() and (not keep_chunk.is_valid() or keep_chunk.call(k)):
 			cs["%d,%d,%d" % [k.x, k.y, k.z]] = Marshalls.raw_to_base64(c.to_rle())
 	var sh := []
 	for p: Vector3i in shapes:

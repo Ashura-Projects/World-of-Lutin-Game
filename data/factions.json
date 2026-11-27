@@ -33,6 +33,61 @@
       "aggression": 0.2,
       "trade": 0.9,
       "faith": 0.8
+    },
+    {
+      "id": "orange",
+      "name": "Comté des Moissons",
+      "desc": "Lutins orangés des grandes plaines, fermiers et éleveurs.",
+      "skin": "e0904a",
+      "tunic": "6a4a2a",
+      "color": "f09040",
+      "aggression": 0.3,
+      "trade": 0.8,
+      "faith": 0.6
+    },
+    {
+      "id": "violet",
+      "name": "Principauté d'Améthyste",
+      "desc": "Lutins violets rusés, diplomates et intrigants.",
+      "skin": "9a6ac0",
+      "tunic": "3a2a5a",
+      "color": "a070d8",
+      "aggression": 0.5,
+      "trade": 0.7,
+      "faith": 0.4
+    },
+    {
+      "id": "blanc",
+      "name": "Ordre des Neiges",
+      "desc": "Lutins pâles des montagnes, moines-soldats austères.",
+      "skin": "e8e8ec",
+      "tunic": "5a5a6a",
+      "color": "f0f0f8",
+      "aggression": 0.6,
+      "trade": 0.3,
+      "faith": 0.9
+    },
+    {
+      "id": "brun",
+      "name": "Tribus de la Tourbe",
+      "desc": "Lutins bruns des marais, chasseurs farouches.",
+      "skin": "8a6440",
+      "tunic": "4a3a20",
+      "color": "a07850",
+      "aggression": 0.8,
+      "trade": 0.2,
+      "faith": 0.3
+    },
+    {
+      "id": "rose",
+      "name": "Marche des Églantiers",
+      "desc": "Lutins roses des collines fleuries, artisans et musiciens.",
+      "skin": "e8a0b8",
+      "tunic": "6a3a4a",
+      "color": "f0a0c0",
+      "aggression": 0.2,
+      "trade": 0.9,
+      "faith": 0.5
     }
   ],
   "village": {
@@ -104,5 +159,349 @@
     "camp_radius": 1,
     "claim_post_radius": 1,
     "claim_post_gold": 20
+  },
+  "schemas_doc": "Schémas de bâtiments des IA (1.4). ground = couche du sol (remplace le sol), layers = couches au-dessus (la 1re au niveau du sol). Légende : P planches, B poutre, T chaume, S pierre, C pierre taillée, W bois, F champ, D terre, R créneau, O vitre (planche), espace = air, . = laisser.",
+  "legend": {
+    "P": "plank_block",
+    "B": "beam_block",
+    "T": "thatch_block",
+    "S": "stone_block",
+    "C": "cut_stone_block",
+    "W": "wood_block",
+    "F": "field_plot",
+    "D": "dirt",
+    "R": "crenel",
+    "O": "plank_block"
+  },
+  "schemas": [
+    {
+      "id": "field",
+      "name": "Champ",
+      "cost": 10,
+      "effects": {
+        "food": 0.05
+      },
+      "ground": [
+        "FFFFFFF",
+        "FFFFFFF",
+        "FFFFFFF",
+        "FFFFFFF",
+        "FFFFFFF"
+      ],
+      "layers": []
+    },
+    {
+      "id": "workshop",
+      "name": "Atelier",
+      "cost": 30,
+      "effects": {
+        "wealth": 1.5
+      },
+      "ground": [
+        "SSSSS",
+        "SSSSS",
+        "SSSSS",
+        "SSSSS",
+        "SSSSS"
+      ],
+      "layers": [
+        [
+          "B S B",
+          "S   S",
+          "S   S",
+          "S   S",
+          "BSSSB"
+        ],
+        [
+          "B S B",
+          "S   S",
+          "S   S",
+          "S   S",
+          "BSSSB"
+        ],
+        [
+          "PPPPP",
+          "PPPPP",
+          "PPPPP",
+          "PPPPP",
+          "PPPPP"
+        ]
+      ]
+    },
+    {
+      "id": "granary",
+      "name": "Grenier",
+      "cost": 25,
+      "effects": {
+        "food": 0.04,
+        "wealth": 0.5
+      },
+      "ground": [],
+      "layers": [
+        [
+          "B  B",
+          " .. ",
+          " .. ",
+          "B  B"
+        ],
+        [
+          "WWWW",
+          "W  W",
+          "W  W",
+          "WWWW"
+        ],
+        [
+          "WWWW",
+          "W  W",
+          "W  W",
+          "WWWW"
+        ],
+        [
+          "TTTT",
+          "TTTT",
+          "TTTT",
+          "TTTT"
+        ]
+      ]
+    },
+    {
+      "id": "chapel",
+      "name": "Chapelle",
+      "cost": 45,
+      "effects": {
+        "faith": 0.1,
+        "wealth": 0.5
+      },
+      "ground": [
+        "SSSSS",
+        "SSSSS",
+        "SSSSS",
+        "SSSSS",
+        "SSSSS",
+        "SSSSS",
+        "SSSSS"
+      ],
+      "layers": [
+        [
+          "CC CC",
+          "C   C",
+          "C   C",
+          "C   C",
+          "C   C",
+          "C   C",
+          "CCCCC"
+        ],
+        [
+          "CC CC",
+          "C   C",
+          "O   O",
+          "C   C",
+          "O   O",
+          "C   C",
+          "CCCCC"
+        ],
+        [
+          "CCCCC",
+          "C   C",
+          "C   C",
+          "C   C",
+          "C   C",
+          "C   C",
+          "CCCCC"
+        ],
+        [
+          "TTTTT",
+          "TTTTT",
+          "TTTTT",
+          "TTTTT",
+          "TTTTT",
+          "TTTTT",
+          "TTTTT"
+        ],
+        [
+          "     ",
+          "     ",
+          "     ",
+          "     ",
+          "     ",
+          "  C  ",
+          "     "
+        ],
+        [
+          "     ",
+          "     ",
+          "     ",
+          "     ",
+          "     ",
+          "  C  ",
+          "     "
+        ]
+      ]
+    },
+    {
+      "id": "barracks",
+      "name": "Caserne",
+      "cost": 50,
+      "effects": {
+        "soldiers": 3
+      },
+      "ground": [
+        "SSSSSSS",
+        "SSSSSSS",
+        "SSSSSSS",
+        "SSSSSSS",
+        "SSSSSSS"
+      ],
+      "layers": [
+        [
+          "PPP PPP",
+          "P     P",
+          "P     P",
+          "P     P",
+          "PPPPPPP"
+        ],
+        [
+          "PPP PPP",
+          "P     P",
+          "O     O",
+          "P     P",
+          "PPPPPPP"
+        ],
+        [
+          "TTTTTTT",
+          "TTTTTTT",
+          "TTTTTTT",
+          "TTTTTTT",
+          "TTTTTTT"
+        ]
+      ]
+    },
+    {
+      "id": "tower",
+      "name": "Tour de guet",
+      "cost": 35,
+      "effects": {
+        "defense": 1
+      },
+      "ground": [],
+      "layers": [
+        [
+          "B B",
+          "   ",
+          "B B"
+        ],
+        [
+          "B B",
+          "   ",
+          "B B"
+        ],
+        [
+          "B B",
+          "   ",
+          "B B"
+        ],
+        [
+          "PPP",
+          "PPP",
+          "PPP"
+        ],
+        [
+          "R R",
+          "   ",
+          "R R"
+        ]
+      ]
+    },
+    {
+      "id": "castle",
+      "name": "Château du seigneur",
+      "cost": 140,
+      "effects": {
+        "wealth": 3,
+        "soldiers": 4,
+        "city": 1
+      },
+      "ground": [
+        "CCCCCCC",
+        "CCCCCCC",
+        "CCCCCCC",
+        "CCCCCCC",
+        "CCCCCCC",
+        "CCCCCCC",
+        "CCCCCCC"
+      ],
+      "layers": [
+        [
+          "CCC CCC",
+          "C     C",
+          "C     C",
+          "C     C",
+          "C     C",
+          "C     C",
+          "CCCCCCC"
+        ],
+        [
+          "CCC CCC",
+          "C     C",
+          "C     C",
+          "C     C",
+          "C     C",
+          "C     C",
+          "CCCCCCC"
+        ],
+        [
+          "CCCCCCC",
+          "C     C",
+          "O     O",
+          "C     C",
+          "O     C",
+          "C     C",
+          "CCCCCCC"
+        ],
+        [
+          "CCCCCCC",
+          "CCCCCCC",
+          "CCCCCCC",
+          "CCCCCCC",
+          "CCCCCCC",
+          "CCCCCCC",
+          "CCCCCCC"
+        ],
+        [
+          "R R R R",
+          "       ",
+          "R     R",
+          "       ",
+          "R     R",
+          "       ",
+          "R R R R"
+        ]
+      ]
+    }
+  ],
+  "build_order": [
+    "field",
+    "workshop",
+    "field",
+    "granary",
+    "chapel",
+    "barracks",
+    "tower",
+    "field",
+    "workshop",
+    "castle",
+    "tower",
+    "field"
+  ],
+  "ai_rules": {
+    "_doc": "Règles des IA (1.4) : revenus et croissance par bâtiment, ville à 50 habitants avec un château, cadeaux au joueur s'ils l'aiment bien, voisins rivaux selon leur agressivité.",
+    "build_min_population": 4,
+    "food_growth_mult": 1.0,
+    "city_population": 50,
+    "gift_relation": 45,
+    "gift_chance": 0.05,
+    "gift_gold": 10,
+    "rivalry_chance": 0.02,
+    "spacing": 9
   }
 }

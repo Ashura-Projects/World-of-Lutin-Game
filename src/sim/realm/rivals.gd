@@ -103,8 +103,8 @@ func _spots(start: Vector3i, n: int) -> Array:
 			break
 		var x := Rng.randi_range(16, world.size.x - 17)
 		var z := Rng.randi_range(16, world.size.z - 17)
-		var y := world.surface_y(x, z)
-		if y <= 0 or world.get_block(Vector3i(x, y - 1, z)) != world.types.num("grass"):
+		var y := WorldStreamer.surface(world, x, z)  # Campagne Impériale : hauteur calculée sans générer
+		if y <= 0:
 			continue
 		if Vector2(x - start.x, z - start.z).length() < min_d:
 			continue
@@ -119,9 +119,12 @@ func _spots(start: Vector3i, n: int) -> Array:
 			continue
 		var flat := true
 		for d: Vector2i in [Vector2i(6, 0), Vector2i(-6, 0), Vector2i(0, 6), Vector2i(0, -6)]:
-			if absi(world.surface_y(x + d.x, z + d.y) - y) > 2:
+			if absi(WorldStreamer.surface(world, x + d.x, z + d.y) - y) > 2:
 				flat = false
-		if flat:
+		if not flat:
+			continue
+		WorldStreamer.ensure_at(Vector3i(x, y, z), 1)  # génère la zone du village avant de le bâtir
+		if world.get_block(Vector3i(x, y - 1, z)) == world.types.num("grass"):
 			out.append(Vector3i(x, y, z))
 	return out
 
@@ -290,14 +293,19 @@ func daily(day: int) -> void:
 	for st: Dictionary in present():
 		var fd := def(st["id"])
 		st["wealth"] = float(st["wealth"]) + int(st["population"]) * float(ai.get("income_per_pop", 0.4))
-		if Rng.chance(float(ai.get("growth_per_day", 0.12))):
+		if Rng.chance(float(ai.get("growth_per_day", 0.12)) + RivalBuilder.growth_bonus(st)):
 			st["population"] = int(st["population"]) + 1
 			_grow(st)
-		var max_s := int(int(st["population"]) * float(ai.get("max_soldiers_ratio", 0.4)))
+		var max_s := (
+			int(int(st["population"]) * float(ai.get("max_soldiers_ratio", 0.4)))
+			+ int(RivalBuilder.effect(st, "soldiers"))
+		)
 		if int(st["soldiers"]) < max_s and float(st["wealth"]) >= float(ai.get("soldier_cost", 15)):
 			st["wealth"] = float(st["wealth"]) - float(ai.get("soldier_cost", 15))
 			st["soldiers"] = int(st["soldiers"]) + 1
 		_expand(st, ai)
+		RivalBuilder.daily(self, st)  # 1.4 : ils bâtissent selon leur plan et leurs règles
+		RivalBuilder.diplomacy(self, st, _realm())
 		if _realm() == null:
 			continue
 		var status := _realm().status(st["id"])

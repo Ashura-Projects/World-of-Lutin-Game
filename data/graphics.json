@@ -1,5 +1,5 @@
 {
-  "_doc": "Réglages graphiques : préréglages (Paramètres › Graphismes). « custom » = choix libres du joueur.",
+  "_doc": "Réglages graphiques : préréglages (Paramètres › Graphismes). « custom » = choix libres du joueur. Campagne Impériale : carte générée par zones en bas / moyen / haut ; entière au départ en ultra et personnalisé.",
   "presets": {
     "low": {
       "shadows": "off",
@@ -22,6 +22,15 @@
     "high": {
       "shadows": "high",
       "view_distance": 192,
+      "render_scale": 1.0,
+      "aa": "msaa2",
+      "fog": true,
+      "fps_cap": 60,
+      "vegetation": 1.0
+    },
+    "ultra": {
+      "shadows": "high",
+      "view_distance": 256,
       "render_scale": 1.0,
       "aa": "msaa2",
       "fog": true,

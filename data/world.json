@@ -325,5 +325,12 @@
       }
     ],
     "radius_max": 6
+  },
+  "streaming": {
+    "_doc": "Campagne Impériale par zones (1.4) : zones générées au départ autour du centre (rayon en zones de 64), marge autour de la vue, zones oubliées au-delà de keep_extra.",
+    "initial_radius_regions": 3,
+    "view_margin": 64,
+    "lutin_radius": 40,
+    "keep_extra": 256
   }
 }

@@ -49,7 +49,10 @@ func setup_new(start: Vector3i) -> void:
 
 func pick_camp_spots(start: Vector3i, n: int) -> Array:
 	var trees: Array = flora.trees.keys()
-	var min_d := float(_cfg.get("camp_min_distance_ratio", 0.3)) * float(mini(world.size.x, world.size.z))
+	var min_d := minf(
+		float(_cfg.get("camp_min_distance_ratio", 0.3)) * float(mini(world.size.x, world.size.z)),
+		float(_cfg.get("camp_min_distance_streamed", 150)) if GameSetup.size_def().get("streamed", false) else INF
+	)
 	var spacing := float(_cfg.get("camp_spacing", 60))
 	var cands := []
 	for _i in mini(500, trees.size()):

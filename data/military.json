@@ -16,7 +16,8 @@
       "small": 2,
       "medium": 3,
       "large": 5,
-      "huge": 9
+      "huge": 9,
+      "imperial": 14
     },
     "camp_min_distance_ratio": 0.3,
     "camp_spacing": 60,
@@ -72,7 +73,8 @@
       "bedrock",
       "water"
     ],
-    "detour_after_fails": 2
+    "detour_after_fails": 2,
+    "camp_min_distance_streamed": 150
   },
   "victory": {
     "destroy_all_camps": true,

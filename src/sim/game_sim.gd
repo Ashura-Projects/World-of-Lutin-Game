@@ -27,7 +27,8 @@ const SAVE_KEYS := [
 	"gates",
 	"missions",
 	"settlements",
-	"bandits"
+	"bandits",
+	"streamer"
 ]
 
 var world: VoxelWorld
@@ -59,6 +60,7 @@ var catapults: Catapults
 var water: WaterFlow
 var settlements: Settlements
 var bandits: Bandits
+var streamer: WorldStreamer
 
 
 func _init(w: VoxelWorld) -> void:
@@ -97,6 +99,7 @@ func _init(w: VoxelWorld) -> void:
 	water = WaterFlow.new(w)
 	settlements = Settlements.new(colony, structures, w)
 	bandits = Bandits.new(self)
+	streamer = WorldStreamer.new(w, flora)
 	structures.changed.connect(settlements.sync)
 	structures.changed.connect(gates.sync_with_structures)
 
@@ -204,7 +207,8 @@ func register_saves() -> void:
 		gates,
 		missions,
 		settlements,
-		bandits
+		bandits,
+		streamer
 	]
 	for i in SAVE_KEYS.size():
 		SaveManager.register(SAVE_KEYS[i], objs[i])

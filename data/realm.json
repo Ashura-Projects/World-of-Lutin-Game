@@ -142,6 +142,46 @@
         "relation": 35,
         "status": "neutral",
         "price_bonus_trade": 0.15
+      },
+      {
+        "id": "orange",
+        "name": "Comté des Moissons",
+        "desc": "Lutins orangés des grandes plaines, fermiers et éleveurs.",
+        "relation": 25,
+        "status": "neutral",
+        "price_bonus_trade": 0.1
+      },
+      {
+        "id": "violet",
+        "name": "Principauté d'Améthyste",
+        "desc": "Lutins violets rusés, diplomates et intrigants.",
+        "relation": 0,
+        "status": "neutral",
+        "price_bonus_trade": 0.1
+      },
+      {
+        "id": "blanc",
+        "name": "Ordre des Neiges",
+        "desc": "Lutins pâles des montagnes, moines-soldats austères.",
+        "relation": -5,
+        "status": "neutral",
+        "price_bonus_trade": 0.1
+      },
+      {
+        "id": "brun",
+        "name": "Tribus de la Tourbe",
+        "desc": "Lutins bruns des marais, chasseurs farouches.",
+        "relation": -20,
+        "status": "neutral",
+        "price_bonus_trade": 0.1
+      },
+      {
+        "id": "rose",
+        "name": "Marche des Églantiers",
+        "desc": "Lutins roses des collines fleuries, artisans et musiciens.",
+        "relation": 30,
+        "status": "neutral",
+        "price_bonus_trade": 0.1
       }
     ],
     "alliance_min": 70,

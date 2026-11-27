@@ -79,6 +79,29 @@ func _visible(k: Vector3i) -> bool:
 	return fog == null or fog.explored.has(fog.col_of(Vector3i(k.x * Chunk.SIZE, 0, k.z * Chunk.SIZE)))
 
 
+## Attend les maillages en cours (fermeture de la partie).
+func finish_tasks() -> void:
+	for id: int in _running.keys():
+		WorkerThreadPool.wait_for_task_completion(id)
+	_running.clear()
+
+
+## Plus aucun maillage en cours (le monde peut recevoir une nouvelle zone sans accès croisé).
+func idle() -> bool:
+	return _running.is_empty()
+
+
+## Une zone vient d'être générée (Campagne Impériale) : ses chunks et les bords voisins sont (re)maillés.
+func on_region_loaded(keys: Array) -> void:
+	for k: Vector3i in keys:
+		for d: Vector3i in [
+			Vector3i.ZERO, Vector3i(1, 0, 0), Vector3i(-1, 0, 0), Vector3i(0, 0, 1), Vector3i(0, 0, -1)
+		]:
+			if _views.has(k + d):
+				_pending[k + d] = true
+	_scanned_at = Vector3(-9999, 0, -9999)  # nouveau balayage : les chunks proches arrivent
+
+
 func remesh_all() -> void:
 	for k: Vector3i in _views:
 		_pending[k] = true

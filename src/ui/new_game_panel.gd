@@ -112,7 +112,7 @@ func refresh() -> void:
 	_row(
 		"Villages voisins (IA)",
 		str(GameSetup.ai_factions) if GameSetup.ai_factions > 0 else "aucun",
-		func() -> void: GameSetup.ai_factions = (GameSetup.ai_factions + 1) % 4
+		func() -> void: GameSetup.ai_factions = (GameSetup.ai_factions + 1) % 9
 	)
 	if GameSetup.ai_factions > 0:
 		_row(

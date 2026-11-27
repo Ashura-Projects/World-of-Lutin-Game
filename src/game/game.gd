@@ -37,6 +37,8 @@ var realm_view: RealmView
 var smoke_view: SmokeView
 var fauna_fog: Territory
 var click_marker: ClickMarker
+var streamed: bool = false  # Campagne Impériale générée par zones
+var _initial_regions: Array = []
 
 
 func _ready() -> void:
@@ -56,7 +58,21 @@ func _ready() -> void:
 	generator = WorldGenerator.new(world, GameSetup.seed_value)
 	if GameSetup.mode == "battle" and GameSetup.load_slot == "":
 		generator.preset = GameSetup.terrain  # carte de bataille : plaine, forêt ou collines
-	_gen_task = WorkerThreadPool.add_task(generator.generate)
+	var full := str(Settings.get_value("quality")) in ["ultra", "custom"]  # Ultra / perso : toute la carte
+	streamed = bool(GameSetup.size_def().get("streamed", false)) and GameSetup.load_slot == "" and not full
+	_gen_task = WorkerThreadPool.add_task(_gen_initial_zones if streamed else generator.generate)
+
+
+## Campagne Impériale : seulement les zones autour du centre au chargement ; le reste vient en jouant.
+func _gen_initial_zones() -> void:
+	var r := int(DataRegistry.get_table("world").get("streaming", {}).get("initial_radius_regions", 3))
+	var c := WorldStreamer.region_of(Vector3i(world.size.x / 2, 0, world.size.z / 2))
+	for dx in range(-r, r + 1):
+		for dz in range(-r, r + 1):
+			var reg := c + Vector2i(dx, dz)
+			var n := WorldStreamer.REGION
+			generator.generate_region(reg.x * n, reg.y * n, (reg.x + 1) * n, (reg.y + 1) * n)
+			_initial_regions.append(reg)
 
 
 func _process(delta: float) -> void:
@@ -73,6 +89,8 @@ func _process(delta: float) -> void:
 		_loading.set_progress(0.65 + 0.35 * (1.0 - float(left) / maxf(1.0, float(_mesh_total))))
 		if left == 0 and world_view.has_scanned():
 			_loading.ready_to_play()
+	if sim != null and sim.streamer.enabled and world_view != null:
+		_stream()
 	if sky and world_view:
 		sky.update(GameClock.time_of_day())
 		world_view.focus = camera.target
@@ -94,6 +112,9 @@ func _process(delta: float) -> void:
 
 func _on_world_ready() -> void:
 	sim = GameSim.new(world)
+	if streamed:
+		sim.streamer.start(generator)
+		sim.streamer.mark_generated(_initial_regions)
 	colony = sim.colony
 	flora = sim.flora
 	fauna = sim.fauna
@@ -113,6 +134,8 @@ func _on_world_ready() -> void:
 	world_view = WorldView.new()
 	add_child(world_view)
 	world_view.setup(world)
+	sim.streamer.merge_gate = world_view.idle
+	sim.streamer.region_loaded.connect(world_view.on_region_loaded)
 	world_view.focus = Vector3(colony.stock.pos)
 	if bool(DataRegistry.get_table("realm").get("fog", {}).get("enabled", true)):
 		world_view.fog = sim.territory
@@ -189,6 +212,25 @@ func _on_world_ready() -> void:
 	hud.bind_game(self)
 	_loading.set_progress(0.65)
 	GameClock.running = false  # la partie démarre au bouton « Jouer »
+
+
+## Campagne Impériale : zones demandées autour de la caméra (et des lutins), une génération à la fois, oubli
+## des zones lointaines jamais modifiées.
+func _stream() -> void:
+	var st: WorldStreamer = sim.streamer
+	var cfg: Dictionary = DataRegistry.get_table("world").get("streaming", {})
+	var f := Engine.get_process_frames()
+	if f % 10 == 0:
+		st.request(camera.target, Graphics.view_distance() + float(cfg.get("view_margin", 64)))
+	if f % 90 == 0:
+		for l: Lutin in colony.lutins:
+			st.request(l.pos, float(cfg.get("lutin_radius", 40)))
+	if f % 900 == 0 and world_view.idle():
+		var pts: Array = [camera.target]
+		for l: Lutin in colony.lutins:
+			pts.append(l.pos)
+		st.unload_far(pts, Graphics.view_distance() + float(cfg.get("keep_extra", 256)))
+	st.process()
 
 
 ## Poser des blocs : plans pour les bâtisseurs, ou pose immédiate en « construction libre » (débug).
@@ -378,6 +420,10 @@ func _pick_object(screen: Vector2) -> void:
 
 
 func _exit_tree() -> void:
+	if sim != null:
+		sim.streamer.finish()
+	if world_view != null:
+		world_view.finish_tasks()
 	Audio.stop_all()
 	Audio.world_root = null
 	if sim != null:

@@ -198,10 +198,12 @@ func _graphics_tab() -> void:
 	row.add_theme_constant_override("separation", 6)
 	_body.add_child(row)
 	_preset_btns.clear()
-	for p: Array in [["low", "Basse"], ["medium", "Moyenne"], ["high", "Haute"], ["custom", "Personnalisée"]]:
+	for p: Array in [
+		["low", "Basse"], ["medium", "Moyenne"], ["high", "Haute"], ["ultra", "Ultra"], ["custom", "Perso."]
+	]:
 		var b := Button.new()
 		b.text = p[1]
-		b.custom_minimum_size = Vector2(210, 52)
+		b.custom_minimum_size = Vector2(170, 52)
 		var id: String = p[0]
 		b.pressed.connect(
 			func() -> void:
