@@ -14,7 +14,18 @@ func setup(g: Node) -> void:
 	_cfg = DataRegistry.get_table("audio")
 	Audio.world_root = self
 	EventBus.sfx.connect(func(n: String, p: Vector3) -> void: Audio.play_at(n, p))
+	EventBus.alert.connect(_on_alert)
 	Audio.start_music()
+
+
+func _on_alert(kind: String, _text: String) -> void:
+	match kind:
+		"cloche":
+			Audio.play_ui("cloche")
+		"naissance":
+			Audio.play_ui("naissance")
+		"objectif", "rang", "recherche", "formation":
+			Audio.play_ui("fanfare")
 
 
 func _process(delta: float) -> void:
