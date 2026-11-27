@@ -34,7 +34,7 @@
     {
       "id": "cemetery",
       "title": "Cimetière",
-      "text": "Zones › Cimetière : désignez des cases. Les lutins morts y sont enterrés et une pierre tombale apparaît (touchez-la pour lire le nom)."
+      "text": "Terre › Zones › Cimetière : désignez des cases. Les lutins morts y sont enterrés et une pierre tombale apparaît (touchez-la pour lire le nom)."
     },
     {
       "id": "defense",
@@ -49,7 +49,7 @@
     {
       "id": "farm",
       "title": "Ferme et élevage",
-      "text": "Le marchand ambulant vend des vaches et des cochons (Commerce › Animaux d'élevage). Une vache donne 2 laits par jour si elle mange (paille, blé ou navet) ; un cochon mange navets, pommes de terre, légumes, baies ou paille. Deux bêtes bien nourries font un petit de temps en temps. Touchez une bête pour l'abattre (viande, peaux) ou la vendre. Faites un enclos avec des clôtures (Construire › Ferme) : elles se relient toutes seules ; un portillon fermé garde les bêtes dedans. Laiterie : fromage et beurre ; billot : saucisses et jambon. Nouvelles cultures : carotte, oignon, navet, citrouille, chanvre (corde, toile)."
+      "text": "Le marchand ambulant vend des vaches et des cochons (Royaume › Commerce › Animaux d'élevage). Une vache donne 2 laits par jour si elle mange (paille, blé ou navet) ; un cochon mange navets, pommes de terre, légumes, baies ou paille. Deux bêtes bien nourries font un petit de temps en temps. Touchez une bête pour l'abattre (viande, peaux) ou la vendre. Faites un enclos avec des clôtures (Construire › Ferme) : elles se relient toutes seules ; un portillon fermé garde les bêtes dedans. Laiterie : fromage et beurre ; billot : saucisses et jambon. Nouvelles cultures : carotte, oignon, navet, citrouille, chanvre (corde, toile)."
     },
     {
       "id": "crafting",
@@ -64,7 +64,7 @@
     {
       "id": "units",
       "title": "Commander une unité",
-      "text": "Militaire › Unités › ⚑ Commander (ou touchez un soldat de l'unité) : une bulle et une barre de symboles apparaissent. ⬇ aller et ⚔ attaquer : chaque toucher sur la carte donne l'ordre. ✋ tenir, ⌂ rentrer, ◎ explorer, ⌖ voir l'unité ; formations : ligne, double ligne, colonne, carré, coin. Les soldats d'une unité portent l'uniforme aux couleurs de l'étendard et se rangent chacun sur sa case."
+      "text": "Armée › Militaire › Unités › ⚑ Commander (ou touchez un soldat de l'unité) : une bulle et une barre de symboles apparaissent. ⬇ aller et ⚔ attaquer : chaque toucher sur la carte donne l'ordre. ✋ tenir, ⌂ rentrer, ◎ explorer, ⌖ voir l'unité ; formations : ligne, double ligne, colonne, carré, coin. Les soldats d'une unité portent l'uniforme aux couleurs de l'étendard et se rangent chacun sur sa case."
     },
     {
       "id": "storage",
@@ -74,12 +74,47 @@
     {
       "id": "homes",
       "title": "Tentes et maisons",
-      "text": "Tentes en peau ou en tissu : 1 place (célibataire) ou couple, plus 1 place d'enfant ; un couple y a un enfant. Les maisons (pièces avec des lits) n'ont pas de limite tant qu'il reste un lit libre. Lutins › Familles › 🏠 Loger… : touchez une maison, une tente ou un lit pour y installer la famille."
+      "text": "Tentes en peau ou en tissu : 1 place (célibataire) ou couple, plus 1 place d'enfant ; un couple y a un enfant. Les maisons (pièces avec des lits) n'ont pas de limite tant qu'il reste un lit libre. Peuple › Lutins › Familles › 🏠 Loger… : touchez une maison, une tente ou un lit pour y installer la famille."
     },
     {
       "id": "build_tips",
       "title": "Construire plus vite",
       "text": "Sous la bulle de construction : outils (bloc, ligne, remplir, mur, gomme), forme suivante ◩ (demi-bloc, escalier, pente…), ⟳ sens, ↶ annuler, ✋ déplacer la vue. Pour un objet : ⟳ le tourne avant de le poser (un fantôme montre le résultat). Un gros atelier se touche n'importe où sur son volume (fiche ou gomme)."
+    },
+    {
+      "id": "menus14",
+      "title": "Les menus (1.4)",
+      "text": "La barre du bas est rangée par catégories : Construire ; Terre (Récolter, Terrain, Zones) ; Peuple (Lutins, Villages et villes, Statistiques) ; Armée (Militaire et unités, Bataille) ; Royaume (Royaume et diplomatie, Commerce) ; Gestion (Ateliers, Recherche, Tableau de bord). Le compteur ☺ en haut ouvre la liste des lutins par village avec des filtres."
+    },
+    {
+      "id": "army14",
+      "title": "Unités, soldats et commandement",
+      "text": "Armée › Militaire › Unités › ⚙ Gérer : type d'unité (mixte, cavalerie, fusiliers, lanciers, épéistes, catapulte), arme et cheval pour toute l'unité ou pour chaque soldat, catapulte servie, cuisinier, lieutenants. Le commandant porte un bicorne et a 20 % de PV en plus. Entraînez la force (dégâts), l'agilité (vitesse de marche et d'attaque) et la robustesse (PV) sur un sol d'entraînement (✦). La compétence Commandement monte en combattant et renforce les soldats ; tous les 5 niveaux, une sous-unité de plus (avec son lieutenant), commandée à part avec le bouton T / C / 1 / 2. ☾ Repos : les soldats montent un camp de tentes et le cuisinier les nourrit. Fusiliers : fusil à l'épaule en marche, en joue à l'arrêt ; lanciers : lance haute puis en pique."
+    },
+    {
+      "id": "diplo14",
+      "title": "Diplomatie",
+      "text": "Royaume › Diplomatie : choisissez un diplomate (formé à la Chancellerie, avec du charisme). La relation va d'ennemi mortel à alliance (7 niveaux). Cadeaux d'or ou de vivres, banquet, accord commercial, pacte de non-agression, tribut, alliance, intrigues : chaque niveau de Diplomatie débloque des actions, et le charisme renforce leurs effets. Les voisins qui vous aiment vous font des cadeaux."
+    },
+    {
+      "id": "school14",
+      "title": "École, cours du soir, statistiques",
+      "text": "Les enfants apprennent à l'école (savoir, adresse, force, et maintenant éloquence pour le charisme). Les adultes peuvent suivre des cours du soir (Peuple › Statistiques › Lutins). L'onglet Royaume des statistiques montre population, âges, métiers, humeur, foi, vivres, armée et réserve."
+    },
+    {
+      "id": "villages14",
+      "title": "Villages et villes",
+      "text": "La balise de royaume revendique le territoire ; la balise de village fonde un nouveau village. Peuple › Villages et villes montre pour chacun les foyers (qui habite où), les maisons, les ateliers (qui y travaille, ce qu'ils produisent), les soldats et unités, les bâtiments. Un village devient une ville avec 50 habitants, un château (salle du trône), une geôle de 5 cages, une maison par foyer, une caserne et un camp d'entraînement."
+    },
+    {
+      "id": "bandits14",
+      "title": "Bandits et combats",
+      "text": "Des bandits gris se cachent dans les grandes forêts : ils attaquent les lutins qui passent et viennent piller les villages (le vôtre comme ceux des voisins). Videz leur camp pour récupérer leur butin. Bandits, orcs et voisins se battent aussi entre eux."
+    },
+    {
+      "id": "modes14",
+      "title": "Bataille et Campagne Impériale",
+      "text": "Bataille : une carte plaine, forêt ou collines ; posez vos soldats et des ennemis (Armée › Bataille), formez des unités et combattez. Campagne Impériale : une carte 40 fois la moyenne, huit factions qui bâtissent leurs villages selon leurs plans et font de la diplomatie. En graphismes bas, moyen ou haut, la carte se crée par zones autour de vous ; en Ultra ou personnalisé, elle est créée entièrement au départ (chargement long)."
     },
     {
       "id": "tips",

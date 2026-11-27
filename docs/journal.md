@@ -120,6 +120,25 @@ Settings, GameSetup), GUT 9.7.1 headless, export Android arm64 (`com.ashura.worl
     (com.ashura.worldoflutin) pour garder les sauvegardes et installer par-dessus.
 - Non testé : sur téléphone.
 
+## v1.4.0 (demandes d'Ashura)
+- Fait : voir CHANGELOG 1.4.0.
+- Preuves : 180 tests GUT verts (nouveaux `test_v14_units`, `test_v14_realm`, `test_v14_bandits`, `test_v14_battle`,
+  `test_v14_imperial`), gdlint propre, tous les scripts compilent, captures `build/captures/v14_*`.
+  Tick moyen 1,9 ms (Aventure Royale, PC). Campagne Impériale : une zone 64 × 64 se génère en ~180 ms (PC, fil de
+  travail), chargement de départ ~25 s sur PC (plus long sur téléphone).
+- Choix faits sans Ashura :
+  - Campagne Impériale : 2 336 × 2 336 blocs ; zones de 64 × 64 ; zones lointaines jamais modifiées oubliées puis
+    régénérées à l'identique ; seules les zones modifiées sont sauvegardées (décision d'Ashura : zones en bas / moyen /
+    haut, tout au départ en Ultra / personnalisé) ;
+  - entraînement : 10 niveaux par qualité (+6 % dégâts, +4 % marche / +5 % attaque, +8 % PV par niveau) ;
+    Commandement : +2 % aux soldats par niveau, 20 niveaux, une sous-unité de plus tous les 5 niveaux ;
+  - diplomatie : seuils -75 / -40 / -10 / 15 / 40 ; actions débloquées aux niveaux 0 à 6 de Diplomatie ;
+  - ville : 50 habitants, salle du trône, 5 cages, une maison (pièce avec lits) par foyer, garnison + réfectoire,
+    4 cases de sol d'entraînement ; rayon d'un village : 40 blocs ;
+  - bandits : un camp pour 40 000 cases de carte (12 au plus), pillage tous les 9 jours ;
+  - mode Bataille : construction libre et réserve d'armes ; les ennemis posés foncent sur nos soldats.
+- Non testé : sur téléphone (dont la Campagne Impériale en Ultra : chargement très long).
+
 ## v1.3.2 (demandes d'Ashura)
 - Fait : voir CHANGELOG 1.3.2.
 - Preuves : 155 tests GUT verts (nouveau `tests/test_v132.gd` : enlever, volume des objets, clôtures, portillon,

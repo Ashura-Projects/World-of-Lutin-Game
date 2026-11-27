@@ -1,5 +1,31 @@
 # Journal des versions
 
+## 1.4.0 — Armées, diplomatie, villes, Campagne Impériale (2026-11-27)
+- **Unités** : type (mixte, cavalerie, fusiliers, lanciers, épéistes, catapulte), arme et cheval pour l'unité ou
+  pour chaque soldat, catapulte servie (elle vise, se charge, tire et suit l'unité), cuisinier et lieutenants ;
+  **sous-unités** commandées à part (une de base, +1 tous les 5 niveaux de Commandement) ; unités jusqu'à 40 soldats ;
+  panneau **⚙ Gérer l'unité**.
+- **Commandant** : bicorne à plume, +20 % de PV. **Entraînement** force (dégâts), agilité (vitesse de marche et
+  d'attaque), robustesse (PV). Compétence **Commandement** (monte en combattant, renforce les soldats).
+- **Armes en main** : fusil à l'épaule en marche, en joue à l'arrêt ; lance haute puis en pique (transition douce).
+- **Repos ☾** : camp de tentes et repas du cuisinier ; **✦** entraînement ; barre d'ordres par sous-unité (T/C/1/2).
+- **Diplomatie** à 7 niveaux (ennemi mortel → alliance), cadeaux d'or ou de vivres, banquet, commerce, pacte,
+  tribut, alliance, intrigues ; **diplomate** (formé à la Chancellerie) dont le **charisme** et la compétence
+  Diplomatie renforcent les effets et débloquent des actions. Les voisins amicaux font des cadeaux.
+- **École** : cours d'éloquence (charisme) et **cours du soir** pour adultes. **Statistiques** (royaume et lutins).
+- **Villages et villes** : balise de royaume / balise de village ; panneau des villages (foyers, maisons, ateliers et
+  artisans, commandes, soldats, unités, bâtiments) ; une ville = 50 habitants + château, geôle de 5 cages, une maison
+  par foyer, caserne, camp d'entraînement. **Compteur ☺** de lutins en haut : liste filtrée (village, métier,
+  soldats, âge).
+- **Bandits** gris des grandes forêts : attaques, pillages (chez nous et chez les voisins), camps à vider (butin).
+  **Combats entre PNJ** (bandits, orcs, voisins).
+- **Mode Bataille** : carte plaine, forêt ou collines ; poser alliés (fusiliers, lanciers, épéistes, cavaliers) et
+  ennemis (orcs, bandits, soldats voisins) ; former et gérer les unités.
+- **Campagne Impériale** : carte 40 × la moyenne, générée par zones autour de la caméra (bas, moyen, haut) ou
+  entièrement (Ultra, personnalisé) ; 8 factions (5 nouvelles) qui **bâtissent** selon leurs schémas (champ, atelier,
+  grenier, chapelle, caserne, tour, château), avec leurs règles de production et un peu de diplomatie.
+- **Graphismes Ultra**. **Menus par catégories** (Construire, Terre, Peuple, Armée, Royaume, Gestion). Guide complété.
+
 ## 1.3.2 — Ferme, ateliers réels, terrain, unités (2026-11-27)
 - **Arbres, buissons, plantes** : on les touche pour voir ce qu'ils donnent et Couper / Cueillir / **Enlever** ;
   Récolter › Enlever en cercle ; débug « Enlever instantané ».

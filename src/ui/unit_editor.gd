@@ -127,6 +127,7 @@ func _roles(u: Dictionary) -> void:
 ## Liste déroulante des membres (« aucun » = -1) pour un rôle.
 func _pick(row: HBoxContainer, u: Dictionary, current: int, cb: Callable) -> void:
 	var o := OptionButton.new()
+	o.add_theme_font_size_override("font_size", 16)
 	o.custom_minimum_size = Vector2(300, 46)
 	o.add_item("— aucun —", 0)
 	var i := 1
@@ -178,6 +179,7 @@ func _soldiers(u: Dictionary) -> void:
 		name.add_theme_font_size_override("font_size", 16)
 		row.add_child(name)
 		var w := OptionButton.new()
+		w.add_theme_font_size_override("font_size", 16)
 		w.custom_minimum_size = Vector2(170, 44)
 		w.add_item("Arme : unité", 0)
 		for i in range(1, UnitSetup.WEAPONS.size()):
@@ -194,6 +196,7 @@ func _soldiers(u: Dictionary) -> void:
 		)
 		row.add_child(w)
 		var mt := OptionButton.new()
+		mt.add_theme_font_size_override("font_size", 16)
 		mt.custom_minimum_size = Vector2(160, 44)
 		for e: Array in [["default", "Monture : unité"], ["foot", "À pied"], ["horse", "À cheval"]]:
 			mt.add_item(e[1])
@@ -206,6 +209,7 @@ func _soldiers(u: Dictionary) -> void:
 		)
 		row.add_child(mt)
 		var sq := OptionButton.new()
+		sq.add_theme_font_size_override("font_size", 16)
 		sq.custom_minimum_size = Vector2(150, 44)
 		for s in n:
 			sq.add_item("Commandant" if s == 0 else "Sous-unité %d" % s, s)

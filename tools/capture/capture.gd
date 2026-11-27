@@ -58,7 +58,7 @@ func _process(delta: float) -> bool:
 				_action_done_at
 				+ (
 					25.0
-					if _action in ["travail", "village", "ferme", "v132_unite"]
+					if _action in ["travail", "village", "ferme", "v132_unite", "v14_units"]
 					else (6.0 if _action == "loups" else 3.0)
 				)
 			)

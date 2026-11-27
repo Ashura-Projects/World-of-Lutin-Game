@@ -5,7 +5,7 @@
       "id": "wood",
       "title": "Couper du bois",
       "goal": "Rapportez 6 bûches à la réserve.",
-      "hint": "Récolter › Couper, puis touchez des arbres (cercle) et « Valider ». Le bûcheron s'en charge.",
+      "hint": "Terre › Récolter › Couper, puis touchez des arbres (cercle) et « Valider ». Le bûcheron s'en charge.",
       "kind": "stock_gain",
       "res": "log",
       "n": 6
@@ -32,7 +32,7 @@
       "id": "store",
       "title": "Ranger les réserves",
       "goal": "Créez une zone de réserve.",
-      "hint": "Zones › Réserves › Nouvelle réserve, puis touchez le sol.",
+      "hint": "Terre › Zones › Réserves › Nouvelle réserve, puis touchez le sol.",
       "kind": "store_zone",
       "n": 1
     },
@@ -48,7 +48,7 @@
       "id": "fields",
       "title": "Cultiver",
       "goal": "Semez 4 cases de champ.",
-      "hint": "Zones › Champs : choisissez une culture, touchez des cases (aperçu) puis « Valider les champs ». Le fermier sème.",
+      "hint": "Terre › Zones › Champs : choisissez une culture, touchez des cases (aperçu) puis « Valider les champs ». Le fermier sème.",
       "kind": "sown",
       "n": 4
     },
@@ -56,7 +56,7 @@
       "id": "wolves",
       "title": "Défendre le village",
       "goal": "Abattez les 2 loups qui rôdent.",
-      "hint": "Militaire › Mobiliser : vos lutins prennent les armes. Ou touchez un loup › Attaquer.",
+      "hint": "Armée › Militaire › Mobiliser : vos lutins prennent les armes. Ou touchez un loup › Attaquer.",
       "kind": "kills",
       "what": "wolf",
       "n": 2,

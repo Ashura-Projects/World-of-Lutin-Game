@@ -223,5 +223,18 @@
 - **Unités** : places uniques alignées sur la grille (4 directions), formation double ligne ; barre d'ordres à symboles.
 - **Stockage** : tas visibles de 50 par case (resources.json › piles) ; râteliers d'armes filtrés (fusils, lances, tout).
 
+## 15. Ajouts v1.4
+- **Unités** (`Units`, `UnitSetup`, `UnitCamp`) : type, arme et monture par unité / par soldat, catapulte servie,
+  commandant, lieutenants et sous-unités (+1 tous les 5 niveaux de Commandement), cuisinier, repos, entraînement.
+- **Soldats** (`Soldiering`, military.json › soldiers) : force / agilité / robustesse, compétences Commandement et
+  Diplomatie, bonus du commandant et du chef.
+- **Diplomatie** (`Diplomacy`, realm.json › diplomacy.levels / actions), diplomate, charisme ; école : éloquence et
+  cours du soir.
+- **Établissements** (`Settlements`, realm.json › settlements) : villages, villes, règles de ville.
+- **Bandits** (`Bandits`, military.json › bandits), **combats PNJ** (`NpcCombat`).
+- **Modes** : Bataille (`Battle`, générateur `preset`), Campagne Impériale (`WorldStreamer`, world.json › streaming,
+  `RivalBuilder` et factions.json › schemas / build_order / ai_rules).
+- **Interface** : barre par catégories (`MenuCategories`), statistiques, villages, gérer l'unité, bataille.
+
 ## Questions ouvertes
 1. Carte aléatoire, ou aussi des cartes dessinées à la main ? (par défaut : aléatoire seedée)

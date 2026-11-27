@@ -19,6 +19,9 @@ static func run(game: Node, action: String) -> void:
 	if "_loading" in game and is_instance_valid(game._loading):  # passer l'écran de chargement
 		game._loading.play_pressed.emit()
 		game._loading.queue_free()
+	if action.begins_with("v14"):
+		load("res://tools/capture/demos_v14.gd").run(game, action)
+		return
 	if action.begins_with("v132"):
 		load("res://tools/capture/demos_v132.gd").run(game, action)
 		return

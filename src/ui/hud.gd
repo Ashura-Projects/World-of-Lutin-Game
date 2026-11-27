@@ -14,6 +14,7 @@ var unit_editor: UnitEditor
 var stats_panel: StatsPanel
 var settlements_panel: SettlementsPanel
 var battle_panel: BattlePanel
+var categories: MenuCategories  # barre du bas par catégories (1.4)
 var sheet: LutinSheet
 var tools: HudTools
 var build_panel: BuildPanel
@@ -198,6 +199,7 @@ func _setup_build(tool: BuildTool, view: WorldView) -> void:
 		func(on: bool) -> void:
 			panel.visible = on
 			tool.set_active(on)
+			categories.sync_build(on)
 			if not on:
 				tools.hide_bubble()
 			if on:
@@ -254,13 +256,17 @@ func _build_bottom() -> void:
 	row.set_anchors_preset(Control.PRESET_FULL_RECT)
 	row.add_theme_constant_override("separation", 10)
 	bar.add_child(row)
+	var hidden := HBoxContainer.new()  # anciens boutons de menu : cachés, ils pilotent toujours leurs panneaux
+	hidden.visible = false
+	bar.add_child(hidden)
 	for n: String in MENUS:
 		var b := Button.new()
 		b.text = n
-		b.custom_minimum_size = Vector2(140, 76)
-		b.add_theme_font_size_override("font_size", 18)
 		b.name = n
-		row.add_child(b)
+		hidden.add_child(b)
+	categories = MenuCategories.new()
+	add_child(categories)
+	categories.setup(self, row)
 
 
 ## Coin bas-droit : Info (aide selon ce qu'on fait) et Retour (revenir en arrière).
@@ -291,7 +297,9 @@ func _info() -> void:
 
 ## Retour : annule le choix d'un endroit, sinon ferme la fenêtre du dessus, sinon quitte le mode en cours.
 func back() -> void:
-	if windows != null and windows.picking():
+	if categories != null and categories.is_open():
+		categories.close()
+	elif windows != null and windows.picking():
 		windows.cancel_pick()
 	elif _menu_panel.visible:
 		_menu_panel.visible = false

@@ -200,6 +200,7 @@ func _lutins() -> void:
 		if l.age_stage() != "adult":
 			continue
 		var o := OptionButton.new()
+		o.add_theme_font_size_override("font_size", 16)
 		o.custom_minimum_size = Vector2(200, 40)
 		o.add_item("Cours : aucun")
 		for k: String in APT_NAMES:

@@ -10,6 +10,7 @@ static func fill(p: RealmPanel) -> void:
 	var d := Diplomacy.diplomat(r)
 	var row := p._row()
 	var pick := OptionButton.new()
+	pick.add_theme_font_size_override("font_size", 16)
 	pick.custom_minimum_size = Vector2(380, 46)
 	pick.add_item("— pas de diplomate —", 0)
 	for l: Lutin in r.colony.lutins:
