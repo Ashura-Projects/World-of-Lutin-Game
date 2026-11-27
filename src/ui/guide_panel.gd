@@ -4,6 +4,7 @@ extends PanelContainer
 ## chevaux, conseils. Sommaire à gauche, texte à droite.
 
 var _text: RichTextLabel
+var _scroll: ScrollContainer
 var _sections: Array = []
 
 
@@ -17,15 +18,26 @@ func _ready() -> void:
 	var h := HBoxContainer.new()
 	h.add_theme_constant_override("separation", 12)
 	v.add_child(h)
+	# sommaire et texte défilent chacun (au doigt) : tout reste lisible, même les longues pages
+	var menu_scroll := ScrollContainer.new()
+	menu_scroll.custom_minimum_size = Vector2(320, 470)
+	menu_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	h.add_child(menu_scroll)
 	var menu := VBoxContainer.new()
 	menu.add_theme_constant_override("separation", 4)
-	h.add_child(menu)
+	menu_scroll.add_child(menu)
+	_scroll = ScrollContainer.new()
+	_scroll.custom_minimum_size = Vector2(860, 470)
+	_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	h.add_child(_scroll)
 	_text = RichTextLabel.new()
-	_text.custom_minimum_size = Vector2(860, 470)
+	_text.custom_minimum_size = Vector2(840, 0)
+	_text.fit_content = true
+	_text.scroll_active = false
 	_text.bbcode_enabled = true
 	_text.add_theme_font_size_override("normal_font_size", 20)
 	_text.add_theme_color_override("default_color", UiStyle.TXT)
-	h.add_child(_text)
+	_scroll.add_child(_text)
 	_sections = DataRegistry.get_table("guide").get("sections", [])
 	for i in _sections.size():
 		var b := Button.new()
@@ -43,6 +55,7 @@ func show_section(i: int) -> void:
 	if s["id"] == "rooms":
 		t += "\n" + room_rules()
 	_text.text = t
+	_scroll.scroll_vertical = 0  # nouvelle page : on repart du haut
 
 
 ## Règles des pièces, lues dans data/rooms.json (ce qu'il faut dans une pièce fermée pour chaque type).
