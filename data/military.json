@@ -44,7 +44,7 @@
     "raid_archer_ratio": 0.3,
     "raid_brute_every": 6,
     "raid_step": 22,
-    "raid_path_budget": 700,
+    "raid_path_budget": 450,
     "break_seconds": 3.0,
     "break_resist": {
       "stone": 2.0,
@@ -55,7 +55,24 @@
     },
     "collapse_max": 12,
     "destroy_camp_radius": 6,
-    "warning_days": 2
+    "warning_days": 2,
+    "natural_blocks": [
+      "grass",
+      "dirt",
+      "fertile_soil",
+      "sand",
+      "clay",
+      "stone",
+      "deep_stone",
+      "gravel",
+      "snow",
+      "iron_ore",
+      "coal_ore",
+      "gold_ore",
+      "bedrock",
+      "water"
+    ],
+    "detour_after_fails": 2
   },
   "victory": {
     "destroy_all_camps": true,

@@ -44,8 +44,8 @@ func test_raid_marche_sur_le_village() -> void:
 
 
 func test_siege_casse_un_mur_et_effondrement() -> void:
-	var st := w.types.num("stone")
-	# un orc coincé derrière un mur : il le casse
+	var st := w.types.num("plank_block")
+	# un orc coincé derrière un mur bâti : il le casse (il ne creuse pas le terrain naturel)
 	var a := sim.fauna.spawn("orc", Vector3i(30, 2, 12))
 	a["raid"] = true
 	a["goal"] = Vector3i(12, 2, 12)
@@ -55,6 +55,7 @@ func test_siege_casse_un_mur_et_effondrement() -> void:
 	_run(8)
 	assert_eq(w.get_block(Vector3i(29, 3, 12)), 0, "le bloc qui gênait est tombé")
 	# effondrement : un bloc suspendu sans appui
+	st = w.types.num("stone")
 	w.set_block(Vector3i(40, 6, 40), st)
 	w.set_block(Vector3i(40, 5, 40), st)
 	w.set_block(Vector3i(40, 5, 40), 0)

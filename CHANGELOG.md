@@ -1,5 +1,26 @@
 # Journal des versions
 
+## 1.2.0 — Aventure Royale et royaume (2026-11-27)
+Phase 2 et Phase 3, demandées par Ashura.
+- **Nouvelle partie** : Bac à sable ou **Aventure Royale** ; carte petite, moyenne (×2), grande (×5), gigantesque (×15) ;
+  difficulté (facile à légendaire) ; 0 à 3 villages voisins ; orcs ; raids tous les 50 à 200 jours.
+- **Orcs** : camps dans les forêts, raids réguliers annoncés par les tambours, ils cassent les murs, les blocs sans appui
+  s'effondrent ; on peut attaquer et détruire leurs camps (butin).
+- **Défense** : créneaux et remparts, tir depuis les hauteurs, soldats de garnison équipés qui tirent depuis leur poste,
+  armures, caserne, tour de guet.
+- **Voisins** : villages de lutins jaunes, rouges et vert clair gérés par l'IA (commerce, alliance, guerre, paix, raids,
+  conquête de leur village), victoire de l'Aventure Royale.
+- **Territoires**, bornes de revendication, **brouillard de guerre**, rencontre des factions, **éclaireurs** (exploration
+  autonome, camp la nuit, retour à la base, unité d'éclaireurs).
+- **Carte** et minicarte : filtres (territoires, villages, camps, ressources, marqueurs, lutins), marqueurs personnels.
+- **Religion** : chapelle, église, autel, cloche ; prêtres, offices, **mariages** et naissances des couples mariés ;
+  cardinaux et chef de culte ; religion personnalisée (dogmes) ; prédication chez les voisins et recrutement des convertis.
+- **Nourritures** : tarte aux baies, soupe de légumes et aux champignons, pain d'orge, poisson fumé, rôti, galette, compote.
+- **Technologies** : fortifications, exercices militaires, théologie, cartographie.
+- **Paramètres** en onglets (Son, Musique, Graphismes, Jeu) avec croix ; graphismes détaillés (ombres, distance de vue,
+  résolution, anticrénelage, brume, images/s, herbes) ; affichage limité à la distance de vue (grandes cartes fluides).
+- **zZz** au-dessus des lutins qui dorment ; tutoriel de départ ; menu **débug** caché (5 touchers dans le coin de l'accueil).
+
 ## 1.1.0 — Royaume, ordres et confort (2026-11-27)
 Retours d'Ashura sur la 1.0.1.
 - **Lutins** : toucher un lutin → barre d'ordres qui reste ouverte (Auto : couper, cueillir, chasser, aller ici ;

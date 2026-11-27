@@ -66,7 +66,15 @@
     "fishing_rod": 12,
     "flintlock": 60,
     "spear": 25,
-    "basket": 6
+    "basket": 6,
+    "berry_pie": 5,
+    "veg_soup": 5,
+    "barley_bread": 4,
+    "smoked_fish": 4,
+    "roast": 7,
+    "potato_cake": 4,
+    "mushroom_soup": 3,
+    "compote": 3
   },
   "always_offer": [
     "iron_ingot",

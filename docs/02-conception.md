@@ -175,5 +175,29 @@
   (armes prises, combat autour du point), Tenir, Rentrer, Dissoudre.
 - Valeurs : `data/realm.json`.
 
+## 11. Phase 2-3 (v1.2, demandées par Ashura)
+- **Configuration** (`data/difficulty.json`) : Bac à sable ou Aventure Royale ; carte petite (256²), moyenne (×2),
+  grande (×5), gigantesque (×15) ; difficulté (raids, PV et dégâts ennemis, agressivité de l'IA, chariot) ;
+  0 à 3 voisins ; orcs oui/non ; un raid tous les 50/100/150/200 jours.
+- **Orcs** (`data/military.json`) : camps dans les forêts denses loin du départ, garnison qui revient ; raids vers le
+  village ; ils contournent le terrain mais **cassent les murs bâtis** ; ce qui n'a plus d'appui s'effondre.
+  Un camp sans défenseurs avec un lutin armé à côté est détruit (butin).
+- **Défense** : créneau (−50 % de dégâts, +2 de portée), hauteur (+0,4 de portée par bloc), soldats de garnison
+  équipés qui tirent sans quitter leur poste, armures portées (protection = défense × 5 %).
+- **Voisins** (`data/factions.json`) : lutins jaunes (Pierrefeu), rouges (Braise), vert clair (Val Clair) ; maisons
+  posées dans la grille ; IA : richesse, population, soldats, expansion de territoire, déclaration de guerre si la
+  relation est très basse, raids, proposition de paix après 40 jours ; conquête = village vidé de ses soldats et
+  occupé par des lutins armés → territoire, or et 3 villageois. Victoire : plus de camp d'orcs, voisins conquis ou alliés.
+- **Territoires** : zones de 16 × 16 ; borne de territoire (20 or) ; brouillard de guerre : la carte et les autres
+  factions se découvrent en explorant ; tour de guet = vue sur 5 zones.
+- **Éclaireurs** : métier plus rapide ; ordre « Explorer » (vers la zone inconnue la plus proche, camp la nuit) ;
+  « Base » pour rentrer ; une unité peut explorer.
+- **Carte** : minicarte + grande carte (relief, territoires, villages, camps repérés, minerais près de la surface,
+  marqueurs ★ ⚑ ⚒ ⚠ ⌂ ✚).
+- **Religion** (`data/religion.json`) : chapelle, église, autel, cloche ; prêtres (offices = foi), mariages (plus
+  fréquents avec un lieu de culte ; seuls les couples mariés ont des enfants) ; prêtre → cardinal → chef de culte ;
+  religion personnalisée (nom, symbole, 2 dogmes) ; prédication chez les voisins, recrutement à 100 % de foi.
+- **Débug** : 5 touchers en 3 s dans le coin haut-droit de l'accueil → menu débug (accueil et ⚙ en partie).
+
 ## Questions ouvertes
 1. Carte aléatoire, ou aussi des cartes dessinées à la main ? (par défaut : aléatoire seedée)

@@ -49,7 +49,7 @@ func _ready() -> void:
 	add_child(hud)
 	_loading = LoadingScreen.new()
 	add_child(_loading)
-	_loading.play_pressed.connect(func() -> void: GameClock.running = true)
+	_loading.play_pressed.connect(_on_play)
 	world = VoxelWorld.new(GameSetup.map_dims())
 	generator = WorldGenerator.new(world, GameSetup.seed_value)
 	_gen_task = WorkerThreadPool.add_task(generator.generate)
@@ -180,6 +180,12 @@ func _place_structure(kind: String, cell: Vector3i) -> bool:
 		structures.assign_homes(colony)
 		return true
 	return board.add_structure(kind, cell) >= 0
+
+
+func _on_play() -> void:
+	GameClock.running = true
+	if bool(Settings.get_value("tutorial")) and GameSetup.load_slot == "":
+		hud.root.add_child(TutorialPanel.new())
 
 
 func _on_tick(_i: int) -> void:

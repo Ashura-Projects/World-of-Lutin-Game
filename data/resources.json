@@ -568,6 +568,62 @@
       "name": "Cloche d'église",
       "category": "furniture",
       "stack": 5
+    },
+    {
+      "id": "berry_pie",
+      "name": "Tarte aux baies",
+      "category": "food",
+      "stack": 40,
+      "nutrition": 35
+    },
+    {
+      "id": "veg_soup",
+      "name": "Soupe de légumes",
+      "category": "food",
+      "stack": 40,
+      "nutrition": 30
+    },
+    {
+      "id": "barley_bread",
+      "name": "Pain d'orge",
+      "category": "food",
+      "stack": 40,
+      "nutrition": 28
+    },
+    {
+      "id": "smoked_fish",
+      "name": "Poisson fumé",
+      "category": "food",
+      "stack": 40,
+      "nutrition": 28
+    },
+    {
+      "id": "roast",
+      "name": "Rôti de gibier",
+      "category": "food",
+      "stack": 40,
+      "nutrition": 45
+    },
+    {
+      "id": "potato_cake",
+      "name": "Galette de pommes de terre",
+      "category": "food",
+      "stack": 40,
+      "nutrition": 25
+    },
+    {
+      "id": "mushroom_soup",
+      "name": "Soupe aux champignons",
+      "category": "food",
+      "stack": 40,
+      "nutrition": 22
+    },
+    {
+      "id": "compote",
+      "name": "Compote de baies",
+      "category": "food",
+      "stack": 40,
+      "nutrition": 18
     }
   ]
 }

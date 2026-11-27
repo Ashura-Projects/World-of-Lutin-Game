@@ -15,15 +15,25 @@ Règle : **un jalon = un APK jouable** sur le Xiaomi 14T Pro. On passe au suivan
 | **J7 — Gestion & sauvegarde** | **Loups et ours**, PV et attaque des lutins, cloche d'alerte, guérisseur et potions ; tableau de bord, alertes, rangs, objectifs, sauvegarde auto | 1 h de partie sans bug bloquant ; sauvegarde → réouverture = identique |
 | **J8 — Familles, école & recherche** | Naissances, âges, enfants, école + maître, aptitudes, bibliothèque → chercheurs, arbre de technologies court, atelier de maître | Un enfant né au village va à l'école, devient chercheur et débloque une technologie |
 
-## Phase 2 — Aventure Royale
-| Jalon | Contenu |
-|---|---|
-| J9 | Orcs, raids ; **caserne** → soldats (lanciers, fusiliers) formés par l'éducation |
-| J10 | Armures et uniformes, technologies militaires |
-| J11 | Destruction, effondrement, sièges |
-| J12 | Carte régionale, royaumes IA, diplomatie |
-| J13 | Guerres, conquête, but de partie |
-| J14 | Sons, musique, tutoriel, équilibrage |
+## Phase 2 — Aventure Royale (faite en v1.2)
+| Jalon | Contenu | État |
+|---|---|---|
+| J9 | Orcs (camps en forêt, raids tous les N jours), **caserne** et soldats de garnison | fait |
+| J10 | Armures portées, uniformes aux couleurs de la faction, technologies militaires (fortifications, exercices) | fait |
+| J11 | Sièges : les orcs cassent les murs bâtis, effondrement des blocs sans appui ; créneaux et remparts | fait |
+| J12 | Villages voisins IA (lutins jaunes, rouges, vert clair), diplomatie | fait |
+| J13 | Guerres, raids ennemis, conquête des villages, victoire de l'Aventure Royale | fait |
+| J14 | Musiques, tutoriel, équilibrage (difficulté) | fait |
+
+## Phase 3 — Royaume (défini avec Ashura, fait en v1.2)
+| Jalon | Contenu | État |
+|---|---|---|
+| J15 | Territoires par zones de 16 × 16, bornes de revendication, expansion de l'IA | fait |
+| J16 | Brouillard de guerre, rencontre des factions, éclaireurs (exploration autonome) | fait |
+| J17 | Minicarte et grande carte : filtres, ressources découvertes, marqueurs personnels | fait |
+| J18 | Configuration de partie (mode, taille de carte ×1/×2/×5/×15, difficulté, voisins, orcs, raids) | fait |
+| J19 | Religion : prêtres, mariages, clergé, religion personnalisée, prédication et conversions | fait |
+| J20 | Menu débug caché (5 touchers), nouvelles nourritures et bâtiments | fait |
 
 ## Jalon en cours
-**J0 — Fondations**
+**v1.2 livrée** — retours d'Ashura sur téléphone attendus.

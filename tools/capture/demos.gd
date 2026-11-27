@@ -3,7 +3,10 @@ extends RefCounted
 
 
 static func run(game: Node, action: String) -> void:
-	if is_instance_valid(game._loading):  # passer l'écran de chargement
+	if action == "nouvelle":
+		game._on_new_game()
+		return
+	if "_loading" in game and is_instance_valid(game._loading):  # passer l'écran de chargement
 		game._loading.play_pressed.emit()
 		game._loading.queue_free()
 	match action:
@@ -49,6 +52,8 @@ static func run(game: Node, action: String) -> void:
 			game.hud.tools._floor_panel.visible = true
 		"chargement":
 			pass
+		"tutoriel":
+			game.hud.root.add_child(TutorialPanel.new())
 		"carte":
 			game.sim.territory.reveal_all()
 			game.sim.rivals.check_meetings()

@@ -120,6 +120,22 @@ Settings, GameSetup), GUT 9.7.1 headless, export Android arm64 (`com.ashura.worl
     (com.ashura.worldoflutin) pour garder les sauvegardes et installer par-dessus.
 - Non testé : sur téléphone.
 
+## v1.2.0 (Phase 2 et Phase 3, demandées par Ashura)
+- Fait : voir CHANGELOG 1.2.0 (configuration, orcs, défense, voisins IA, territoires, brouillard, éclaireurs, carte,
+  religion et mariages, nourritures, technologies, paramètres, zZz, tutoriel, débug).
+- Preuves : 123 tests GUT verts (nouveaux : test_orcs, test_rivals, test_scouting, test_religion), gdlint propre,
+  outil `tools/check_scripts.gd` (tous les scripts compilent), captures `build/captures/v111_*`, `v12_*`.
+- Performance (PC, partie Aventure Royale avec raid et guerres en cours) : tick moyen 1,9 ms (petite) / 2,3 ms (grande),
+  pire tick ≈ 15 ms (bilan quotidien). Génération : grande 10,6 s, gigantesque 31 s sur PC (plus long sur téléphone).
+- Choix faits sans Ashura :
+  - « 2 / 5 / 15 fois plus grande » = surface (côtés 368, 576, 992) ;
+  - Phase 3 = J15 à J20 (voir feuille de route) ;
+  - les villages voisins sont représentés par leurs maisons, quelques villageois visibles et une population chiffrée ;
+  - seuls les couples mariés ont des enfants ; on ne se marie pas entre proches ;
+  - les orcs contournent le terrain naturel et ne cassent que les blocs construits ;
+  - la victoire de l'Aventure Royale ne termine pas la partie.
+- Non testé : sur téléphone ; génération gigantesque sur téléphone (durée).
+
 ## Problèmes connus (v1.0.0)
 - **Pas testé sur le téléphone** : ni les 60 img/s, ni le tactile réel, ni le son (le cloud n'a pas de carte son).
 - Le tick reste au-dessus de 4 ms au pire (~10 ms) ; sur téléphone il peut être 1,5 à 2 fois plus lent.

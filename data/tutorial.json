@@ -1,0 +1,37 @@
+{
+  "_doc": "Tutoriel de la première partie (désactivable dans Paramètres › Jeu).",
+  "steps": [
+    {
+      "title": "Bienvenue !",
+      "text": "Vos lutins arrivent avec une charrette. Glissez un doigt pour déplacer la vue, deux doigts pour zoomer et tourner — ou utilisez les boutons et le joystick à droite."
+    },
+    {
+      "title": "Construire",
+      "text": "« Construire » : choisissez une catégorie en haut, puis un élément. Le menu se réduit en bulle ; touchez le sol pour poser des plans. Les bâtisseurs font le reste."
+    },
+    {
+      "title": "Récolter",
+      "text": "« Récolter » : couper, creuser, cueillir dans un cercle. Des cercles lumineux montrent ce qui est ciblé."
+    },
+    {
+      "title": "Ordres",
+      "text": "Touchez un lutin : la barre d'ordres s'ouvre. Touchez un arbre, une plante, le sol… il obéit. « Explorer » l'envoie découvrir la carte."
+    },
+    {
+      "title": "La carte",
+      "text": "« Carte » (en haut) : minicarte et grande carte. Le noir n'est pas encore exploré : envoyez des éclaireurs pour rencontrer les autres factions."
+    },
+    {
+      "title": "Le royaume",
+      "text": "« Royaume » : seigneur, lois et impôts, diplomatie avec les voisins, religion (prêtres, mariages, conversions)."
+    },
+    {
+      "title": "Défense",
+      "text": "Les orcs attaquent régulièrement. Construisez créneaux et remparts (Construire › Défense), formez des soldats et des unités (Militaire). La cloche mobilise tout le monde."
+    },
+    {
+      "title": "À vous !",
+      "text": "Paramètres et sauvegarde dans ⚙. Bon règne !"
+    }
+  ]
+}

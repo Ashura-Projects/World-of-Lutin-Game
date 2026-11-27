@@ -186,7 +186,7 @@ func direction(cell: Vector3i) -> String:
 ## Chaque tick : les raiders avancent vers le village et cassent ce qui bloque ; camps détruits / découverts.
 func tick() -> void:
 	var tps := GameClock.ticks_per_second()
-	var searches := 2
+	var searches := 1  # une recherche de chemin de raid par tick (performance)
 	for a in fauna.animals:
 		if not a.get("raid", false) or int(a.get("prey", -1)) != -1:
 			continue
@@ -216,13 +216,40 @@ func _advance(a: Dictionary) -> void:
 	var wp2 := Vector2(cell.x, cell.z) + d.normalized() * step
 	var wp := Vector3i(int(wp2.x), 0, int(wp2.y))
 	wp.y = world.surface_y(wp.x, wp.z)
-	var path := Pathfinder.find(world, cell, wp, int(_cfg.get("raid_path_budget", 700)), true)
+	if int(a.get("fails", 0)) > 0:  # détour : on contourne par le côté
+		var side := (
+			Vector2(-d.y, d.x).normalized() * float(_cfg.get("raid_step", 22)) * (1 if int(a["fails"]) % 2 == 1 else -1)
+		)
+		wp = Vector3i(
+			clampi(wp.x + int(side.x), 1, world.size.x - 2), 0, clampi(wp.z + int(side.y), 1, world.size.z - 2)
+		)
+		wp.y = world.surface_y(wp.x, wp.z)
+	var path := Pathfinder.find(world, cell, wp, int(_cfg.get("raid_path_budget", 450)), true)
 	if path.size() > 1:
 		a["path"] = path
 		a["path_i"] = 1
-	else:
-		a["blocked_at"] = GameClock.tick_index
+		a["fails"] = 0
+		return
+	a["fails"] = int(a.get("fails", 0)) + 1
+	a["wait"] = tps_wait(1)
+	if int(a["fails"]) > int(_cfg.get("detour_after_fails", 2)) and _built_obstacle(a, target).y >= 0:
+		a["blocked_at"] = GameClock.tick_index  # un mur bâti bloque : siège
 		a["break"] = 0.0
+		a["fails"] = 0
+
+
+## Bloc construit (pas du terrain naturel) qui gêne dans la direction de la cible, ou (-1,-1,-1).
+func _built_obstacle(a: Dictionary, target: Vector3i) -> Vector3i:
+	var cell: Vector3i = a["cell"]
+	var dx := target.x - cell.x
+	var dz := target.z - cell.z
+	var dir := Vector3i(signi(dx), 0, 0) if absi(dx) >= absi(dz) else Vector3i(0, 0, signi(dz))
+	var natural: Array = _cfg.get("natural_blocks", [])
+	for q: Vector3i in [cell + dir + Vector3i.UP, cell + dir, cell + dir + Vector3i.UP * 2]:
+		var id := world.get_block(q)
+		if world.types.solid[id] == 1 and not natural.has(str(DataRegistry.block(id).get("id", ""))):
+			return q
+	return Vector3i(-1, -1, -1)
 
 
 static func tps_wait(s: float) -> int:
@@ -232,17 +259,8 @@ static func tps_wait(s: float) -> int:
 ## Siège : l'orc frappe le bloc qui le gêne dans la direction du village ; un bloc tombe au bout d'un moment.
 func _siege(a: Dictionary, tps: int) -> void:
 	var target: Vector3i = a.get("goal", colony.stock.pos)
-	var cell: Vector3i = a["cell"]
-	var dx := target.x - cell.x
-	var dz := target.z - cell.z
-	var dir := Vector3i(signi(dx), 0, 0) if absi(dx) >= absi(dz) else Vector3i(0, 0, signi(dz))
-	var p := Vector3i(-1, -1, -1)
-	for q: Vector3i in [cell + dir + Vector3i.UP, cell + dir, cell + dir + Vector3i.UP * 2]:
-		var id := world.get_block(q)
-		if world.types.solid[id] == 1 and DataRegistry.block(id).get("diggable", true):
-			p = q
-			break
-	if p.y < 0:
+	var p := _built_obstacle(a, target)
+	if p.y < 0 or not DataRegistry.block(world.get_block(p)).get("diggable", true):
 		a.erase("blocked_at")  # plus rien ne bloque : il repart
 		return
 	var bid := DataRegistry.block(world.get_block(p))
