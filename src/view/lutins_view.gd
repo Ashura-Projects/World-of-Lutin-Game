@@ -65,8 +65,10 @@ func _process(delta: float) -> void:
 		if m == null:
 			continue
 		var soldier := l.mobilized or l.job == "soldier" or l.unit_id >= 0  # en unité : uniforme de la faction
-		var job_view := ("militia" if soldier else l.job) + ":" + l.age_stage()
+		var cmd := Soldiering.is_commander(l)
+		var job_view := ("militia" if soldier else l.job) + ":" + l.age_stage() + (":cmd" if cmd else "")
 		if _jobs[l.id] != job_view:
+			m.commander = cmd
 			m.build(job_view.split(":")[0], _age_scale(l))
 			_jobs[l.id] = job_view
 		var target := l.pos
@@ -81,6 +83,10 @@ func _process(delta: float) -> void:
 		var working := l.state == Lutin.State.WORK
 		m.show_tool(working)
 		m.animate(_time + l.id, walking, l.state == Lutin.State.SLEEP, working)
+		var armed := l.weapon != "" and soldier and l.state != Lutin.State.SLEEP
+		m.set_weapon(l.weapon if armed else "")
+		if armed:
+			m.pose_weapon("march" if walking else "ready", delta)  # marche : à l'épaule ; arrêt : en joue / pique
 		_sleep_label(l, m)
 		_scout_tent(l)
 		if l.id == selected_id:

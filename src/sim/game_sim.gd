@@ -129,6 +129,7 @@ func tick() -> void:
 	if GameClock.tick_index % tps == 0:
 		religion.tick_second()
 		production.plan()
+		UnitCamp.tick_second(units)
 		colony.heating_ok = not production.fire_out
 	if GameClock.tick_index % (tps * 5) == 0:
 		village.check()

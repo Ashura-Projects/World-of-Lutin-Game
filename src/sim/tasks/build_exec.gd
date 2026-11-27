@@ -106,7 +106,7 @@ func complete(l: Lutin, t: Dictionary) -> void:
 	if t["kind"] == "heal":
 		var patient := board.colony.find_lutin(int(t["target"]))
 		if patient != null:
-			var max_hp := float(DataRegistry.get_table("population").get("combat", {}).get("hp", 50))
+			var max_hp := Soldiering.max_hp(patient)
 			patient.hp = minf(max_hp, patient.hp + float(Stockpile._resource("healing_potion").get("heal", 30)))
 			EventBus.alert.emit("soin", "%s soigne %s." % [l.name, patient.name])
 	elif t["kind"] == "sow":

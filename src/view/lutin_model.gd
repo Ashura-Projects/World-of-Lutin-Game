@@ -64,6 +64,9 @@ func _part(
 ## Construit le lutin (le modèle regarde vers -Z, hauteur ≈ 1 bloc avec le bonnet). age_scale : bébé 0.5 … adulte 1.
 var skin_override: String = ""  # lutins des autres factions (jaunes, rouges, vert clair)
 var tunic_override: String = ""
+var commander: bool = false  # commandant d'unité : bicorne à plume (1.4)
+var _weapon_id: String = ""
+var _weapon_pivot: Node3D
 
 
 func build(job: String, age_scale: float = 1.0) -> void:
@@ -133,7 +136,91 @@ func build(job: String, age_scale: float = 1.0) -> void:
 		_part(
 			body, _sphere(0.04, 6), mat("c47890", 0.8), head + Vector3(sx * 0.16, -0.04, -0.2), Vector3(1.25, 0.75, 0.5)
 		)
-	_hat(str(o.get("hat", "pointu")), mat(str(o.get("hat_color", "8c4030")), 0.8), head)
+	if commander:
+		_commander_hat(head)
+	else:
+		_hat(str(o.get("hat", "pointu")), mat(str(o.get("hat_color", "8c4030")), 0.8), head)
+	_weapon_id = ""
+	_weapon_pivot = null
+
+
+## Bicorne du commandant : feutre sombre, galon doré, cocarde et grande plume aux couleurs de la faction.
+func _commander_hat(head: Vector3) -> void:
+	var top := head.y + 0.17
+	var felt := mat("1e1a24", 0.7)
+	var gold := mat("d8b048", 0.35, 0.7)
+	var plume := Faction.current.color1 if Faction.current != null else "c02a2a"
+	_part(body, _sphere(0.27, 12), felt, Vector3(0, top - 0.02, 0), Vector3(1, 0.5, 1))
+	_part(body, _cyl(0.0, 0.3, 0.22, 3), felt, Vector3(0, top + 0.06, 0), Vector3(1.9, 1, 0.55), Vector3(0, PI / 2, 0))
+	_part(
+		body, _cyl(0.31, 0.31, 0.03, 3), gold, Vector3(0, top - 0.04, 0), Vector3(1.9, 1, 0.58), Vector3(0, PI / 2, 0)
+	)
+	_part(body, _cyl(0.05, 0.05, 0.02, 10), gold, Vector3(0.12, top + 0.08, -0.15), Vector3.ONE, Vector3(PI / 2, 0, 0))
+	_part(body, _sphere(0.09, 8), mat(plume, 0.8), Vector3(-0.05, top + 0.25, 0.02), Vector3(0.6, 1.8, 0.6))
+	_part(body, _sphere(0.06, 8), mat("f0ece0", 0.8), Vector3(-0.05, top + 0.38, 0.03), Vector3(0.6, 1.4, 0.6))
+
+
+## Arme tenue (fusil, lance, épée) : posée sur l'épaule en marche, en joue / en pique à l'arrêt (transition douce).
+func set_weapon(id: String) -> void:
+	if id == _weapon_id and (_weapon_pivot != null or id == ""):
+		return
+	_weapon_id = id
+	if _weapon_pivot != null:
+		_weapon_pivot.queue_free()
+		_weapon_pivot = null
+	if id == "" or body == null:
+		return
+	_weapon_pivot = Node3D.new()
+	_weapon_pivot.position = Vector3(0.22, 0.42, 0.0)
+	body.add_child(_weapon_pivot)
+	var wood := mat("6a4428", 0.8)
+	var iron := mat("8a8e96", 0.3, 0.8)
+	match id:
+		"flintlock":
+			_part(_weapon_pivot, _cyl(0.035, 0.045, 0.32, 6), wood, Vector3(0, -0.1, 0))
+			_part(_weapon_pivot, _cyl(0.018, 0.018, 0.5, 6), iron, Vector3(0, 0.3, 0))
+			_part(_weapon_pivot, _cyl(0.01, 0.01, 0.06, 4), iron, Vector3(0, 0.57, 0))
+		"spear":
+			_part(_weapon_pivot, _cyl(0.018, 0.018, 1.4, 6), wood, Vector3(0, 0.35, 0))
+			_part(_weapon_pivot, _cyl(0.0, 0.045, 0.16, 4), iron, Vector3(0, 1.12, 0))
+		_:
+			_part(_weapon_pivot, _cyl(0.012, 0.03, 0.42, 4), iron, Vector3(0, 0.24, 0))
+			_part(_weapon_pivot, _cyl(0.06, 0.06, 0.02, 6), mat("c49e54", 0.4, 0.6), Vector3(0, 0.02, 0))
+			_part(_weapon_pivot, _cyl(0.02, 0.02, 0.1, 6), wood, Vector3(0, -0.05, 0))
+
+
+## Posture de l'arme : "march" (fusil à l'épaule, lance haute), "ready" (fusil en joue, lance en pique), "rest".
+func pose_weapon(stance: String, delta: float) -> void:
+	if _weapon_pivot == null:
+		return
+	var rot := Vector3(0.12, 0, 0.18)
+	var pos := Vector3(0.22, 0.42, 0.04)
+	var arm := -0.4
+	if stance == "ready":
+		match _weapon_id:
+			"flintlock":
+				rot = Vector3(-PI / 2.0, 0, 0)
+				pos = Vector3(0.12, 0.55, -0.05)
+				arm = -1.45
+			"spear":
+				rot = Vector3(-PI / 2.0 + 0.22, 0, 0)
+				pos = Vector3(0.2, 0.42, 0.2)
+				arm = -1.1
+			_:
+				rot = Vector3(-0.9, 0, 0)
+				arm = -1.0
+	elif _weapon_id == "spear":
+		rot = Vector3(0.05, 0, 0.05)
+		pos = Vector3(0.24, 0.3, -0.02)
+	var k := minf(1.0, delta * 6.0)
+	_weapon_pivot.rotation = _weapon_pivot.rotation.lerp(rot, k)
+	_weapon_pivot.position = _weapon_pivot.position.lerp(pos, k)
+	if stance == "ready":
+		arm_r.rotation.x = lerpf(arm_r.rotation.x, arm, k)
+		arm_l.rotation.x = lerpf(arm_l.rotation.x, arm * 0.9, k)
+		arm_l.rotation.z = lerpf(arm_l.rotation.z, -0.3, k)
+	else:
+		arm_r.rotation.x = lerpf(arm_r.rotation.x, arm, k)
 
 
 func _hat(kind: String, m: Material, head: Vector3) -> void:

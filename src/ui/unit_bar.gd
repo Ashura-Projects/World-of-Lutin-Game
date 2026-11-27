@@ -4,6 +4,8 @@ extends Node
 ## tous de la même taille. Action en cours : ⬇ aller, ⚔ attaquer — chaque toucher sur la carte donne l'ordre
 ## (plusieurs ordres d'affilée). ✋ tenir, ⌂ rentrer, ◎ explorer. Formations : ▪▪ ligne, ▪▪/▪▪ double ligne,
 ## ▪/▪ colonne, carré de 4 = carré, ▴ coin. ✕ arrête de commander.
+## 1.4 : « T / C / 1 / 2… » choisit qui reçoit les ordres (toute l'unité, le commandant et les siens, ou une
+## sous-unité de lieutenant) ; ☾ repos (camp de tentes, repas du cuisinier) ; ✦ entraînement ; ⚙ gérer l'unité.
 
 const SIZE := Vector2(54, 50)
 const FORMATIONS := [
@@ -18,6 +20,7 @@ var hud: Hud
 var game: Node
 var unit_id: int = -1
 var action: String = "move"
+var squad: int = -1  # -1 = toute l'unité, 0 = commandant, 1… = sous-unité du lieutenant
 var _bubble: Button
 var _bar: PanelContainer
 var _grid: GridContainer
@@ -41,7 +44,7 @@ func setup(h: Hud, g: Node) -> void:
 	_bar.visible = false
 	h.root.add_child(_bar)
 	_grid = GridContainer.new()
-	_grid.columns = 2
+	_grid.columns = 3
 	_grid.add_theme_constant_override("h_separation", 4)
 	_grid.add_theme_constant_override("v_separation", 4)
 	_bar.add_child(_grid)
@@ -53,6 +56,10 @@ func setup(h: Hud, g: Node) -> void:
 	_add("focus", "⌖", 24, "Voir l'unité", _focus)
 	for f: Array in FORMATIONS:
 		_add("f_" + str(f[0]), f[1], int(f[2]), str(f[3]), _formation.bind(str(f[0])))
+	_add("squad", "T", 22, "Qui reçoit les ordres : Tous, Commandant, sous-unité 1, 2…", _cycle_squad)
+	_add("rest", "☾", 24, "Repos : camp de tentes, le cuisinier fait à manger", func() -> void: _now("rest"))
+	_add("train", "✦", 22, "Entraînement (sol d'entraînement)", func() -> void: _now("train"))
+	_add("manage", "⚙", 22, "Gérer l'unité (armes, chevaux, rôles…)", func() -> void: hud.unit_editor.open(unit_id))
 	_add("close", "✕", 22, "Arrêter de commander", close)
 
 
@@ -77,6 +84,7 @@ func open(id: int) -> void:
 		return
 	unit_id = id
 	action = "move"
+	squad = -1
 	_bubble.visible = true
 	_bar.visible = true
 	_refresh()
@@ -93,7 +101,9 @@ func _refresh() -> void:
 		close()
 		return
 	var u: Dictionary = game.sim.units.units[unit_id]
-	_bubble.text = "  ⚑ %s · %d  " % [u["name"], u["members"].size()]
+	var who := "tous" if squad < 0 else ("commandant" if squad == 0 else "sous-unité %d" % squad)
+	_bubble.text = "  ⚑ %s · %d · %s  " % [u["name"], u["members"].size(), who]
+	_btns["squad"].text = "T" if squad < 0 else ("C" if squad == 0 else str(squad))
 	for k: String in _btns:
 		var on: bool = k == action or k == "f_" + str(u["formation"])
 		_btns[k].add_theme_stylebox_override(
@@ -110,9 +120,17 @@ func _set_action(a: String) -> void:
 	EventBus.alert.emit("info", "Touchez la carte : %s." % ("l'unité y va" if a == "move" else "l'unité attaque là"))
 
 
+func _cycle_squad() -> void:
+	if not active():
+		return
+	var n := UnitSetup.max_squads(game.sim.units, game.sim.units.units[unit_id])
+	squad = squad + 1 if squad + 1 < n else -1
+	_refresh()
+
+
 func _now(kind: String) -> void:
 	if active():
-		game.sim.units.command(unit_id, kind)
+		game.sim.units.command(unit_id, kind, Vector3i(-1, -1, -1), squad if kind not in ["rest", "train"] else -1)
 		if kind == "return":
 			close()
 			return
@@ -140,7 +158,7 @@ func on_tap(screen: Vector2) -> bool:
 	var cell: Vector3i = hud.windows.ground_cell(screen)
 	if cell.y < 0:
 		return true
-	game.sim.units.command(unit_id, action, cell)
+	game.sim.units.command(unit_id, action, cell, squad)
 	game.click_marker.show_at(Vector3(cell) + Vector3(0.5, 0, 0.5), "e04030" if action == "attack" else "f0d060")
 	_refresh()
 	return true

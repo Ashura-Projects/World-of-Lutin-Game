@@ -2002,6 +2002,23 @@
       "tags": [
         "trough"
       ]
+    },
+    {
+      "id": "camp_tent",
+      "name": "Tente de camp militaire",
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "cost": {},
+      "build_time": 1,
+      "hidden": true,
+      "object": true,
+      "tags": [
+        "camp"
+      ],
+      "_note": "posée par une unité au repos, retirée quand elle repart"
     }
   ]
 }

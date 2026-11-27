@@ -40,6 +40,8 @@ var spouse: int = -1  # conjoint (mariage)
 var faith: float = 30.0  # foi (0..100) dans la religion du village
 var horse: int = -1  # cheval monté (id d'animal)
 var fun: float = 0.0  # bonus de moral des loisirs (jeux, bar), baisse chaque jour
+var drill: Dictionary = {}  # entraînement militaire : force / agility / robust -> points (Soldiering)
+var skills: Dictionary = {}  # compétences : command / diplomacy -> {"level", "xp"}
 
 
 func place_at(c: Vector3i) -> void:
@@ -147,6 +149,8 @@ func to_dict() -> Dictionary:
 		"faith": faith,
 		"horse": horse,
 		"fun": fun,
+		"drill": drill,
+		"skills": skills,
 	}
 
 
@@ -204,3 +208,11 @@ func from_dict(d: Dictionary) -> void:
 	faith = float(d.get("faith", 30.0))
 	horse = int(d.get("horse", -1))
 	fun = float(d.get("fun", 0.0))
+	drill = {}
+	var dr: Dictionary = d.get("drill", {})
+	for k: String in dr:
+		drill[k] = float(dr[k])
+	skills = {}
+	var sk: Dictionary = d.get("skills", {})
+	for k: String in sk:
+		skills[k] = {"level": int(sk[k].get("level", 0)), "xp": float(sk[k].get("xp", 0.0))}

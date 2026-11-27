@@ -46,6 +46,7 @@ func create(name: String, captain_id: int, member_ids: Array) -> int:
 		"cell": cap.cell,
 		"dir": Vector2(0, -1)
 	}
+	UnitSetup.defaults(u)
 	units[id] = u
 	for m: int in ids:
 		colony.find_lutin(m).unit_id = id
@@ -59,6 +60,13 @@ func _leave(l: Lutin) -> void:
 		return
 	var u: Dictionary = units[l.unit_id]
 	u["members"].erase(l.id)
+	if int(u.get("cook", -1)) == l.id:
+		u["cook"] = -1
+	for s: Variant in u.get("lieutenants", {}).keys():
+		if int(u["lieutenants"][s]) == l.id:
+			u["lieutenants"].erase(s)
+	if u.has("squads"):
+		u["squads"].erase(l.id)
 	l.unit_id = -1
 	if u["members"].is_empty():
 		units.erase(u["id"])
@@ -84,21 +92,41 @@ func set_formation(id: int, f: String) -> void:
 			command(id, units[id]["order"], units[id]["cell"])
 
 
-## Ordre à toute l'unité : move (aller en formation), attack (armes + combat), hold (rester), return (vie normale).
-func command(id: int, kind: String, cell: Vector3i = Vector3i(-1, -1, -1)) -> void:
+## Ordre à l'unité : move (aller en formation), attack (armes + combat), hold (rester), return (vie normale),
+## rest (camp de tentes, le cuisinier fait à manger), train (sol d'entraînement). squad : -1 = toute l'unité,
+## 0 = la sous-unité du commandant, 1 = celle du lieutenant (commandées séparément).
+func command(id: int, kind: String, cell: Vector3i = Vector3i(-1, -1, -1), squad: int = -1) -> void:
 	if not units.has(id):
 		return
 	var u: Dictionary = units[id]
+	var view := u if squad < 0 else squad_view(u, squad)
 	if cell.y >= 0:
-		var cap := colony.find_lutin(u["captain"])
-		var from: Vector3i = cap.cell if cap != null else u["cell"]
+		var lead := colony.find_lutin(int(view["captain"]))
+		var from: Vector3i = lead.cell if lead != null else view["cell"]
 		var d := Vector2(cell.x - from.x, cell.z - from.z)
 		if d.length() > 0.5:
-			u["dir"] = d.normalized()
-		u["cell"] = cell
-	u["order"] = kind
-	var members: Array = u["members"]
-	var places := slots(u)
+			view["dir"] = d.normalized()
+		view["cell"] = cell
+	view["order"] = kind
+	if squad >= 0:
+		u["sq%d" % squad] = {"cell": view["cell"], "dir": view["dir"], "order": kind}
+	else:
+		for k: String in u.keys().filter(
+			func(x: Variant) -> bool: return str(x).begins_with("sq") and str(x) != "squads"
+		):
+			u.erase(k)
+	if kind != "rest":
+		UnitCamp.break_camp(self, u)
+	if kind == "rest":
+		UnitCamp.make_camp(self, u)
+		return
+	if kind == "train":
+		UnitCamp.go_train(self, u)
+		return
+	var members: Array = view["members"]
+	var places := slots(view)
+	if kind in ["move", "attack"] and int(u.get("catapult_id", -1)) >= 0 and cell.y >= 0:
+		UnitCamp.serve_catapult(self, u, kind, cell)
 	for i in members.size():
 		var l := colony.find_lutin(members[i])
 		if l == null or l.jailed.y >= 0:
@@ -119,6 +147,23 @@ func command(id: int, kind: String, cell: Vector3i = Vector3i(-1, -1, -1)) -> vo
 				l.order = {}
 				if combat.alert != "mobilize":
 					combat.disarm(l)
+
+
+## Vue d'une sous-unité (0 : commandant et les siens ; 1, 2… : un lieutenant et les siens), formation et ordre.
+func squad_view(u: Dictionary, squad: int) -> Dictionary:
+	var ids := Array(u["members"]).filter(func(m: int) -> bool: return UnitSetup.squad_of(u, m) == squad)
+	var lead: int = int(u["captain"]) if squad == 0 else UnitSetup.lieutenant_of(u, squad)
+	if lead < 0 and not ids.is_empty():
+		lead = ids[0]
+	var st: Dictionary = u.get("sq%d" % squad, {})
+	return {
+		"captain": lead,
+		"members": ids,
+		"formation": u["formation"],
+		"cell": st.get("cell", u["cell"]),
+		"dir": st.get("dir", u["dir"]),
+		"order": st.get("order", u["order"])
+	}
 
 
 ## Décalage du i-ème membre (x = sur le côté, y = vers l'arrière), en cases entières : rangs bien alignés.
@@ -189,9 +234,11 @@ func rally_for(l: Lutin, fallback: Vector3i) -> Vector3i:
 	if not units.has(l.unit_id):
 		return fallback
 	var u: Dictionary = units[l.unit_id]
-	if u["order"] != "attack":
+	var sq := UnitSetup.squad_of(u, l.id)
+	var view := squad_view(u, sq) if u.has("sq%d" % sq) else u
+	if view["order"] != "attack":
 		return fallback
-	return slot(u, u["members"].find(l.id))
+	return slot(view, Array(view["members"]).find(l.id))
 
 
 func unit_of(l: Lutin) -> Dictionary:
@@ -212,7 +259,8 @@ func to_dict() -> Dictionary:
 				"formation": u["formation"],
 				"order": u["order"],
 				"cell": [c.x, c.y, c.z],
-				"dir": [dv.x, dv.y]
+				"dir": [dv.x, dv.y],
+				"setup": UnitSetup.gear_to_dict(u)
 			}
 		)
 	return {"units": out, "next_id": next_id}
@@ -236,5 +284,6 @@ func from_dict(d: Dictionary) -> void:
 			"cell": Vector3i(int(c[0]), int(c[1]), int(c[2])),
 			"dir": Vector2(float(dv[0]), float(dv[1]))
 		}
+		UnitSetup.gear_from_dict(units[int(e["id"])], e.get("setup", {}))
 	next_id = int(d.get("next_id", units.size() + 1))
 	active = self

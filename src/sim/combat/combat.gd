@@ -26,6 +26,8 @@ static func weapon_def(id: String) -> Dictionary:
 
 func _weapon_stats(l: Lutin) -> Dictionary:
 	var st := _weapon_stats_base(l)
+	st["attack"] = float(st["attack"]) * Soldiering.damage_mult(l)  # entraînement (force) et chef
+	st["every"] = float(st["every"]) * Soldiering.attack_delay_mult(l)  # agilité
 	if l.horse >= 0:  # cavalerie : charge à cheval (lance surtout)
 		var cav: Dictionary = _cfg.get("cavalry", {})
 		var m := (
@@ -252,7 +254,9 @@ func _strike(l: Lutin, a: Dictionary, tps: float) -> void:
 	var dmg := float(ws["attack"])
 	if Religion.active != null and l.faith >= 50.0:
 		dmg *= Religion.active.damage_mult()  # dogme « Guerre sainte »
-	if fauna.damage(a["id"], dmg):
+	var killed := fauna.damage(a["id"], dmg)
+	Soldiering.on_strike(l, killed)
+	if killed:
 		l.kills[kind] = int(l.kills.get(kind, 0)) + 1
 		l.combat_xp += float(fauna.def(kind).get("xp", 10))
 		ground.drop(cell, fauna.def(kind).get("drop", {}))
@@ -261,7 +265,7 @@ func _strike(l: Lutin, a: Dictionary, tps: float) -> void:
 
 ## Blessé : boit une potion de soin s'il y en a à la réserve et qu'il y est ; récupération lente sinon.
 func _self_heal(l: Lutin) -> void:
-	var max_hp := float(_cfg.get("hp", 50))
+	var max_hp := Soldiering.max_hp(l)
 	if l.hp >= max_hp:
 		return
 	# un guérisseur du village vient lui apporter une potion

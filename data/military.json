@@ -95,5 +95,24 @@
     "pushers": 2,
     "push_speed_mult": 0.6,
     "hp": 200
+  },
+  "soldiers": {
+    "_doc": "Soldats 1.4 : entraînement (points par niveau, 10 niveaux), effets par niveau, commandant, XP de Commandement.",
+    "drill_points_per_level": 100,
+    "max_level": 10,
+    "drill_per_second": 1.5,
+    "force_damage_per_level": 0.06,
+    "agility_move_per_level": 0.04,
+    "agility_attack_per_level": 0.05,
+    "robust_hp_per_level": 0.08,
+    "commander_hp_bonus": 0.2,
+    "command_boost_per_level": 0.02,
+    "skill_xp_per_level": 60,
+    "command_xp_per_strike": 1.0,
+    "command_xp_per_kill": 8.0,
+    "rest_food_per_day": 1,
+    "camp_radius": 4,
+    "skill_max_level": 20,
+    "levels_per_squad": 5
   }
 }

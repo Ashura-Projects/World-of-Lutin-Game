@@ -49,6 +49,12 @@ static func build(kind: String) -> Node3D:
 			K.box(r, Vector3(0.14, 1.0, 0.14), K.tex("wood_side"), Vector3(0.45, 0.5, 0))
 		"tent", "tent_double", "tent_cloth", "tent_cloth_double":
 			_tent(r, kind)
+		"camp_tent":  # petite tente militaire aux couleurs de la faction
+			var fac := Faction.current.color1 if Faction.current != null else "2c4a96"
+			K.prism(r, Vector3(0.95, 0.8, 1.0), K.col("d8d0b8", 0.95), Vector3(0, 0.4, 0))
+			K.prism(r, Vector3(0.36, 0.3, 1.02), K.col(fac, 0.9), Vector3(0, 0.66, 0))
+			K.box(r, Vector3(0.04, 1.1, 0.04), K.tex("wood_side"), Vector3(0, 0.55, -0.5))
+			K.box(r, Vector3(0.3, 0.18, 0.02), K.col(fac, 0.9), Vector3(0.15, 1.0, -0.5))
 		"dairy":
 			_dairy(r)
 		"butcher_block":

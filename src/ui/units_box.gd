@@ -135,6 +135,13 @@ func refresh() -> void:
 			b.add_theme_font_size_override("font_size", 17)
 			b.pressed.connect(_order.bind(uid, str(a[0])))
 			row.add_child(b)
+		var gear := Button.new()
+		gear.text = "⚙ Gérer"
+		gear.tooltip_text = "Type, armes, chevaux, catapulte, rôles, sous-unités, soldat par soldat"
+		gear.custom_minimum_size = Vector2(130, 46)
+		gear.add_theme_font_size_override("font_size", 17)
+		gear.pressed.connect(func() -> void: game.hud.unit_editor.open(uid))
+		row.add_child(gear)
 		var cmd := Button.new()
 		cmd.text = "⚑ Commander"
 		cmd.tooltip_text = "Barre d'ordres à symboles : chaque toucher sur la carte donne un ordre"

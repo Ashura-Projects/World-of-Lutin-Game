@@ -253,6 +253,7 @@ func _act(l: Lutin) -> void:
 		var speed := float(_move.get("walk_speed", 2.2)) * float(under.get("speed_mult", 1.0))
 		speed *= float(DataRegistry.find("jobs", "jobs", l.job).get("walk_mult", 1.0))  # éclaireurs plus rapides
 		speed *= Horses.speed_mult(l)  # à cheval
+		speed *= Soldiering.move_mult(l)  # agilité (entraînement)
 		if l.state == Lutin.State.WALK and l.walk(speed / GameClock.ticks_per_second()):
 			l.state = Lutin.State.IDLE
 			if task_board != null:

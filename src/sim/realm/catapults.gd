@@ -41,6 +41,15 @@ func rotate(s: Dictionary, steps: int) -> void:
 	sim.structures.changed.emit()
 
 
+## Tourne la catapulte face à la cible (servants d'une unité).
+func aim(s: Dictionary, target: Vector3i) -> void:
+	var c: Vector3i = s["cell"]
+	var d := Vector2(target.x - c.x, target.z - c.z)
+	if d.length() > 0.5:
+		s["yaw"] = atan2(-d.x, -d.y)
+		sim.structures.changed.emit()
+
+
 ## Direction « devant » de la catapulte (le rocher part vers -Z tourné de yaw).
 static func forward(yaw: float) -> Vector2:
 	return Vector2(-sin(yaw), -cos(yaw))
@@ -109,10 +118,12 @@ func impact(target: Vector3i) -> int:
 
 
 ## Déplacer : deux lutins libres vont la pousser jusqu'à l'endroit choisi.
-func move(s: Dictionary, dest: Vector3i) -> String:
+func move(s: Dictionary, dest: Vector3i, crew: Array = []) -> String:
 	var free := sim.colony.lutins.filter(
 		func(l: Lutin) -> bool: return l.can_work() and not l.mobilized and l.jailed.y < 0 and l.order.is_empty()
 	)
+	if not crew.is_empty():
+		free = crew.duplicate()  # servants de l'unité qui utilise la catapulte
 	free.sort_custom(
 		func(a: Lutin, b: Lutin) -> bool:
 			return Vector3(a.cell).distance_to(Vector3(s["cell"])) < Vector3(b.cell).distance_to(Vector3(s["cell"]))

@@ -60,9 +60,8 @@ static func kill_enemies(sim: GameSim) -> int:
 
 
 static func heal_all(sim: GameSim) -> void:
-	var hp := float(DataRegistry.get_table("population").get("combat", {}).get("hp", 50))
 	for l in sim.colony.lutins:
-		l.hp = hp
+		l.hp = Soldiering.max_hp(l)
 		for k: String in l.needs:
 			l.needs[k] = 100.0
 

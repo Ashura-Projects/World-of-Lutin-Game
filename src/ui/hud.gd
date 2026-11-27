@@ -10,6 +10,7 @@ var windows: HudWindows
 var top: HudTop
 var orders: OrderBar
 var unit_bar: UnitBar
+var unit_editor: UnitEditor
 var sheet: LutinSheet
 var tools: HudTools
 var build_panel: BuildPanel
@@ -79,6 +80,7 @@ func bind_game(game: Node) -> void:
 	dashboard = _free_panel_add(DashboardPanel.new(), Vector2(390, 80))
 	research_panel = _free_panel_add(ResearchPanel.new(), Vector2(360, 80))
 	debug_panel = _free_panel_add(DebugPanel.new(), Vector2(200, 70))
+	unit_editor = _free_panel_add(UnitEditor.new(), Vector2(240, 70))
 	object_dialog = ObjectDialog.new()
 	object_dialog.setup(game)
 	root.add_child(object_dialog)
