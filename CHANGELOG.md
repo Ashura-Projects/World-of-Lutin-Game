@@ -1,5 +1,9 @@
 # Journal des versions
 
+## 1.2.1 — Silence dans les menus (2026-11-27)
+- Plus aucun son dans les menus et l'interface, sans exception : ni clic sur les boutons, ni petite musique
+  sur les alertes (demande d'Ashura). La musique et les bruits du monde (hache, loups, tirs…) restent.
+
 ## 1.2.0 — Aventure Royale et royaume (2026-11-27)
 Phase 2 et Phase 3, demandées par Ashura.
 - **Nouvelle partie** : Bac à sable ou **Aventure Royale** ; carte petite, moyenne (×2), grande (×5), gigantesque (×15) ;

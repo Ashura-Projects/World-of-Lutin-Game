@@ -12,7 +12,6 @@ var _music: AudioStreamPlayer
 var _amb: Dictionary = {}
 var _amb_target: Dictionary = {}
 var _pool: Array[AudioStreamPlayer3D] = []
-var _ui: AudioStreamPlayer
 var _streams: Dictionary = {}
 var _track: int = -1
 var current_track: String = ""
@@ -40,10 +39,6 @@ func _ready() -> void:
 		add_child(p)
 		_amb[a] = p
 		_amb_target[a] = 0.0
-	_ui = AudioStreamPlayer.new()
-	_ui.bus = "Effets"
-	add_child(_ui)
-	get_tree().node_added.connect(_on_node_added)
 	apply_volumes()
 
 
@@ -175,21 +170,3 @@ func play_at(name: String, pos: Vector3) -> void:
 	p.pitch_scale = randf_range(0.92, 1.08)
 	p.global_position = pos
 	p.play()
-
-
-func play_ui(name: String) -> void:
-	var s := _load("sfx/" + name)
-	if s:
-		_ui.stream = s
-		_ui.play()
-
-
-func _on_node_added(n: Node) -> void:
-	if n is BaseButton and not n.pressed.is_connected(_click):
-		n.pressed.connect(_click.bind(n))
-
-
-## Clic sonore sur les boutons, sauf ceux marqués « silent » (caméra, joystick, étage).
-func _click(b: BaseButton) -> void:
-	if not b.has_meta("silent"):
-		play_ui("clic")
