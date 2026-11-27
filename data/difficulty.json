@@ -68,6 +68,22 @@
       "orcs": false,
       "victory": false,
       "hidden": true
+    },
+    {
+      "id": "battle",
+      "name": "Bataille",
+      "desc": "Une carte au choix (plaine, forêt, colline) : posez vos soldats et des ennemis, formez des unités et combattez.",
+      "ai_factions": 0,
+      "orcs": false,
+      "victory": false
+    },
+    {
+      "id": "imperial",
+      "name": "Campagne Impériale",
+      "desc": "Une carte immense (40 fois la moyenne) : beaucoup de factions qui bâtissent et négocient, villages et villes, bandits et orcs. Fondez un empire.",
+      "ai_factions": 7,
+      "orcs": true,
+      "victory": true
     }
   ],
   "raid_days": [

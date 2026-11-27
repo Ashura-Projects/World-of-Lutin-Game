@@ -9,6 +9,8 @@ var seed_value: int
 var trees: Array = []  # [{"pos": Vector3i, "kind": String}]
 var bushes: Array = []
 var herbs: Array = []  # lin sauvage, plantes médicinales : [{"pos", "kind"}]
+## Carte de bataille (1.4) : "plain" (plaine), "forest" (forêt), "hills" (collines) ; "" = carte normale.
+var preset: String = ""
 var _n_base := FastNoiseLite.new()
 var _n_hill := FastNoiseLite.new()
 var _n_forest := FastNoiseLite.new()
@@ -67,15 +69,19 @@ func generate() -> void:
 		for z in sz:
 			var base := float(plain[0]) + (float(plain[1]) - float(plain[0])) * (0.5 + 0.5 * _n_base.get_noise_2d(x, z))
 			var hill_f := clampf((_n_hill.get_noise_2d(x, z) - 0.15) * 2.2, 0.0, 1.0)
+			if preset == "hills":
+				hill_f = clampf((_n_hill.get_noise_2d(x, z) + 0.3) * 1.4, 0.0, 1.0)
+			elif preset != "":
+				hill_f *= 0.15
 			var h := base + hill_f * (float(hills[1]) - float(plain[1])) * (0.6 + 0.4 * _n_detail.get_noise_2d(x, z))
 			var md := Vector2(x, z).distance_to(mc) / (sx * 0.3)
-			var mount_f := pow(clampf(1.0 - md, 0.0, 1.0), 1.3)
+			var mount_f := pow(clampf(1.0 - md, 0.0, 1.0), 1.3) if preset == "" else 0.0
 			h += mount_f * (float(mount[1]) - float(plain[1]))
 			var ry := sz * 0.45 + sz * 0.15 * sin(x / (sx * 0.16) + r_phase) + 4.0 * _n_detail.get_noise_2d(x * 0.5, 0)
 			var dr := absf(z - ry)
 			var ld := Vector2(x, z).distance_to(lake)
-			var wet := (dr < half_w and mount_f < 0.3) or ld < lake_r
-			var bank := not wet and mount_f < 0.3 and (dr < half_w + bank_w or ld < lake_r + bank_w)
+			var wet := ((dr < half_w and mount_f < 0.3) or ld < lake_r) and preset == ""
+			var bank := not wet and mount_f < 0.3 and (dr < half_w + bank_w or ld < lake_r + bank_w) and preset == ""
 			if wet:
 				h = water_y - 2
 			elif bank:
@@ -113,6 +119,10 @@ func generate() -> void:
 
 func _flora(x: int, y: int, z: int, hill_f: float) -> void:
 	var forest := _n_forest.get_noise_2d(x, z) > 0.25
+	if preset == "forest":
+		forest = _n_forest.get_noise_2d(x, z) > -0.35
+	elif preset in ["plain", "hills"]:
+		forest = _n_forest.get_noise_2d(x, z) > 0.55
 	var b := _biome("forest" if forest else ("hills" if hill_f > 0.3 else "plain"))
 	var p := Vector3i(x, y, z)
 	if _rng.randf() * 100.0 < float(b.get("trees_per_100", 1)):

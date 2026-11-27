@@ -162,7 +162,7 @@ func _predators(tps: float) -> void:
 		if not d.get("hostile", false):
 			continue
 		a["cool"] = maxi(0, int(a.get("cool", 0)) - 1)
-		var radius := float(d.get("aggro_radius", 8))
+		var radius := float(d.get("aggro_radius", 8)) * (6.0 if a.get("battle", false) else 1.0)  # bataille : à l'assaut
 		if a["kind"] == "wolf" and not night and a.get("prey", -1) == -1:
 			continue  # les loups chassent la nuit
 		var prey := _nearest_lutin(a["pos"], radius if a.get("prey", -1) == -1 else radius * 2.0)

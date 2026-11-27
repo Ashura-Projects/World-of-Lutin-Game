@@ -290,7 +290,7 @@
     "search_radius": 40
   },
   "units": {
-    "max_members": 12,
+    "max_members": 40,
     "spacing": 1,
     "formations": [
       {

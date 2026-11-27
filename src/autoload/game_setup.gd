@@ -12,6 +12,7 @@ var ai_factions: int = 0  # villages voisins (0 à 3)
 var orcs: bool = false
 var raid_days: int = 100  # un raid d'orcs tous les N jours
 var ai_start_lutins: int = 6  # lutins de départ de chaque village voisin (2 à 10)
+var terrain: String = "plain"  # mode Bataille : plain / forest / hills
 var save_slot: String = "slot1"  # emplacement de sauvegarde de la partie (slot1 à slot5)
 
 
@@ -53,6 +54,12 @@ func size_def() -> Dictionary:
 ## Change de mode et met les options par défaut de ce mode (data/difficulty.json › modes).
 func set_mode(m: String) -> void:
 	mode = m
+	if m == "battle":
+		map_size = "small"  # bataille : petite carte
+	elif m == "imperial":
+		map_size = "imperial"  # campagne : carte immense (générée par zones)
+	elif map_size == "imperial":
+		map_size = str(DataRegistry.get_table("start").get("map_size", "small"))
 	for e: Dictionary in DataRegistry.get_table("difficulty").get("modes", []):
 		if e["id"] == m:
 			ai_factions = int(e.get("ai_factions", 0))
@@ -67,5 +74,6 @@ func rules() -> Dictionary:
 		"ai_factions": ai_factions,
 		"orcs": orcs,
 		"raid_days": raid_days,
-		"ai_start_lutins": ai_start_lutins
+		"ai_start_lutins": ai_start_lutins,
+		"terrain": terrain
 	}

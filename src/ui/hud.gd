@@ -13,6 +13,7 @@ var unit_bar: UnitBar
 var unit_editor: UnitEditor
 var stats_panel: StatsPanel
 var settlements_panel: SettlementsPanel
+var battle_panel: BattlePanel
 var sheet: LutinSheet
 var tools: HudTools
 var build_panel: BuildPanel
@@ -85,6 +86,8 @@ func bind_game(game: Node) -> void:
 	unit_editor = _free_panel_add(UnitEditor.new(), Vector2(240, 70))
 	stats_panel = _free_panel_add(StatsPanel.new(), Vector2(220, 70))
 	settlements_panel = _free_panel_add(SettlementsPanel.new(), Vector2(220, 70))
+	battle_panel = _free_panel_add(BattlePanel.new(), Vector2(150, 70))
+	battle_panel.visible = game.sim.rules.mode == "battle"  # mode Bataille : poser soldats et ennemis
 	object_dialog = ObjectDialog.new()
 	object_dialog.setup(game)
 	root.add_child(object_dialog)

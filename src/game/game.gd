@@ -54,6 +54,8 @@ func _ready() -> void:
 	_loading.play_pressed.connect(_on_play)
 	world = VoxelWorld.new(GameSetup.map_dims())
 	generator = WorldGenerator.new(world, GameSetup.seed_value)
+	if GameSetup.mode == "battle" and GameSetup.load_slot == "":
+		generator.preset = GameSetup.terrain  # carte de bataille : plaine, forêt ou collines
 	_gen_task = WorkerThreadPool.add_task(generator.generate)
 
 
@@ -305,6 +307,9 @@ func _on_tap(screen: Vector2) -> void:
 		return
 	if hud.terraform_panel != null and hud.terraform_panel.visible:
 		hud.terraform_panel.on_tap(screen)
+		return
+	if hud.battle_panel != null and hud.battle_panel.visible:
+		hud.battle_panel.on_tap(screen)  # mode Bataille : poser des combattants
 		return
 	if hud.orders.active() and hud.orders.on_tap(screen):
 		return  # mode ordres : chaque toucher donne un ordre au lutin choisi

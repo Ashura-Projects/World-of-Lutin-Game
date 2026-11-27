@@ -57,13 +57,29 @@ func refresh() -> void:
 	for m: Dictionary in modes:
 		if m["id"] == GameSetup.mode:
 			_desc.text = str(m.get("desc", ""))
-	var sizes: Array = DataRegistry.get_table("world").get("sizes", [])
-	var sd := GameSetup.size_def()
-	_row(
-		"Taille de la carte",
-		"%s (%d × %d)%s" % [sd.get("name", "?"), int(sd.get("x", 0)), int(sd.get("z", 0)), _size_note()],
-		func() -> void: GameSetup.map_size = _next_id(sizes, GameSetup.map_size)
+	var sizes: Array = DataRegistry.get_table("world").get("sizes", []).filter(
+		func(s: Dictionary) -> bool: return not s.get("hidden", false)
 	)
+	var sd := GameSetup.size_def()
+	if GameSetup.mode == "battle":
+		var ts: Array = DataRegistry.get_table("military").get("battle", {}).get("terrains", [])
+		var cur := 0
+		for i in ts.size():
+			if ts[i][0] == GameSetup.terrain:
+				cur = i
+		_row("Terrain", str(ts[cur][1]), func() -> void: GameSetup.terrain = str(ts[(cur + 1) % ts.size()][0]))
+	if GameSetup.mode == "imperial":
+		_row(
+			"Carte",
+			"Impériale (%d × %d) — 40 fois la moyenne" % [int(sd.get("x", 0)), int(sd.get("z", 0))],
+			func() -> void: pass
+		)
+	elif GameSetup.mode != "battle":
+		_row(
+			"Taille de la carte",
+			"%s (%d × %d)%s" % [sd.get("name", "?"), int(sd.get("x", 0)), int(sd.get("z", 0)), _size_note()],
+			func() -> void: GameSetup.map_size = _next_id(sizes, GameSetup.map_size)
+		)
 	var levels: Array = cfg.get("levels", [])
 	_row(
 		"Difficulté",

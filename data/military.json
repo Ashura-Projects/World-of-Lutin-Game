@@ -137,5 +137,42 @@
         "n": 2
       }
     ]
+  },
+  "battle": {
+    "_doc": "Mode Bataille : réserve de départ, armure des soldats posés, ennemis proposés.",
+    "stock": {
+      "flintlock": 40,
+      "spear": 40,
+      "short_sword": 40,
+      "shot": 200,
+      "bread": 200,
+      "healing_potion": 20,
+      "stone": 100,
+      "gold": 200
+    },
+    "armor": "",
+    "enemies": [
+      "orc",
+      "orc_archer",
+      "orc_brute",
+      "bandit_club",
+      "bandit_archer",
+      "soldier_rouge",
+      "soldier_jaune"
+    ],
+    "terrains": [
+      [
+        "plain",
+        "Plaine"
+      ],
+      [
+        "forest",
+        "Forêt"
+      ],
+      [
+        "hills",
+        "Collines"
+      ]
+    ]
   }
 }

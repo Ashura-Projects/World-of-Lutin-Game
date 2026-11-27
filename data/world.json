@@ -36,6 +36,17 @@
       "height": 64,
       "fauna_mult": 0.3,
       "note": "≈ 15 × la surface de la petite ; création longue"
+    },
+    {
+      "id": "imperial",
+      "name": "Impériale",
+      "x": 2336,
+      "z": 2336,
+      "height": 64,
+      "fauna_mult": 0.25,
+      "hidden": true,
+      "streamed": true,
+      "note": "≈ 40 × la surface de la moyenne ; générée par zones (graphismes bas, moyen, haut), entière en ultra et personnalisé"
     }
   ],
   "default_size": "small",

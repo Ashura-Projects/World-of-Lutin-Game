@@ -23,7 +23,8 @@ const EXTRA_KEYS := [
 	"owned",
 	"rider",
 	"hungry",
-	"target_faction"
+	"target_faction",
+	"battle"
 ]
 
 

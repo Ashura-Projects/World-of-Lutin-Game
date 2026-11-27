@@ -107,8 +107,11 @@ func new_game(gen: WorldGenerator, start: Vector3i, lutins: int) -> void:
 	colony.spawn_start(start, lutins)
 	settlements.found(str(Settlements.cfg().get("first_name", "Premier village")), start)
 	colony.auto_assign_jobs()
-	fauna.populate(["deer", "boar", "horse"], start)
-	fauna.populate(["wolf", "bear"], start, 40.0)
+	if rules.mode == "battle":
+		Battle.setup(self)
+	else:
+		fauna.populate(["deer", "boar", "horse"], start)
+		fauna.populate(["wolf", "bear"], start, 40.0)
 	orcs.setup_new(start)
 	bandits.setup_new(start)
 	rivals.setup_new(start, rules.ai_factions)
