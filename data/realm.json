@@ -115,34 +115,36 @@
       "neutral": "Neutre",
       "peace": "Paix",
       "alliance": "Alliance",
-      "trade": "Accord commercial"
+      "trade": "Accord commercial",
+      "conquered": "Conquis"
     },
     "factions": [
       {
-        "id": "pierrefeu",
+        "id": "jaune",
         "name": "Bourg de Pierrefeu",
-        "desc": "Village de lutins des collines, mineurs et forgerons.",
+        "desc": "Lutins jaunes des collines, mineurs et forgerons.",
         "relation": 20,
         "status": "neutral",
         "price_bonus_trade": 0.1
       },
       {
-        "id": "val_dore",
-        "name": "Marchands du Val Doré",
-        "desc": "Guilde de marchands qui envoie le marchand ambulant.",
+        "id": "rouge",
+        "name": "Clan de la Braise",
+        "desc": "Lutins rouges fiers et belliqueux.",
+        "relation": -10,
+        "status": "neutral",
+        "price_bonus_trade": 0.05
+      },
+      {
+        "id": "vert",
+        "name": "Sylves du Val Clair",
+        "desc": "Lutins vert clair des forêts, marchands et pieux.",
         "relation": 35,
         "status": "neutral",
         "price_bonus_trade": 0.15
-      },
-      {
-        "id": "clan_crocs",
-        "name": "Clan des Crocs Rouges",
-        "desc": "Orcs des montagnes. Leurs raids viendront avec l'Aventure Royale.",
-        "relation": -40,
-        "status": "war",
-        "price_bonus_trade": 0.0
       }
-    ]
+    ],
+    "alliance_min": 70
   },
   "military": {
     "soldier_job": "soldier",

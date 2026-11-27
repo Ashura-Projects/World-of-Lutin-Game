@@ -36,10 +36,11 @@ func _init(w: VoxelWorld) -> void:
 func spawn_start(center: Vector3i, n: int) -> void:
 	stock.pos = Pathfinder.snap(world, center)
 	var cart: Dictionary = DataRegistry.get_table("start").get("cart", {})
+	var sm := GameRules.get_mult("start_mult")  # difficulté : chariot plus ou moins rempli
 	for k: String in cart.get("fixed", {}):
-		stock.add(k, int(cart["fixed"][k]))
+		stock.add(k, maxi(1, roundi(int(cart["fixed"][k]) * sm)))
 	for k: String in cart.get("per_lutin", {}):
-		stock.add(k, int(cart["per_lutin"][k]) * n)
+		stock.add(k, maxi(1, roundi(int(cart["per_lutin"][k]) * n * sm)))
 	var names: Array = DataRegistry.get_table("names").get("names", ["Lutin"])
 	var ages: Array = _pop.get("ages", [])
 	var adult_from := 60
@@ -113,6 +114,10 @@ func _run_searches() -> void:
 
 
 func _update_needs(l: Lutin, tpd: float) -> void:
+	if GameRules.active != null and GameRules.active.god_mode:
+		for k: String in l.needs:
+			l.needs[k] = maxf(float(l.needs[k]), 90.0)  # mode dieu (débug) : jamais faim, froid ni fatigue
+		return
 	var food_mult: float = Realm.active.food_mult() if Realm.active != null else 1.0
 	l.needs["hunger"] = maxf(0.0, l.needs["hunger"] - float(_needs["hunger"]["loss_per_day"]) * food_mult / tpd)
 	if l.state == Lutin.State.SLEEP:
@@ -327,6 +332,8 @@ func remove_lutin(l: Lutin) -> void:
 		task_board.call("release", l)
 	if l.weapon != "":
 		stock.add(l.weapon, 1)
+	if l.armor != "":
+		stock.add(l.armor, 1)
 	var tool = DataRegistry.find("jobs", "jobs", l.job).get("tool")
 	if tool != null:
 		stock.add(str(tool), 1)

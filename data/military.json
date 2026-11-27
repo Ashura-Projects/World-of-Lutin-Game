@@ -1,0 +1,64 @@
+{
+  "_doc": "Militaire Phase 2 : orcs (camps, raids), défense (créneaux, hauteur), sièges (casse de blocs, effondrement), armures.",
+  "armor_defense_to_protection": 0.05,
+  "armor_priority": [
+    "iron_armor",
+    "leather_armor",
+    "cloth_armor"
+  ],
+  "crenel_damage_mult": 0.5,
+  "crenel_range_bonus": 2.0,
+  "height_range_bonus_per_block": 0.4,
+  "height_range_bonus_max": 5.0,
+  "guard_shoot": true,
+  "orcs": {
+    "camps_per_size": {
+      "small": 2,
+      "medium": 3,
+      "large": 5,
+      "huge": 9
+    },
+    "camp_min_distance_ratio": 0.3,
+    "camp_spacing": 60,
+    "camp_clearing": 5,
+    "camp_garrison": [
+      {
+        "kind": "orc",
+        "n": 3
+      },
+      {
+        "kind": "orc_archer",
+        "n": 1
+      }
+    ],
+    "camp_garrison_brute_from_day": 120,
+    "wander_radius": 8,
+    "respawn_every_days": 12,
+    "camp_loot": {
+      "gold": 40,
+      "iron_ingot": 6
+    },
+    "raid_base": 3,
+    "raid_growth_per_100_days": 2,
+    "raid_max": 24,
+    "raid_archer_ratio": 0.3,
+    "raid_brute_every": 6,
+    "raid_step": 22,
+    "raid_path_budget": 700,
+    "break_seconds": 3.0,
+    "break_resist": {
+      "stone": 2.0,
+      "cut_stone_block": 3.0,
+      "crenel": 3.5,
+      "rampart": 4.0,
+      "iron_door": 4.0
+    },
+    "collapse_max": 12,
+    "destroy_camp_radius": 6,
+    "warning_days": 2
+  },
+  "victory": {
+    "destroy_all_camps": true,
+    "territory_share": 0.5
+  }
+}

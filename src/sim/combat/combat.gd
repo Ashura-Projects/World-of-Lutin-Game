@@ -57,34 +57,58 @@ func ring(mode: String) -> void:
 	EventBus.alert.emit("cloche", "Mobilisation !" if mode == "mobilize" else "Tout le monde à l'abri !")
 
 
+## Part des dégâts reçus (armure portée, créneau à côté) — 1.0 = tous les dégâts.
+func armor_factor(l: Lutin) -> float:
+	var f := 1.0
+	if l.armor != "":
+		var k := float(DataRegistry.get_table("military").get("armor_defense_to_protection", 0.05))
+		f *= 1.0 - clampf(float(DataRegistry.find("equipment", "armors", l.armor).get("defense", 0)) * k, 0.0, 0.8)
+	if Defense.behind_crenel(colony.world, l.cell):
+		f *= float(DataRegistry.get_table("military").get("crenel_damage_mult", 0.5))
+	return f
+
+
 ## Mobilise un lutin : il prend la meilleure arme en réserve et l'uniforme.
 func arm(l: Lutin) -> void:
 	if colony.task_board != null:
 		colony.task_board.call("release", l)
 	l.order = {}
 	l.mobilized = true
+	equip(l)
+	l.state = Lutin.State.IDLE
+
+
+## Prend la meilleure arme et la meilleure armure en réserve (s'il n'en a pas).
+func equip(l: Lutin) -> void:
 	if l.weapon == "":
 		for w: String in _cfg.get("weapon_priority", ["flintlock", "spear"]):
 			if colony.stock.take(w, 1) == 1:
 				l.weapon = w
 				break
-	l.state = Lutin.State.IDLE
+	if l.armor == "":
+		for a: String in DataRegistry.get_table("military").get("armor_priority", []):
+			if colony.stock.take(a, 1) == 1:
+				l.armor = a
+				break
 
 
+## Rend arme et armure à la réserve (sauf les soldats, qui gardent leur équipement).
 func disarm(l: Lutin) -> void:
-	if l.weapon != "":
-		colony.stock.add(l.weapon, 1)
-		l.weapon = ""
+	if l.job != "soldier":
+		if l.weapon != "":
+			colony.stock.add(l.weapon, 1)
+			l.weapon = ""
+		if l.armor != "":
+			colony.stock.add(l.armor, 1)
+			l.armor = ""
 	l.mobilized = false
 	l.state = Lutin.State.IDLE
 
 
 func stand_down() -> void:
 	for l in colony.lutins:
-		if l.weapon != "":
-			colony.stock.add(l.weapon, 1)
-			l.weapon = ""
-		l.mobilized = false
+		if l.mobilized:
+			disarm(l)
 		if l.hiding:
 			l.hiding = false
 			l.state = Lutin.State.IDLE
@@ -111,6 +135,8 @@ func tick() -> void:
 			continue
 		if l.mobilized:
 			_militia(l, tps)
+		elif l.weapon != "" and l.jailed.y < 0:
+			_guard(l, tps)
 		_self_heal(l)
 
 
@@ -133,7 +159,8 @@ func _predators(tps: float) -> void:
 		if dist <= float(d.get("reach", 1.2)) + 0.3:
 			a["path"] = []
 			if a["cool"] == 0:
-				prey.hp -= float(d.get("damage", 5))
+				if GameRules.active == null or not GameRules.active.god_mode:
+					prey.hp -= float(d.get("damage", 5)) * GameRules.get_mult("enemy_damage") * armor_factor(prey)
 				EventBus.sfx.emit("ours" if a["kind"] == "bear" else "loup", a["pos"])
 				a["cool"] = int(float(d.get("attack_every_s", 1.5)) * tps)
 				if not prey.mobilized and prey.attack_cool == 0:
@@ -174,7 +201,7 @@ func _militia(l: Lutin, tps: float) -> void:
 			colony.send(l, rally, true)  # point de rassemblement
 		return
 	var ws := _weapon_stats(l)
-	if bd <= float(ws["reach"]):
+	if bd <= float(ws["reach"]) + Defense.range_bonus(colony.world, l.cell, target["cell"]):
 		l.path = []
 		l.path_i = 0
 		l.state = Lutin.State.WORK
@@ -182,6 +209,24 @@ func _militia(l: Lutin, tps: float) -> void:
 			_strike(l, target, tps)
 	elif not l.pending_path and (not l.has_path() or int(GameClock.tick_index) % int(tps * 2) == l.id % int(tps * 2)):
 		colony.send(l, target["cell"], true)
+
+
+## Garde (soldat équipé, non mobilisé) : tire ou frappe un ennemi à portée, sans quitter son poste.
+func _guard(l: Lutin, tps: float) -> void:
+	if l.attack_cool > 0:
+		return
+	var ws := _weapon_stats(l)
+	var best: Dictionary = {}
+	var bd := float(ws["reach"]) + 6.0
+	for a in fauna.animals:
+		if not fauna.def(a["kind"]).get("enemy", false):
+			continue
+		var dd: float = l.pos.distance_to(a["pos"])
+		if dd < bd and dd <= float(ws["reach"]) + Defense.range_bonus(colony.world, l.cell, a["cell"]):
+			bd = dd
+			best = a
+	if not best.is_empty():
+		_strike(l, best, tps)
 
 
 ## Un coup (ou un tir) d'un lutin sur un animal. Tuer donne de l'XP de combat et compte au tableau de chasse.

@@ -21,6 +21,7 @@ var realm_panel: RealmPanel
 var dashboard: DashboardPanel
 var research_panel: ResearchPanel
 var commerce_panel: CommercePanel
+var debug_panel: DebugPanel
 var _time_label: Label
 var _fps_label: Label
 var _speed_buttons: Array[Button] = []
@@ -69,6 +70,7 @@ func bind_game(game: Node) -> void:
 	commerce_panel = _menu_panel_add(CommercePanel.new(), "Commerce", Vector2(350, 80))
 	dashboard = _free_panel_add(DashboardPanel.new(), Vector2(390, 80))
 	research_panel = _free_panel_add(ResearchPanel.new(), Vector2(360, 80))
+	debug_panel = _free_panel_add(DebugPanel.new(), Vector2(200, 70))
 	top = HudTop.new()
 	add_child(top)
 	top.setup(self, game)
@@ -251,6 +253,17 @@ func _build_menu() -> void:
 	v.add_theme_constant_override("separation", 12)
 	_menu_panel.add_child(v)
 	v.add_child(UiStyle.header("Menu", 34, _close_menu))
+	var debug := Button.new()
+	debug.text = "Débug"
+	debug.custom_minimum_size = Vector2(440, 56)
+	debug.add_theme_color_override("font_color", Color("ff8a7a"))
+	debug.pressed.connect(
+		func() -> void:
+			_menu_panel.visible = false
+			debug_panel.visible = true
+			debug_panel.refresh()
+	)
+	_menu_panel.visibility_changed.connect(func() -> void: debug.visible = bool(Settings.get_value("debug")))
 	for item: Array in [
 		["Reprendre", _close_menu],
 		["Sauvegarder", _save],
@@ -263,6 +276,8 @@ func _build_menu() -> void:
 		b.custom_minimum_size = Vector2(440, 56)
 		b.pressed.connect(item[1])
 		v.add_child(b)
+		if item[0] == "Paramètres":
+			v.add_child(debug)
 
 
 func _settings() -> void:

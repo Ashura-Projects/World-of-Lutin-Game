@@ -139,15 +139,32 @@ func _on_world_ready() -> void:
 	build_tool = BuildTool.new()
 	add_child(build_tool)
 	build_tool.setup(world, camera)
-	build_tool.place_handler = board.place_blueprints  # en partie : poser = plans pour les bâtisseurs
-	build_tool.structure_handler = func(kind: String, cell: Vector3i) -> bool:
-		return board.add_structure(kind, cell) >= 0
+	build_tool.place_handler = _place  # en partie : poser = plans pour les bâtisseurs
+	build_tool.structure_handler = _place_structure
 	sound = SoundDirector.new()
 	add_child(sound)
 	sound.setup(self)
 	hud.bind_game(self)
 	_loading.set_progress(0.65)
 	GameClock.running = false  # la partie démarre au bouton « Jouer »
+
+
+## Poser des blocs : plans pour les bâtisseurs, ou pose immédiate en « construction libre » (débug).
+func _place(cells: Array, block_id: int, erase: bool) -> int:
+	if sim.rules.free_build:
+		var into_air: bool = not erase and build_tool.mode != BuildTool.Mode.ROAD
+		return build_tool.history.apply(cells, 0 if erase else block_id, into_air)
+	return board.place_blueprints(cells, block_id, erase)
+
+
+func _place_structure(kind: String, cell: Vector3i) -> bool:
+	if sim.rules.free_build:
+		if not structures.at(cell).is_empty():
+			return false
+		structures.add(kind, cell, true)
+		structures.assign_homes(colony)
+		return true
+	return board.add_structure(kind, cell) >= 0
 
 
 func _on_tick(_i: int) -> void:

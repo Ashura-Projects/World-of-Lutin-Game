@@ -107,11 +107,11 @@ func test_diplomatie_cadeau_et_accord_commercial() -> void:
 	var r := sim.realm
 	sim.colony.stock.add("gold", 100)
 	var before := sim.trade.sell_price("log")
-	assert_string_contains(r.diplomacy("pierrefeu", "treaty"), "refusent")
-	r.diplomacy("pierrefeu", "gift")
-	assert_eq(r.relation("pierrefeu"), 30.0)
-	r.diplomacy("pierrefeu", "treaty")
-	assert_eq(r.status("pierrefeu"), "trade")
+	assert_string_contains(r.diplomacy("jaune", "treaty"), "refusent")
+	r.diplomacy("jaune", "gift")
+	assert_eq(r.relation("jaune"), 30.0)
+	r.diplomacy("jaune", "treaty")
+	assert_eq(r.status("jaune"), "trade")
 	assert_gt(r.trade_bonus(), 0.0)
 	assert_gte(sim.trade.sell_price("log"), before)
 
@@ -163,7 +163,7 @@ func test_sauvegarde_royaume_unites_et_lutins() -> void:
 	var r := sim.realm
 	r.tax = "normal"
 	r.toggle_law("curfew")
-	r.diplomacy("clan_crocs", "insult")
+	r.diplomacy("rouge", "insult")
 	var l := sim.colony.lutins[0]
 	l.combat_xp = 42.0
 	l.title = "knight"
@@ -179,5 +179,5 @@ func test_sauvegarde_royaume_unites_et_lutins() -> void:
 	assert_eq(l2.order["cell"], Vector3i(30, 2, 24))
 	assert_eq(sim2.realm.tax, "normal")
 	assert_true(sim2.realm.law_on("curfew"))
-	assert_eq(sim2.realm.relation("clan_crocs"), r.relation("clan_crocs"))
+	assert_eq(sim2.realm.relation("rouge"), r.relation("rouge"))
 	assert_eq(sim2.units.units[id]["members"], sim.units.units[id]["members"])

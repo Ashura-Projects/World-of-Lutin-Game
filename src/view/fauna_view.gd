@@ -33,6 +33,10 @@ static func _part(
 
 
 static func model(kind: String) -> Node3D:
+	if kind.begins_with("orc"):
+		return OrcModel.build(kind)
+	if NpcLook.is_npc(kind):
+		return NpcLook.build(kind)
 	var root := Node3D.new()
 	var sphere := SphereMesh.new()
 	sphere.radial_segments = 10

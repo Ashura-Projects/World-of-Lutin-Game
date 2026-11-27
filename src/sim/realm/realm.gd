@@ -164,8 +164,12 @@ func mood_for(l: Lutin) -> float:
 
 
 # --- diplomatie ----------------------------------------------------------------------------------
+## Voisins : ceux présents sur la carte (Rivals), sinon la liste de data/realm.json (voisins lointains).
 func neighbours() -> Array:
-	return _cfg.get("diplomacy", {}).get("factions", [])
+	var all: Array = _cfg.get("diplomacy", {}).get("factions", [])
+	if Rivals.active == null or Rivals.active.states.is_empty():
+		return all
+	return all.filter(func(f: Dictionary) -> bool: return Rivals.active.states.has(f["id"]))
 
 
 func relation(id: String) -> float:
@@ -187,6 +191,9 @@ func diplomacy(id: String, action: String) -> String:
 	var d: Dictionary = _cfg.get("diplomacy", {})
 	var r: Dictionary = relations[id]
 	var msg := ""
+	if status(id) == "conquered":
+		return "Ce village est déjà à vous."
+	var rv := Rivals.active
 	match action:
 		"gift":
 			var cost := int(d.get("gift_gold", 20))
@@ -205,15 +212,27 @@ func diplomacy(id: String, action: String) -> String:
 				r["status"] = "trade"
 				msg = "Accord commercial signé : meilleurs prix chez le marchand."
 		"peace":
-			if float(r["relation"]) < 0.0:
+			var offer: bool = rv != null and bool(rv.states.get(id, {}).get("peace_offer", false))
+			if float(r["relation"]) < 0.0 and not offer:
 				msg = "Ils refusent la paix : relation négative."
 			else:
 				r["status"] = "peace"
+				r["relation"] = maxf(float(r["relation"]), 0.0)
+				if rv != null:
+					rv.on_peace(id)
 				msg = "La paix est signée."
+		"alliance":
+			if status(id) == "war" or float(r["relation"]) < float(d.get("alliance_min", 70)):
+				msg = "Ils refusent l'alliance : relation trop basse (%d requis)." % int(d.get("alliance_min", 70))
+			else:
+				r["status"] = "alliance"
+				msg = "Alliance conclue !"
 		"war":
 			r["status"] = "war"
 			r["relation"] = minf(float(r["relation"]), -20.0)
-			msg = "Vous avez déclaré la guerre."
+			if rv != null:
+				rv.on_war(id)
+			msg = "Vous avez déclaré la guerre : conquérez leur village avec vos soldats."
 		"insult":
 			r["relation"] = maxf(-100.0, float(r["relation"]) + float(d.get("insult_relation", -15)))
 			msg = "Votre messager les a insultés."
@@ -224,7 +243,7 @@ func diplomacy(id: String, action: String) -> String:
 func trade_bonus() -> float:
 	var b := 0.0
 	for f: Dictionary in neighbours():
-		if status(f["id"]) == "trade":
+		if status(f["id"]) in ["trade", "alliance"]:
 			b += float(f.get("price_bonus_trade", 0.1))
 	return minf(b, 0.3)
 
@@ -249,11 +268,20 @@ func enroll(l: Lutin) -> bool:
 	if not l.can_work() or soldiers().size() >= garrison_capacity() or l.jailed.y >= 0:
 		return false
 	l.trained["soldier"] = maxf(float(l.trained.get("soldier", 0.0)), 1.0)
-	return colony.change_job(l, str(_cfg.get("military", {}).get("soldier_job", "soldier")))
+	var ok := colony.change_job(l, str(_cfg.get("military", {}).get("soldier_job", "soldier")))
+	if ok and colony.combat != null:
+		colony.combat.call("equip", l)  # le soldat garde arme et armure (il tire depuis son poste)
+	return ok
 
 
 func discharge(l: Lutin) -> void:
 	colony.change_job(l, "hauler")
+	if l.weapon != "":
+		colony.stock.add(l.weapon, 1)
+		l.weapon = ""
+	if l.armor != "":
+		colony.stock.add(l.armor, 1)
+		l.armor = ""
 
 
 func _on_block(cell: Vector3i, _old: int, new: int) -> void:

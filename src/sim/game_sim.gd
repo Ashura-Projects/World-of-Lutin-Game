@@ -18,7 +18,11 @@ const SAVE_KEYS := [
 	"research",
 	"trade",
 	"realm",
-	"units"
+	"units",
+	"rules",
+	"orcs",
+	"territory",
+	"rivals"
 ]
 
 var world: VoxelWorld
@@ -39,10 +43,15 @@ var faction: Faction
 var trade: Trade
 var realm: Realm
 var units: Units
+var rules: GameRules
+var orcs: Orcs
+var territory: Territory
+var rivals: Rivals
 
 
 func _init(w: VoxelWorld) -> void:
 	world = w
+	rules = GameRules.new(GameSetup.rules())
 	colony = Colony.new(w)
 	flora = Flora.new()
 	fauna = Fauna.new(w)
@@ -65,6 +74,9 @@ func _init(w: VoxelWorld) -> void:
 	trade = Trade.new(colony)
 	realm = Realm.new(colony, structures, w)
 	units = Units.new(colony, combat)
+	orcs = Orcs.new(w, fauna, colony, flora)
+	territory = Territory.new(w)
+	rivals = Rivals.new(w, fauna, colony, flora, territory)
 
 
 ## Nouvelle partie sur un monde généré.
@@ -74,12 +86,19 @@ func new_game(gen: WorldGenerator, start: Vector3i, lutins: int) -> void:
 	colony.auto_assign_jobs()
 	fauna.populate(["deer", "boar"], start)
 	fauna.populate(["wolf", "bear"], start, 40.0)
+	orcs.setup_new(start)
+	rivals.setup_new(start, rules.ai_factions)
+	for c: Dictionary in orcs.camps:
+		territory.claim(
+			c["cell"], int(DataRegistry.get_table("factions").get("territory", {}).get("camp_radius", 1)), "orcs"
+		)
 	village.last_stock = colony.stock.items.duplicate()
 
 
 func tick() -> void:
 	colony.tick()
 	combat.tick()
+	orcs.tick()
 	var tps := GameClock.ticks_per_second()
 	if GameClock.tick_index % 2 == 0:
 		var cells := []
@@ -91,6 +110,9 @@ func tick() -> void:
 		colony.heating_ok = not production.fire_out
 	if GameClock.tick_index % (tps * 5) == 0:
 		village.check()
+		rivals.check_conquest()
+		for l in colony.lutins:
+			territory.explore(l.cell, 2)
 
 
 func daily() -> void:
@@ -101,6 +123,8 @@ func daily() -> void:
 	trade.daily(GameClock.day())
 	village.daily()
 	realm.daily()
+	orcs.daily(GameClock.day())
+	rivals.daily(GameClock.day())
 
 
 func register_saves() -> void:
@@ -120,7 +144,11 @@ func register_saves() -> void:
 		research,
 		trade,
 		realm,
-		units
+		units,
+		rules,
+		orcs,
+		territory,
+		rivals
 	]
 	for i in SAVE_KEYS.size():
 		SaveManager.register(SAVE_KEYS[i], objs[i])

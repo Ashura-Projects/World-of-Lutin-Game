@@ -1,0 +1,106 @@
+{
+  "_doc": "Factions voisines (Phase 2) : villages de lutins d'autres couleurs, gérés par l'IA. Les orcs sont à part (military.json).",
+  "factions": [
+    {
+      "id": "jaune",
+      "name": "Bourg de Pierrefeu",
+      "desc": "Lutins jaunes des collines, mineurs et forgerons.",
+      "skin": "d8b84a",
+      "tunic": "7a5a2a",
+      "color": "e8c440",
+      "aggression": 0.4,
+      "trade": 0.6,
+      "faith": 0.5
+    },
+    {
+      "id": "rouge",
+      "name": "Clan de la Braise",
+      "desc": "Lutins rouges fiers et belliqueux.",
+      "skin": "c0505e",
+      "tunic": "5a2a2a",
+      "color": "d04848",
+      "aggression": 0.9,
+      "trade": 0.3,
+      "faith": 0.3
+    },
+    {
+      "id": "vert",
+      "name": "Sylves du Val Clair",
+      "desc": "Lutins vert clair des forêts, marchands et pieux.",
+      "skin": "8fd27a",
+      "tunic": "3e6a3a",
+      "color": "7ad060",
+      "aggression": 0.2,
+      "trade": 0.9,
+      "faith": 0.8
+    }
+  ],
+  "village": {
+    "houses": [
+      4,
+      7
+    ],
+    "spread": 10,
+    "min_distance_ratio": 0.25,
+    "spacing": 70,
+    "villagers_shown": 6,
+    "soldiers_shown": 3,
+    "roam": 12,
+    "start_population": [
+      12,
+      20
+    ],
+    "start_soldiers": [
+      3,
+      6
+    ],
+    "start_wealth": [
+      50,
+      120
+    ]
+  },
+  "npc": {
+    "villager": {
+      "hp": 45,
+      "speed": 1.8
+    },
+    "soldier": {
+      "hp": 60,
+      "damage": 8,
+      "reach": 1.3,
+      "attack_every_s": 1.6,
+      "speed": 2.0,
+      "aggro_radius": 10,
+      "xp": 20,
+      "drop": {
+        "gold": 3
+      }
+    }
+  },
+  "ai": {
+    "income_per_pop": 0.4,
+    "growth_per_day": 0.05,
+    "soldier_cost": 15,
+    "max_soldiers_ratio": 0.4,
+    "war_relation": -50,
+    "war_chance_per_day": 0.04,
+    "war_raid_every_days": 15,
+    "war_raid_max": 10,
+    "peace_after_days": 40,
+    "claim_cost": 25,
+    "claim_chance_per_day": 0.25,
+    "border_tension": 1.0,
+    "conquest_radius": 8,
+    "defense_radius": 20,
+    "conquest_loot_gold": 80,
+    "conquest_join": 3
+  },
+  "territory": {
+    "chunk": 16,
+    "player_start_radius": 2,
+    "village_radius": 2,
+    "camp_radius": 1,
+    "claim_post_radius": 1,
+    "claim_post_gold": 20
+  }
+}

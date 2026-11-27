@@ -3,9 +3,7 @@ extends Control
 
 const GAME_SCENE := "res://src/game/game.tscn"
 
-var _setup_panel: PanelContainer
-var _lutin_label: Label
-var _seed_label: Label
+var _setup_panel: NewGamePanel
 
 
 func _ready() -> void:
@@ -69,58 +67,12 @@ func _menu_button(parent: Control, text: String, cb: Callable) -> Button:
 
 
 func _build_setup_panel() -> void:
-	_setup_panel = PanelContainer.new()
-	_setup_panel.position = Vector2(600, 150)
-	_setup_panel.custom_minimum_size = Vector2(520, 0)
+	_setup_panel = NewGamePanel.new()
+	_setup_panel.position = Vector2(560, 80)
 	_setup_panel.visible = false
 	add_child(_setup_panel)
-	var v := VBoxContainer.new()
-	v.add_theme_constant_override("separation", 14)
-	_setup_panel.add_child(v)
-	v.add_child(UiStyle.title_label("Nouvelle partie", 34))
-	var sandbox := Button.new()
-	sandbox.text = "Bac à sable"
-	sandbox.custom_minimum_size = Vector2(460, 64)
-	UiStyle.make_primary(sandbox)
-	v.add_child(sandbox)
-	var royal := Button.new()
-	royal.text = "Aventure Royale (Phase 2)"
-	royal.disabled = true
-	royal.custom_minimum_size = Vector2(460, 56)
-	v.add_child(royal)
-	# nombre de lutins de départ (2 à 10)
-	var row := HBoxContainer.new()
-	row.add_theme_constant_override("separation", 10)
-	v.add_child(row)
-	var lab := Label.new()
-	lab.text = "Lutins de départ"
-	lab.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	row.add_child(lab)
-	row.add_child(_small_button("−", func() -> void: _change_lutins(-1)))
-	_lutin_label = UiStyle.title_label(str(GameSetup.lutin_count), 30)
-	_lutin_label.custom_minimum_size = Vector2(56, 0)
-	_lutin_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	row.add_child(_lutin_label)
-	row.add_child(_small_button("+", func() -> void: _change_lutins(1)))
-	var row2 := HBoxContainer.new()
-	v.add_child(row2)
-	_seed_label = Label.new()
-	_seed_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	row2.add_child(_seed_label)
-	row2.add_child(_small_button("⟲", _new_seed))
-	_refresh_seed()
-	var fb := Button.new()
-	fb.text = "Faction et emblème…"
-	fb.custom_minimum_size = Vector2(460, 56)
-	fb.pressed.connect(_open_faction)
-	v.add_child(fb)
-	var go := Button.new()
-	go.text = "Lancer"
-	go.custom_minimum_size = Vector2(460, 64)
-	UiStyle.make_primary(go)
-	go.pressed.connect(_start_game)
-	sandbox.pressed.connect(_start_game)
-	v.add_child(go)
+	_setup_panel.start_requested.connect(_start_game)
+	_setup_panel.faction_requested.connect(_open_faction)
 
 
 func _open_faction() -> void:
@@ -141,20 +93,6 @@ func _small_button(text: String, cb: Callable) -> Button:
 	b.custom_minimum_size = Vector2(64, 56)
 	b.pressed.connect(cb)
 	return b
-
-
-func _change_lutins(d: int) -> void:
-	GameSetup.lutin_count = GameSetup.clamp_lutins(GameSetup.lutin_count + d)
-	_lutin_label.text = str(GameSetup.lutin_count)
-
-
-func _new_seed() -> void:
-	GameSetup.seed_value = randi() % 100000
-	_refresh_seed()
-
-
-func _refresh_seed() -> void:
-	_seed_label.text = "Graine de carte : %d" % GameSetup.seed_value
 
 
 func _on_new_game() -> void:

@@ -9,12 +9,19 @@ var world: VoxelWorld
 var animals: Array[Dictionary] = []
 var next_id: int = 1
 var _defs: Dictionary = {}
+## Champs en plus sauvegardés (orcs, soldats ennemis, villageois des voisins).
+const EXTRA_KEYS := ["camp", "raid", "home", "goal", "faction", "roam", "faith", "npc_id", "name"]
 
 
 func _init(w: VoxelWorld) -> void:
 	world = w
 	for a: Dictionary in DataRegistry.get_table("animals").get("animals", []):
 		_defs[a["id"]] = a
+
+
+## Ajoute une sorte créée par un système (villageois et soldats des factions voisines).
+func register_def(kind: String, d: Dictionary) -> void:
+	_defs[kind] = d
 
 
 func def(kind: String) -> Dictionary:
@@ -100,12 +107,15 @@ func tick(colony_cells: Array) -> void:
 			else:
 				a["pos"] += to.normalized() * step
 			continue
-		if a["wait"] > 0 or int(a.get("prey", -1)) != -1 or searches <= 0:
-			continue  # un prédateur en chasse suit sa proie (Combat)
+		if a["wait"] > 0 or int(a.get("prey", -1)) != -1 or searches <= 0 or a.get("raid", false):
+			continue  # un prédateur en chasse suit sa proie (Combat) ; les raids sont menés par Orcs / Rivals
 		searches -= 1
-		# fuite si un lutin approche (cerf), sinon errance
+		# fuite si un lutin approche (cerf), sinon errance (autour de son camp ou village s'il en a un)
 		var flee := float(d.get("flee_radius", 0))
 		var dest: Vector3i = a["cell"] + Vector3i(Rng.randi_range(-6, 6), 0, Rng.randi_range(-6, 6))
+		if a.has("home"):
+			var r := int(a.get("roam", 8))
+			dest = a["home"] + Vector3i(Rng.randi_range(-r, r), 0, Rng.randi_range(-r, r))
 		for c: Vector3i in colony_cells:
 			if flee > 0 and Vector3(c).distance_to(Vector3(a["cell"])) < flee:
 				var away: Vector3i = a["cell"] - c
@@ -122,7 +132,12 @@ func to_dict() -> Dictionary:
 	var out := []
 	for a in animals:
 		var c: Vector3i = a["cell"]
-		out.append({"id": a["id"], "kind": a["kind"], "cell": [c.x, c.y, c.z], "hp": a["hp"]})
+		var e := {"id": a["id"], "kind": a["kind"], "cell": [c.x, c.y, c.z], "hp": a["hp"]}
+		for k: String in EXTRA_KEYS:
+			if a.has(k):
+				var v: Variant = a[k]
+				e[k] = [v.x, v.y, v.z] if v is Vector3i else v
+		out.append(e)
 	return {"animals": out, "next_id": next_id}
 
 
@@ -135,4 +150,10 @@ func from_dict(d: Dictionary) -> void:
 		var a := spawn(e["kind"], Vector3i(int(c[0]), int(c[1]), int(c[2])))
 		a["id"] = int(e["id"])
 		a["hp"] = float(e["hp"])
+		for k: String in EXTRA_KEYS:
+			if e.has(k):
+				var v: Variant = e[k]
+				a[k] = Vector3i(int(v[0]), int(v[1]), int(v[2])) if k in ["home", "goal"] else v
+				if v is float and k in ["camp", "npc_id", "roam"]:
+					a[k] = int(v)
 	next_id = int(d.get("next_id", next_id))

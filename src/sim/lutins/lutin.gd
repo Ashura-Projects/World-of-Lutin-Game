@@ -24,6 +24,7 @@ var carrying: Dictionary = {}  # {"id": ressource, "n": quantité}
 var home := Vector3i(-1, -1, -1)  # tente ou lit attribué
 var mobilized: bool = false
 var weapon: String = ""  # arme prise en réserve pendant la mobilisation
+var armor: String = ""  # armure portée (soldats et mobilisés)
 var combat_xp: float = 0.0
 var kills: Dictionary = {}  # espèce -> nombre abattu
 var hiding: bool = false
@@ -128,6 +129,7 @@ func to_dict() -> Dictionary:
 		"home": [home.x, home.y, home.z],
 		"mob": mobilized,
 		"weapon": weapon,
+		"armor": armor,
 		"cxp": combat_xp,
 		"kills": kills,
 		"hiding": hiding,
@@ -171,6 +173,7 @@ func from_dict(d: Dictionary) -> void:
 	home = Vector3i(int(h[0]), int(h[1]), int(h[2]))
 	mobilized = bool(d.get("mob", false))
 	weapon = str(d.get("weapon", ""))
+	armor = str(d.get("armor", ""))
 	combat_xp = float(d.get("cxp", 0.0))
 	kills = {}
 	var ks: Dictionary = d.get("kills", {})

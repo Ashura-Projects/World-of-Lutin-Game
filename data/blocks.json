@@ -412,6 +412,38 @@
         "side": "dirt",
         "bottom": "dirt"
       }
+    },
+    {
+      "id": "crenel",
+      "name": "Créneau",
+      "solid": true,
+      "cost": {
+        "stone": 2
+      },
+      "build_time": 3,
+      "tiles": {
+        "top": "cut_stone",
+        "side": "crenel",
+        "bottom": "cut_stone"
+      },
+      "_note": "un soldat posté à côté d'un créneau prend moitié moins de dégâts et tire plus loin",
+      "num": 32
+    },
+    {
+      "id": "rampart",
+      "name": "Rempart",
+      "solid": true,
+      "cost": {
+        "stone": 3
+      },
+      "build_time": 4,
+      "tiles": {
+        "top": "cut_stone",
+        "side": "rampart",
+        "bottom": "cut_stone"
+      },
+      "_note": "mur épais : les orcs mettent longtemps à le casser",
+      "num": 33
     }
   ]
 }

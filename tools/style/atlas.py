@@ -20,7 +20,7 @@ TILES = [
     "bedrock", "grass_top", "grass_side", "dirt", "fertile_soil", "sand", "clay", "stone",
     "iron_ore", "coal_ore", "snow", "snow_side", "water", "wood_top", "wood_side", "plank",
     "cobble", "cut_stone", "brick", "thatch_top", "thatch_side", "dirt_packed", "ice", "leaves",
-    "gravel", "deep_stone", "beam", "road_stone", "field_wet", "gold_ore",
+    "gravel", "deep_stone", "beam", "road_stone", "field_wet", "gold_ore", "crenel", "rampart",
 ]
 
 PALETTES = {
@@ -229,6 +229,27 @@ def make_tile(name, p, rng):
                         if d < 1.0:
                             hl = 1.12 if (x - cx) + (y - cy) < -2 else (0.86 if (x - cx) + (y - cy) > 3 else 1.0)
                             img.putpixel((x % TILE, y % TILE), shade(p["cobble"], f * hl + rng.uniform(-0.03, 0.03)))
+    elif name in ("crenel", "rampart"):
+        c = p["cut"]
+        bh, bw = (11, 16) if name == "rampart" else (16, 32)
+        for y in range(TILE):
+            row = y // bh
+            off = (bw // 2) * (row % 2)
+            for x in range(TILE):
+                f = (0.82 if name == "rampart" else 1.0) + rng.uniform(-0.05, 0.05)
+                if y % bh == bh - 1 or (x + off) % bw == bw - 1:
+                    img.putpixel((x, y), shade(p["mortar"], 0.85))
+                else:
+                    img.putpixel((x, y), shade(c, f))
+        if name == "crenel":  # merlons : deux embrasures sombres en haut
+            for x0 in (8, 24):
+                for y in range(0, 12):
+                    for x in range(x0 - 4, x0 + 4):
+                        img.putpixel((x, y), shade(c, 0.32 + 0.02 * (y % 3)))
+        else:  # meurtrière au milieu
+            for y in range(9, 24):
+                for x in range(15, 17):
+                    img.putpixel((x, y), (24, 22, 26))
     elif name in ("cut_stone", "brick"):
         c = p["cut"] if name == "cut_stone" else p["brick"]
         bh, bw = (16, 32) if name == "cut_stone" else (8, 16)

@@ -122,6 +122,14 @@
   "gold_ore": [
    5,
    3
+  ],
+  "crenel": [
+   6,
+   3
+  ],
+  "rampart": [
+   7,
+   3
   ]
  },
  "_doc": "Disposition de assets/textures/blocks_atlas.png (généré par tools/style/atlas.py, palette B validée)."

@@ -62,18 +62,28 @@ func _part(
 
 
 ## Construit le lutin (le modèle regarde vers -Z, hauteur ≈ 1 bloc avec le bonnet). age_scale : bébé 0.5 … adulte 1.
+var skin_override: String = ""  # lutins des autres factions (jaunes, rouges, vert clair)
+var tunic_override: String = ""
+
+
 func build(job: String, age_scale: float = 1.0) -> void:
 	_job = job
 	for c in get_children():
 		c.queue_free()
 	var cfg := DataRegistry.get_table("outfits")
 	var o: Dictionary = cfg.get("outfits", {}).get(job, cfg.get("outfits", {}).get("none", {}))
-	var skin := mat(str(cfg.get("skin", "466ca0")), 0.55)
-	var nose := mat(str(cfg.get("skin_shade", "365684")), 0.5)
+	var skin_hex := skin_override if skin_override != "" else str(cfg.get("skin", "466ca0"))
+	var skin := mat(skin_hex, 0.55)
+	var nose := mat(
+		Color(skin_hex).darkened(0.2).to_html(false) if skin_override != "" else str(cfg.get("skin_shade", "365684")),
+		0.5
+	)
 	var tunic_hex := str(o.get("tunic", "5a6a48"))
 	var soldier := job in ["militia", "soldier"]
 	if soldier and Faction.current != null:
 		tunic_hex = Color(Faction.current.color1).darkened(0.25).to_html(false)  # uniforme aux couleurs de la faction
+	if tunic_override != "":
+		tunic_hex = tunic_override
 	var tunic := mat(tunic_hex, 0.85)
 	var s := 0.82 * age_scale
 	body = Node3D.new()

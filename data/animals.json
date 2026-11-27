@@ -111,6 +111,66 @@
       "xp": 60,
       "respawn_days": 30,
       "aggro_radius": 5
+    },
+    {
+      "id": "orc",
+      "name": "Orc",
+      "hostile": true,
+      "enemy": true,
+      "faction": "orcs",
+      "per_1000": 0,
+      "hp": 60,
+      "damage": 9,
+      "reach": 1.3,
+      "attack_every_s": 1.6,
+      "speed": 1.9,
+      "drop": {
+        "gold": 3,
+        "iron_ingot": 1
+      },
+      "xp": 25,
+      "aggro_radius": 11,
+      "breaks_blocks": true
+    },
+    {
+      "id": "orc_archer",
+      "name": "Orc archer",
+      "hostile": true,
+      "enemy": true,
+      "faction": "orcs",
+      "per_1000": 0,
+      "hp": 40,
+      "damage": 6,
+      "reach": 6.0,
+      "attack_every_s": 2.2,
+      "speed": 2.0,
+      "drop": {
+        "gold": 2
+      },
+      "xp": 20,
+      "aggro_radius": 12,
+      "ranged": true
+    },
+    {
+      "id": "orc_brute",
+      "name": "Orc brute",
+      "hostile": true,
+      "enemy": true,
+      "faction": "orcs",
+      "per_1000": 0,
+      "hp": 130,
+      "damage": 16,
+      "reach": 1.4,
+      "attack_every_s": 2.0,
+      "speed": 1.5,
+      "drop": {
+        "gold": 8,
+        "iron_ingot": 2
+      },
+      "xp": 60,
+      "aggro_radius": 10,
+      "breaks_blocks": true,
+      "break_mult": 2.0
     }
   ]
 }
