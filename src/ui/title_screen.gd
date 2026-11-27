@@ -10,11 +10,21 @@ var _play: VBoxContainer
 var _slots: SlotsPanel
 var _taps: Array = []  # 5 touchers rapides dans le coin droit = menu débug
 
+static var intro_seen: bool = false  # la cinématique d'ouverture ne passe qu'au lancement
+
 
 func _ready() -> void:
 	theme = UiStyle.make_theme()
 	GameSetup.reset_defaults()
 	_build()
+	if not intro_seen:
+		intro_seen = true
+		var cine := CinematicPlayer.new()
+		add_child(cine)
+		if cine.play("res://assets/cinematics/intro.ogv"):
+			cine.finished.connect(Audio.start_music)  # le menu principal arrive après la cinématique
+			return
+		cine.queue_free()
 	Audio.start_music()
 
 
@@ -62,6 +72,7 @@ func _build() -> void:
 	cont.disabled = SaveManager.last_slot() == ""
 	if not cont.disabled:
 		UiStyle.make_primary(cont)
+	UiStyle.make_primary(_menu_button(_play, "Campagne", _start_campaign))
 	_menu_button(_play, "Nouvelle partie", _on_new_game)
 	_menu_button(_play, "Charger", _open_slots)
 	_menu_button(_play, "Tutoriel", _start_tutorial)
@@ -148,6 +159,19 @@ func load_slot(slot: String) -> void:
 func _start_game() -> void:
 	GameSetup.load_slot = ""
 	get_tree().change_scene_to_file(GAME_SCENE)
+
+
+## Campagne : l'histoire des lutins par chapitres (data/campaign.json › setup).
+func _start_campaign() -> void:
+	GameSetup.reset_defaults()
+	GameSetup.set_mode("campaign")
+	var c: Dictionary = DataRegistry.get_table("campaign").get("setup", {})
+	GameSetup.map_size = str(c.get("map_size", "medium"))
+	GameSetup.ai_factions = int(c.get("ai_factions", 3))
+	GameSetup.orcs = bool(c.get("orcs", true))
+	GameSetup.raid_days = int(c.get("raid_days", 50))
+	GameSetup.lutin_count = int(c.get("lutins", 6))
+	_start_game()
 
 
 ## Tutoriel : petite carte paisible, 4 lutins, missions pas à pas (construire, cultiver, se défendre…).

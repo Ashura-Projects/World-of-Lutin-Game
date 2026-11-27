@@ -1,5 +1,18 @@
 # Journal des versions
 
+## 1.4.1 — Campagne, cinématiques dessinées, villages IA vivants (2026-11-27)
+- **Cinématique d'ouverture dessinée** (Remotion) : le logo d'Ashura se dessine au pinceau puis le papier noir
+  brûle (bords incandescents, braises) ; les lutins arrivent dans la vallée, les clans s'unissent et bâtissent,
+  la guerre contre les orcs, la diplomatie, la vallée prospère et le titre. Musique : Heroic Age. Toucher deux fois
+  pour passer.
+- **Mode Campagne** (Jouer › Campagne) : 7 chapitres de l'arrivée à l'Empire, **Maître Ombelin** le conseiller
+  (portrait dessiné, récit, missions, astuces), récompenses, **mini-cinématique dessinée** à chaque chapitre,
+  musiques de paix, de guerre et de victoire.
+- **Villages IA** : métiers (fermiers, bûcherons, mineurs, artisans, bâtisseurs, soldats), production, repas,
+  famine, ventes ; bâtiments payés en or et en matériaux ; **améliorations** (niveaux 1 à 3) ; forge, marché,
+  grande halle ; villageois habillés selon leur métier ; détail visible dans la diplomatie.
+- **Musiques** (Kevin MacLeod, CC BY 4.0) : Master of the Feast, Five Armies, Clash Defiant, Achilles, Heroic Age.
+
 ## 1.4.0 — Armées, diplomatie, villes, Campagne Impériale (2026-11-27)
 - **Unités** : type (mixte, cavalerie, fusiliers, lanciers, épéistes, catapulte), arme et cheval pour l'unité ou
   pour chaque soldat, catapulte servie (elle vise, se charge, tire et suit l'unité), cuisinier et lieutenants ;

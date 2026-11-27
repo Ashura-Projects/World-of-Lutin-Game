@@ -120,6 +120,20 @@ Settings, GameSetup), GUT 9.7.1 headless, export Android arm64 (`com.ashura.worl
     (com.ashura.worldoflutin) pour garder les sauvegardes et installer par-dessus.
 - Non testé : sur téléphone.
 
+## v1.4.1 (demandes d'Ashura)
+- Fait : voir CHANGELOG 1.4.1.
+- Preuves : tests GUT verts (nouveau `tests/test_v141.gd` : économie IA, améliorations, campagne, sauvegarde),
+  gdlint propre, tous les scripts compilent ; cinématiques rendues par Remotion (`cinematics/`, `node render.mjs all`
+  puis `tools/cinematics_export.sh`) ; capture de la cinématique jouée dans Godot (`build/captures/v141_intro.png`).
+- Choix faits sans Ashura :
+  - cinématiques en Ogg Theora 1280 × 576 (le seul format vidéo de Godot) : intro ~19 Mo, chapitres ~2 Mo chacun ;
+  - le logo est une image : il « se dessine » par traits de pinceau qui le révèlent (anneau, visage, nom) ;
+  - conseiller : « Maître Ombelin » ; 7 chapitres, missions et récompenses dans data/campaign.json ;
+  - la cinématique d'ouverture passe à chaque lancement de l'appli (pas en revenant au menu) ;
+  - musiques choisies : Heroic Age (ouverture), Master of the Feast (paix), Five Armies / Clash Defiant (guerre),
+    Achilles (victoire) — Kevin MacLeod, CC BY 4.0, crédités.
+- Non testé : sur téléphone (lecture vidéo Theora sur Android).
+
 ## v1.4.0 (demandes d'Ashura)
 - Fait : voir CHANGELOG 1.4.0.
 - Preuves : 180 tests GUT verts (nouveaux `test_v14_units`, `test_v14_realm`, `test_v14_bandits`, `test_v14_battle`,

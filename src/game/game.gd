@@ -278,7 +278,12 @@ func _save_meta() -> Dictionary:
 
 func _on_play() -> void:
 	GameClock.running = true
-	if sim.rules.mode == "tutorial":
+	if sim.rules.mode == "campaign":  # Campagne : cinématique du chapitre puis Maître Ombelin
+		var ap := AdvisorPanel.new()
+		ap.setup(self)
+		hud.root.add_child(ap)
+		ap.start_chapter(GameSetup.load_slot == "")
+	elif sim.rules.mode == "tutorial":
 		var mp := MissionPanel.new()
 		mp.setup(self)
 		hud.root.add_child(mp)

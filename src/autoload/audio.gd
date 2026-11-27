@@ -81,6 +81,20 @@ func stop_all() -> void:
 		_amb_target[k] = 0.0
 
 
+## Cinématiques : la musique du jeu se met en pause pendant la vidéo.
+func pause_music(on: bool) -> void:
+	if _music != null:
+		_music.stream_paused = on
+
+
+## Joue une musique d'ambiance précise (Campagne : paix, guerre, victoire) — même lecteur que la playlist.
+func play_mood(mood: String) -> void:
+	for t: Dictionary in tracks():
+		if str(t.get("mood", "")) == mood:
+			play_track(t["id"])
+			return
+
+
 ## Morceaux de la playlist : [{id, title, author, license}].
 func tracks() -> Array:
 	return _cfg.get("music", [])
@@ -91,8 +105,8 @@ func playlist() -> Array:
 	var chosen: Array = Settings.get_value("playlist") if Settings.get_value("playlist") != null else []
 	var out := []
 	for t: Dictionary in tracks():
-		if chosen.is_empty() or chosen.has(t["id"]):
-			out.append(t["id"])
+		if (chosen.is_empty() and bool(t.get("playlist", true))) or chosen.has(t["id"]):
+			out.append(t["id"])  # les musiques de guerre, de victoire et de cinématique ne passent qu'à leur moment
 	return out
 
 

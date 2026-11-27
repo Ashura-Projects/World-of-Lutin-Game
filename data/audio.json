@@ -1,5 +1,5 @@
 {
-  "_doc": "Son : playlist de musiques (Paramètres : toutes en boucle, aléatoire ou un seul morceau), ambiances selon la caméra, bruitages. Volumes en dB.",
+  "_doc": "Son : playlist de musiques (Paramètres : toutes en boucle, aléatoire ou un seul morceau), ambiances selon la caméra, bruitages. Volumes en dB. mood : peace / war / victory / cinematic (Campagne et cinématiques) ; playlist=false : pas dans la playlist normale.",
   "music_db": -8,
   "ambience_db": -6,
   "sfx_db": -4,
@@ -59,6 +59,45 @@
       "title": "Pippin the Hunchback",
       "author": "Kevin MacLeod",
       "license": "CC BY 4.0 — incompetech.com"
+    },
+    {
+      "id": "festin",
+      "title": "Master of the Feast",
+      "author": "Kevin MacLeod",
+      "license": "CC BY 4.0 — incompetech.com",
+      "mood": "peace"
+    },
+    {
+      "id": "cinq_armees",
+      "title": "Five Armies",
+      "author": "Kevin MacLeod",
+      "license": "CC BY 4.0 — incompetech.com",
+      "mood": "war",
+      "playlist": false
+    },
+    {
+      "id": "defi",
+      "title": "Clash Defiant",
+      "author": "Kevin MacLeod",
+      "license": "CC BY 4.0 — incompetech.com",
+      "mood": "war",
+      "playlist": false
+    },
+    {
+      "id": "achille",
+      "title": "Achilles",
+      "author": "Kevin MacLeod",
+      "license": "CC BY 4.0 — incompetech.com",
+      "mood": "victory",
+      "playlist": false
+    },
+    {
+      "id": "ouverture_heroique",
+      "title": "Heroic Age",
+      "author": "Kevin MacLeod",
+      "license": "CC BY 4.0 — incompetech.com",
+      "mood": "cinematic",
+      "playlist": false
     }
   ]
 }

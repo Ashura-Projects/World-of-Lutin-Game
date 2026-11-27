@@ -1,0 +1,319 @@
+{
+  "_doc": "Campagne (1.4.1) : chapitres de l'histoire, de l'arrivée dans la vallée à la fondation de l'Empire. Chaque chapitre : mini-cinématique, récit du conseiller, missions (vérifiées par TutorialMissions / CampaignGoals), récompense, musique (mood).",
+  "advisor": {
+    "name": "Maître Ombelin",
+    "role": "conseiller du clan",
+    "portrait": "res://assets/ui/advisor.png"
+  },
+  "setup": {
+    "map_size": "medium",
+    "ai_factions": 3,
+    "orcs": true,
+    "raid_days": 50,
+    "lutins": 6
+  },
+  "chapters": [
+    {
+      "id": 1,
+      "title": "L'arrivée dans la vallée",
+      "cinematic": "res://assets/cinematics/chapitre_1.ogv",
+      "mood": "peace",
+      "story": [
+        "Nous y voilà enfin, mon ami. Cette vallée sera notre nouveau foyer.",
+        "Le voyage nous a épuisés : il faut du bois, un abri et un feu avant la nuit.",
+        "Je resterai à tes côtés pour te conseiller. Commençons !"
+      ],
+      "missions": [
+        {
+          "title": "Du bois pour l'hiver",
+          "goal": "Rapportez 10 bûches à la réserve.",
+          "hint": "Terre › Récolter › Couper : touchez des arbres (cercle) puis « Valider ». Les bûcherons s'en chargent.",
+          "kind": "stock_gain",
+          "res": "log",
+          "n": 10
+        },
+        {
+          "title": "Monter le camp",
+          "goal": "Construisez 2 tentes.",
+          "hint": "Construire › Bâtiments › Tente, puis touchez le sol. Une tente de couple accueille aussi un enfant.",
+          "kind": "built_tag",
+          "what": "tent",
+          "n": 2
+        },
+        {
+          "title": "Un feu pour la veillée",
+          "goal": "Construisez un feu de camp.",
+          "hint": "Construire › Bâtiments › Feu de camp. Il réchauffe les lutins quand il fait froid.",
+          "kind": "built",
+          "what": "campfire",
+          "n": 1
+        },
+        {
+          "title": "Ranger nos biens",
+          "goal": "Créez une zone de réserve.",
+          "hint": "Terre › Zones › Réserves : les porteurs y empilent les ressources en tas.",
+          "kind": "store_zone",
+          "n": 1
+        }
+      ],
+      "reward": {
+        "bread": 20,
+        "plank": 20
+      },
+      "reward_text": "Le camp est monté. Les lutins dorment au chaud !"
+    },
+    {
+      "id": 2,
+      "title": "Le premier village",
+      "cinematic": "res://assets/cinematics/chapitre_2.ogv",
+      "mood": "peace",
+      "story": [
+        "Des tentes, c'est bien. Un village, c'est mieux !",
+        "Il nous faut de vraies maisons, des champs et un atelier.",
+        "Plus nous serons nombreux, plus la vallée nous appartiendra."
+      ],
+      "missions": [
+        {
+          "title": "De vraies maisons",
+          "goal": "Deux lutins dorment dans des pièces fermées.",
+          "hint": "Murs, toit, porte et lit : une pièce fermée devient une maison. Construire › Blocs (mode Mur).",
+          "kind": "home_in_room",
+          "n": 2
+        },
+        {
+          "title": "Les premiers champs",
+          "goal": "Semez 6 cases de champ.",
+          "hint": "Terre › Zones › Champs : choisissez une culture, touchez les cases puis « Valider ».",
+          "kind": "sown",
+          "n": 6
+        },
+        {
+          "title": "L'établi",
+          "goal": "Construisez un établi de menuisier.",
+          "hint": "Construire › Ateliers. Touchez-le ensuite pour lui commander des planches.",
+          "kind": "built",
+          "what": "sawbench",
+          "n": 1
+        },
+        {
+          "title": "Un village qui grandit",
+          "goal": "Comptez 8 lutins.",
+          "hint": "Les couples mariés ont des enfants s'ils ont un foyer avec un lit libre et de quoi manger.",
+          "kind": "population",
+          "n": 8
+        }
+      ],
+      "reward": {
+        "gold": 30,
+        "cloth": 10
+      },
+      "reward_text": "Notre premier village est né !"
+    },
+    {
+      "id": 3,
+      "title": "Les clans voisins",
+      "cinematic": "res://assets/cinematics/chapitre_3.ogv",
+      "mood": "peace",
+      "story": [
+        "D'autres lutins vivent dans la vallée : jaunes des collines, rouges de la braise, verts des forêts.",
+        "Allons à leur rencontre. Un bon diplomate vaut mieux que cent épées.",
+        "Mais garde l'œil ouvert : tous ne nous veulent pas du bien."
+      ],
+      "missions": [
+        {
+          "title": "Explorer la vallée",
+          "goal": "Découvrez 25 nouvelles zones.",
+          "hint": "Touchez un lutin › Explorer, ou formez un éclaireur. La carte se dévoile.",
+          "kind": "explored",
+          "n": 25
+        },
+        {
+          "title": "Un diplomate",
+          "goal": "Nommez un diplomate.",
+          "hint": "Royaume › Diplomatie : choisissez le lutin le plus charismatique (l'école enseigne l'éloquence).",
+          "kind": "diplomat",
+          "n": 1
+        },
+        {
+          "title": "Des amis",
+          "goal": "Ayez une relation « Favorable » avec un clan.",
+          "hint": "Cadeaux d'or ou de vivres, banquets : la relation monte. Le charisme du diplomate aide.",
+          "kind": "relation_any",
+          "n": 15
+        },
+        {
+          "title": "Commercer",
+          "goal": "Signez un accord commercial ou une alliance.",
+          "hint": "Il faut une relation favorable et un diplomate de niveau 2 (il apprend à chaque action).",
+          "kind": "pact_any",
+          "n": 1
+        }
+      ],
+      "reward": {
+        "gold": 40
+      },
+      "reward_text": "Les clans voisins nous connaissent et nous respectent."
+    },
+    {
+      "id": 4,
+      "title": "L'ombre des forêts",
+      "cinematic": "res://assets/cinematics/chapitre_4.ogv",
+      "mood": "war",
+      "story": [
+        "Des bandits gris se cachent dans les grands bois. Ils pillent nos réserves !",
+        "Il est temps de former une vraie unité, avec un commandant.",
+        "Trouve leur camp et chasse-les de la vallée."
+      ],
+      "missions": [
+        {
+          "title": "Une unité",
+          "goal": "Formez une unité d'au moins 4 soldats.",
+          "hint": "Armée › Militaire › Unités : un capitaine et des lutins. ⚙ Gérer pour leurs armes.",
+          "kind": "unit_size",
+          "n": 4
+        },
+        {
+          "title": "Chasser les bandits",
+          "goal": "Abattez 5 bandits.",
+          "hint": "⚑ Commander : ⬇ aller puis ⚔ attaquer. Les fusiliers tirent de loin.",
+          "kind": "kills_prefix",
+          "what": "bandit",
+          "n": 5
+        },
+        {
+          "title": "Le repaire",
+          "goal": "Videz un camp de bandits.",
+          "hint": "Leurs camps sont au cœur des grandes forêts. Tous les bandits d'un camp abattus : le butin est à vous.",
+          "kind": "bandit_camps",
+          "n": 1
+        }
+      ],
+      "reward": {
+        "gold": 50,
+        "iron_ingot": 10
+      },
+      "reward_text": "Les forêts sont sûres à nouveau !"
+    },
+    {
+      "id": 5,
+      "title": "La guerre des orcs",
+      "cinematic": "res://assets/cinematics/chapitre_5.ogv",
+      "mood": "war",
+      "story": [
+        "Les orcs descendent des collines. Ils sont forts, nombreux et en colère.",
+        "Une caserne, des soldats entraînés, un commandant aguerri : voilà notre défense.",
+        "Puis nous irons détruire leur camp."
+      ],
+      "missions": [
+        {
+          "title": "La caserne",
+          "goal": "Une garnison et un réfectoire.",
+          "hint": "Deux pièces : garnison (lits, coffre, râtelier) et réfectoire (foyer, table, bancs).",
+          "kind": "barracks",
+          "n": 1
+        },
+        {
+          "title": "Des soldats aguerris",
+          "goal": "Comptez 6 soldats.",
+          "hint": "Royaume › Membres : enrôlez des soldats ; entraînez-les (✦) en force, agilité et robustesse.",
+          "kind": "soldiers",
+          "n": 6
+        },
+        {
+          "title": "Repousser les orcs",
+          "goal": "Abattez 10 orcs.",
+          "hint": "Lances en pique en première ligne, fusils derrière. Un bon commandant renforce ses soldats.",
+          "kind": "kills_prefix",
+          "what": "orc",
+          "n": 10
+        },
+        {
+          "title": "Le camp des orcs",
+          "goal": "Détruisez un camp d'orcs.",
+          "hint": "Une catapulte servie par une unité casse leurs palissades.",
+          "kind": "orc_camps",
+          "n": 1
+        }
+      ],
+      "reward": {
+        "gold": 80,
+        "cut_stone": 40
+      },
+      "reward_text": "Les orcs fuient la vallée !",
+      "victory": true
+    },
+    {
+      "id": 6,
+      "title": "L'unification",
+      "cinematic": "res://assets/cinematics/chapitre_6.ogv",
+      "mood": "peace",
+      "story": [
+        "La vallée a besoin d'un seul étendard.",
+        "Par l'alliance ou par la conquête, rassemble les clans.",
+        "Et fonde un second village pour tenir nos terres."
+      ],
+      "missions": [
+        {
+          "title": "Deux clans avec nous",
+          "goal": "Deux clans alliés ou conquis.",
+          "hint": "Alliance (diplomate de niveau 5, relation de soutien) ou guerre et conquête de leur village.",
+          "kind": "united",
+          "n": 2
+        },
+        {
+          "title": "Un second village",
+          "goal": "Fondez un deuxième village.",
+          "hint": "Construire › Défense › Balise de village. Peuple › Villages et villes pour le gérer.",
+          "kind": "settlements",
+          "n": 2
+        },
+        {
+          "title": "Un seigneur",
+          "goal": "Nommez un seigneur sur son trône.",
+          "hint": "Une salle du trône (trône dans une pièce), puis Royaume › Faction › Seigneur.",
+          "kind": "lord",
+          "n": 1
+        }
+      ],
+      "reward": {
+        "gold": 120
+      },
+      "reward_text": "Les clans marchent sous notre bannière !",
+      "victory": true
+    },
+    {
+      "id": 7,
+      "title": "L'Empire des Lutins",
+      "cinematic": "res://assets/cinematics/chapitre_7.ogv",
+      "mood": "victory",
+      "story": [
+        "Il reste une dernière étape, mon ami : unir toute la vallée.",
+        "Bâtis une ville digne d'un empire, et que chaque clan reconnaisse ta couronne.",
+        "Alors, l'Empire des Lutins sera né."
+      ],
+      "missions": [
+        {
+          "title": "Toute la vallée",
+          "goal": "Tous les clans alliés ou conquis.",
+          "hint": "Chaque voisin : alliance ou conquête.",
+          "kind": "united_all",
+          "n": 1
+        },
+        {
+          "title": "Une ville",
+          "goal": "Un village devient une ville.",
+          "hint": "50 habitants, château (salle du trône), geôle de 5 cages, une maison par foyer, caserne, camp d'entraînement.",
+          "kind": "cities",
+          "n": 1
+        }
+      ],
+      "reward": {
+        "gold": 300
+      },
+      "reward_text": "Gloire à l'Empire des Lutins !",
+      "victory": true
+    }
+  ],
+  "done_title": "L'Empire est fondé !",
+  "done_text": "Tu as uni la vallée et fondé l'Empire des Lutins. Tu peux continuer à faire prospérer ton empire."
+}

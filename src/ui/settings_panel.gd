@@ -137,7 +137,7 @@ func _music_tab() -> void:
 		var row := HBoxContainer.new()
 		var c := CheckBox.new()
 		c.text = "%s — %s" % [t["title"], t["author"]]
-		c.button_pressed = chosen.is_empty() or chosen.has(t["id"])
+		c.button_pressed = (chosen.is_empty() and bool(t.get("playlist", true))) or chosen.has(t["id"])
 		c.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		c.toggled.connect(func(_on: bool) -> void: _save_playlist())
 		row.add_child(c)

@@ -118,7 +118,9 @@ func new_game(gen: WorldGenerator, start: Vector3i, lutins: int) -> void:
 	orcs.setup_new(start)
 	bandits.setup_new(start)
 	rivals.setup_new(start, rules.ai_factions)
-	if rules.mode == "tutorial":
+	if rules.mode == "campaign":
+		missions.campaign = true
+	if rules.mode in ["tutorial", "campaign"]:
 		missions.start_current()
 	for c: Dictionary in orcs.camps:
 		territory.claim(
@@ -155,7 +157,7 @@ func tick() -> void:
 		for l in colony.lutins:
 			territory.explore(l.cell, int(DataRegistry.find("jobs", "jobs", l.job).get("explore_radius", 2)))
 		_buildings_effects()
-		if rules.mode == "tutorial":
+		if rules.mode in ["tutorial", "campaign"]:
 			missions.check()
 		rivals.check_meetings()
 		orcs.check_discovery(territory)

@@ -45,6 +45,15 @@
   "default": "normal",
   "modes": [
     {
+      "id": "campaign",
+      "name": "Campagne",
+      "desc": "L'histoire des lutins, chapitre après chapitre : de l'arrivée dans la vallée à la fondation de l'Empire, avec Maître Ombelin pour te guider.",
+      "ai_factions": 3,
+      "orcs": true,
+      "victory": false,
+      "hidden": true
+    },
+    {
       "id": "sandbox",
       "name": "Bac à sable",
       "desc": "Construire en paix. Voisins et orcs au choix.",

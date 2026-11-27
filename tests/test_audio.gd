@@ -3,7 +3,8 @@ extends GutTest
 
 func test_tous_les_sons_existent() -> void:
 	var cfg := DataRegistry.get_table("audio")
-	assert_between(cfg["music"].size(), 6, 8, "playlist de 6-7 morceaux")
+	var normal: Array = cfg["music"].filter(func(t: Dictionary) -> bool: return t.get("playlist", true))
+	assert_between(normal.size(), 6, 10, "playlist de 6 à 10 morceaux (hors guerre, victoire, cinématique)")
 	for t: Dictionary in cfg["music"]:
 		assert_true(ResourceLoader.exists("res://assets/audio/music/%s.ogg" % t["id"]), "musique " + t["id"])
 		assert_true(t.has("author") and t.has("license"), "crédit de " + t["id"])
@@ -35,6 +36,7 @@ func test_playlist_respecte_les_morceaux_coches_et_le_mode() -> void:
 	Audio._next_track()
 	assert_eq(Audio.current_track, "conteur", "en boucle : morceau suivant de la liste")
 	Settings.values["playlist"] = []
-	assert_eq(Audio.playlist().size(), Audio.tracks().size(), "rien de coché = tous")
+	var normal := Audio.tracks().filter(func(t: Dictionary) -> bool: return t.get("playlist", true)).size()
+	assert_eq(Audio.playlist().size(), normal, "rien de coché = tous (sauf guerre, victoire, cinématique)")
 	Settings.values = saved
 	Audio.stop_all()
