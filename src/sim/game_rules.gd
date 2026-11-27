@@ -14,6 +14,8 @@ var ai_start_lutins: int = 6
 var god_mode: bool = false  # débug : lutins invincibles
 var free_build: bool = false  # débug : construction instantanée et gratuite
 var free_dig: bool = false  # débug : creuser (gomme, récolte « creuser ») instantané
+var free_clear: bool = false  # débug : enlever arbres / buissons instantané
+var free_terra: bool = false  # débug : terraformation gratuite et instantanée
 
 
 func _init(d: Dictionary = {}) -> void:
@@ -47,7 +49,9 @@ func to_dict() -> Dictionary:
 		"ai_start_lutins": ai_start_lutins,
 		"god_mode": god_mode,
 		"free_build": free_build,
-		"free_dig": free_dig
+		"free_dig": free_dig,
+		"free_clear": free_clear,
+		"free_terra": free_terra
 	}
 
 
@@ -61,4 +65,6 @@ func from_dict(d: Dictionary) -> void:
 	god_mode = bool(d.get("god_mode", false))
 	free_build = bool(d.get("free_build", false))
 	free_dig = bool(d.get("free_dig", false))
+	free_clear = bool(d.get("free_clear", false))
+	free_terra = bool(d.get("free_terra", false))
 	active = self

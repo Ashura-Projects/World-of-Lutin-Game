@@ -42,6 +42,23 @@ func add_order(struct_id: int, recipe_id: String, mode: String, n: int) -> void:
 	orders.get_or_add(struct_id, []).append({"recipe": recipe_id, "mode": mode, "n": n, "done": 0})
 
 
+## Commandes d'un atelier, dans l'ordre de la file : on monte / descend / retire une commande.
+func move_order(struct_id: int, i: int, d: int) -> void:
+	var q: Array = orders.get(struct_id, [])
+	var j := i + d
+	if i < 0 or i >= q.size() or j < 0 or j >= q.size():
+		return
+	var o: Variant = q[i]
+	q[i] = q[j]
+	q[j] = o
+
+
+func remove_order(struct_id: int, i: int) -> void:
+	var q: Array = orders.get(struct_id, [])
+	if i >= 0 and i < q.size():
+		q.remove_at(i)
+
+
 ## Affecter un lutin à un bâtiment : il prend le métier (et l'outil) du poste. False si pas d'outil en réserve.
 func assign_staff(struct_id: int, l: Lutin) -> bool:
 	var s: Dictionary = board.structures.items.get(struct_id, {})
@@ -116,7 +133,11 @@ func _plan_station(s: Dictionary) -> void:
 		if t["kind"] == "craft" and t["struct_id"] == s["id"]:
 			return  # une commande à la fois par atelier
 	var st: Stockpile = board.colony.stock
-	for o: Dictionary in orders.get(s["id"], []):
+	var queue: Array = orders.get(s["id"], [])
+	for o: Dictionary in queue.duplicate():  # file d'attente : les commandes « faire N » finies s'en vont
+		if o["mode"] == "make" and int(o["done"]) >= int(o["n"]):
+			queue.erase(o)
+	for o: Dictionary in queue:
 		var r := recipe(o["recipe"])
 		if r.is_empty():
 			continue

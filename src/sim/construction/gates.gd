@@ -12,6 +12,7 @@ var structures: Structures
 var gates: Dictionary = {}  # id -> {"id", "struct_id", "kind", "cell", "rot", "w", "l", "open", "locked"}
 var next_id: int = 1
 var _block: int = -1
+var fences: Dictionary = {}  # case -> id de la clôture (bloc invisible solide : les bêtes ne passent pas)
 
 
 func _init(w: VoxelWorld, s: Structures) -> void:
@@ -78,6 +79,24 @@ func sync_with_structures() -> void:
 		if not structures.items.has(g["struct_id"]):
 			_clear(g)
 			gates.erase(g["id"])
+	_sync_fences()
+
+
+## Clôtures bâties : un bloc invisible solide dans leur case ; retiré quand on les démonte.
+func _sync_fences() -> void:
+	for s: Dictionary in structures.items.values():
+		if s["kind"] == "fence" and s["built"] and not fences.has(s["cell"]):
+			fences[s["cell"]] = s["id"]
+			for c: Vector3i in [s["cell"], s["cell"] + Vector3i.UP]:  # 2 de haut : on ne saute pas par-dessus
+				if world.get_block(c) == 0:
+					world.set_block(c, _block)
+	for c: Vector3i in fences.keys():
+		var s: Dictionary = structures.items.get(fences[c], {})
+		if s.is_empty() or s["cell"] != c:
+			fences.erase(c)
+			for q: Vector3i in [c, c + Vector3i.UP]:
+				if world.get_block(q) == _block:
+					world.set_block(q, 0)
 
 
 ## Pose ou retire les blocs selon l'état.
@@ -85,6 +104,8 @@ func _apply(g: Dictionary) -> void:
 	var filled: bool = (g["kind"] == "portcullis" and not g["open"]) or (g["kind"] == "drawbridge" and g["open"])
 	if g["kind"] == "door":
 		filled = g["locked"]  # porte non verrouillée : les lutins l'ouvrent pour passer
+		if str(g.get("door", "")) == "fence_gate":
+			filled = g["locked"] or not g["open"]  # portillon fermé : les bêtes restent dans l'enclos
 	for c in cells(g):
 		var cur := world.get_block(c)
 		if filled and cur == 0:
@@ -118,6 +139,13 @@ func set_locked(id: int, on: bool) -> void:
 
 
 ## Herse ou pont-levis à cette case (case du tablier, de l'ouverture ou de l'objet), sinon {}.
+func for_struct(struct_id: int) -> Dictionary:
+	for g: Dictionary in gates.values():
+		if int(g["struct_id"]) == struct_id:
+			return g
+	return {}
+
+
 func at(cell: Vector3i) -> Dictionary:
 	for g: Dictionary in gates.values():
 		if g["cell"] == cell or g["cell"] + Vector3i.DOWN == cell:

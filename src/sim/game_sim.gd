@@ -54,6 +54,7 @@ var religion: Religion
 var gates: Gates
 var missions: TutorialMissions
 var catapults: Catapults
+var water: WaterFlow
 
 
 func _init(w: VoxelWorld) -> void:
@@ -89,6 +90,7 @@ func _init(w: VoxelWorld) -> void:
 	colony.fauna_ref = fauna
 	missions = TutorialMissions.new(self)
 	catapults = Catapults.new(self)
+	water = WaterFlow.new(w)
 	structures.changed.connect(gates.sync_with_structures)
 
 
@@ -115,6 +117,7 @@ func tick() -> void:
 	Horses.tick(self)
 	Hauling.tick(self)
 	catapults.tick()
+	water.tick()
 	combat.tick()
 	orcs.tick()
 	var tps := GameClock.ticks_per_second()
@@ -151,6 +154,7 @@ func daily() -> void:
 	rivals.daily(GameClock.day())
 	religion.daily()
 	Horses.daily(self)
+	Livestock.daily(self)
 	Leisure.daily(colony)
 
 

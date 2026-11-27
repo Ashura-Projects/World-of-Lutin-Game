@@ -10,6 +10,7 @@ static func remove_structure_at(b: TaskBoard, cell: Vector3i) -> bool:
 	var s := b.structures.at(cell)
 	if s.is_empty():
 		return false
+	cell = s["cell"]  # case d'origine (on a pu toucher une autre case d'un gros atelier)
 	if b._by_cell.has(cell) and b.tasks[b._by_cell[cell]]["kind"] == "build_struct":
 		b.cancel(b._by_cell[cell])
 		return true

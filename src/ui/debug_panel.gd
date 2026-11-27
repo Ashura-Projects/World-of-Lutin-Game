@@ -70,6 +70,8 @@ func refresh() -> void:
 			["Mode dieu : %s" % ("OUI" if r.god_mode else "non"), _toggle_god],
 			["Construction libre : %s" % ("OUI" if r.free_build else "non"), _toggle_free],
 			["Creuser instantané : %s" % ("OUI" if r.free_dig else "non"), _toggle_dig],
+			["Enlever arbres et buissons instantané : %s" % ("OUI" if r.free_clear else "non"), _toggle_clear],
+			["Terraformation gratuite et instantanée : %s" % ("OUI" if r.free_terra else "non"), _toggle_terra],
 			[
 				"Finir les constructions",
 				func() -> void: _say("%d plan(s) terminé(s)." % DebugTools.finish_builds(_sim()))
@@ -138,6 +140,16 @@ func _toggle_god() -> void:
 
 func _toggle_dig() -> void:
 	_sim().rules.free_dig = not _sim().rules.free_dig
+	refresh.call_deferred()
+
+
+func _toggle_clear() -> void:
+	_sim().rules.free_clear = not _sim().rules.free_clear
+	refresh.call_deferred()
+
+
+func _toggle_terra() -> void:
+	_sim().rules.free_terra = not _sim().rules.free_terra
 	refresh.call_deferred()
 
 

@@ -36,6 +36,7 @@ var fog_view: FogView
 var realm_view: RealmView
 var smoke_view: SmokeView
 var fauna_fog: Territory
+var click_marker: ClickMarker
 
 
 func _ready() -> void:
@@ -156,6 +157,11 @@ func _on_world_ready() -> void:
 	var stores := StoreZonesView.new()
 	add_child(stores)
 	stores.bind(colony)
+	var piles := PilesView.new()  # tas de matières dans les zones de stockage
+	add_child(piles)
+	piles.bind(colony)
+	click_marker = ClickMarker.new()
+	add_child(click_marker)
 	var markers := TaskMarkersView.new()
 	add_child(markers)
 	markers.bind(board)
@@ -174,6 +180,7 @@ func _on_world_ready() -> void:
 	build_tool.setup(world, camera)
 	build_tool.place_handler = _place  # en partie : poser = plans pour les bâtisseurs
 	build_tool.structure_handler = _place_structure
+	build_tool.structure_picker = structures.pick_ray
 	sound = SoundDirector.new()
 	add_child(sound)
 	sound.setup(self)
@@ -201,10 +208,10 @@ func _place(cells: Array, block_id: int, erase: bool) -> int:
 
 
 func _place_structure(kind: String, cell: Vector3i) -> bool:
-	var rot := posmod(roundi(-camera.yaw / (PI / 2.0)), 4)  # l'objet fait face à la caméra
+	var rot := build_tool.current_rot()  # face à la caméra, ou le sens choisi avec ⟳
 	var extra := {"rot": rot, "gate_w": build_tool.gate_size.x, "gate_l": build_tool.gate_size.y}
 	if sim.rules.free_build:
-		if not structures.at(cell).is_empty():
+		if not structures.footprint_free(kind, cell, rot):
 			return false
 		structures.add(kind, cell, true, extra)
 		structures.assign_homes(colony)
@@ -273,15 +280,31 @@ func _start_spot() -> Vector3i:
 
 
 func _on_tap(screen: Vector2) -> void:
+	if not build_tool.active:  # marqueur : on voit où l'on a touché
+		var hit := VoxelRaycast.cast(
+			world, camera.cam.project_ray_origin(screen), camera.cam.project_ray_normal(screen)
+		)
+		if hit["hit"]:
+			click_marker.show_at(Vector3(hit["pos"]) + Vector3(0.5, 1.0, 0.5))
 	if hud.windows.on_tap(screen):
 		return
 	if build_tool.active:
 		return
+	if hud.unit_bar.active():
+		var other := lutins_view.pick(camera.cam, screen)
+		if other != null and other.unit_id != hud.unit_bar.unit_id:
+			hud.show_lutin(other)
+			return
+		if hud.unit_bar.on_tap(screen):
+			return
 	if hud.zones_panel != null and hud.zones_panel.visible:
 		hud.zones_panel.on_tap(screen)
 		return
 	if hud.harvest_panel != null and hud.harvest_panel.visible:
 		hud.harvest_panel.on_tap(screen)
+		return
+	if hud.terraform_panel != null and hud.terraform_panel.visible:
+		hud.terraform_panel.on_tap(screen)
 		return
 	if hud.orders.active() and hud.orders.on_tap(screen):
 		return  # mode ordres : chaque toucher donne un ordre au lutin choisi
@@ -319,7 +342,21 @@ func _pick_object(screen: Vector2) -> void:
 	if not best.is_empty():
 		hud.object_dialog.show_animal(best)
 		return
-	var r := VoxelRaycast.cast(world, camera.cam.project_ray_origin(screen), camera.cam.project_ray_normal(screen))
+	var o := camera.cam.project_ray_origin(screen)
+	var dir := camera.cam.project_ray_normal(screen)
+	var r := VoxelRaycast.cast(world, o, dir)
+	var hit_s := structures.pick_ray(o, dir, float(r["t"]) + 0.5)  # tout le volume d'un objet est touchable
+	if not hit_s.is_empty():
+		var g0 := sim.gates.for_struct(int(hit_s["id"]))
+		if not g0.is_empty():
+			hud.object_dialog.show_gate(g0)
+		else:
+			hud.object_dialog.show_structure(hit_s)
+		return
+	var fl := FloraDialog.pick(self, screen)
+	if not fl.is_empty():
+		hud.object_dialog.show_flora(fl["what"], fl["cell"])
+		return
 	if not r["hit"]:
 		return
 	var cell: Vector3i = r["pos"]

@@ -24,6 +24,8 @@ func _natural() -> Dictionary:
 	for k: String in flora["fishing"]["drop"]:
 		out[k] = true
 	for a: Dictionary in DataRegistry.get_table("animals")["animals"]:
+		for k: String in a.get("product", {}):  # élevage : lait…
+			out[k] = true
 		for k: String in a.get("drop", {}):
 			out[k] = true
 	var crops := DataRegistry.get_table("crops")

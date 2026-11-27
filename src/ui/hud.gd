@@ -3,16 +3,18 @@ extends CanvasLayer
 ## Interface en jeu (STYLE-VALIDE §7) : barre du haut, 8 menus en bas, engrenage.
 ## Chaque fenêtre a une croix ✕ et reste entre les deux barres (HudWindows).
 
-const MENUS := ["Construire", "Récolter", "Zones", "Lutins", "Militaire", "Royaume", "Commerce", "Gestion"]
+const MENUS := ["Construire", "Récolter", "Terrain", "Zones", "Lutins", "Militaire", "Royaume", "Commerce", "Gestion"]
 
 var root: Control
 var windows: HudWindows
 var top: HudTop
 var orders: OrderBar
+var unit_bar: UnitBar
 var sheet: LutinSheet
 var tools: HudTools
 var build_panel: BuildPanel
 var harvest_panel: HarvestPanel
+var terraform_panel: TerraformPanel
 var lutins_panel: LutinsPanel
 var zones_panel: ZonesPanel
 var workshops_panel: WorkshopsPanel
@@ -45,7 +47,10 @@ func _ready() -> void:
 
 func show_lutin(l: Lutin) -> void:
 	sheet.show_lutin(l)
-	if l != null:
+	if l != null and l.unit_id >= 0 and unit_bar != null:
+		orders.clear()
+		unit_bar.open(l.unit_id)  # lutin d'une unité : on commande toute l'unité
+	elif l != null:
 		orders.select(l)
 	else:
 		orders.clear()
@@ -62,6 +67,7 @@ func bind_game(game: Node) -> void:
 	sheet.setup(game)
 	windows.add(sheet, func() -> void: show_lutin(null), true)
 	harvest_panel = _menu_panel_add(HarvestPanel.new(), "Récolter", Vector2(170, 380))
+	terraform_panel = _menu_panel_add(TerraformPanel.new(), "Terrain", Vector2(170, 420))
 	lutins_panel = _menu_panel_add(LutinsPanel.new(), "Lutins", Vector2(300, 70))
 	zones_panel = _menu_panel_add(ZonesPanel.new(), "Zones", Vector2(170, 420))
 	root.add_child(zones_panel.filter_panel)
@@ -83,6 +89,9 @@ func bind_game(game: Node) -> void:
 	orders = OrderBar.new()
 	add_child(orders)
 	orders.setup(self, game)
+	unit_bar = UnitBar.new()
+	add_child(unit_bar)
+	unit_bar.setup(self, game)
 	_setup_build(game.build_tool, game.world_view)
 
 
@@ -239,8 +248,8 @@ func _build_bottom() -> void:
 	for n: String in MENUS:
 		var b := Button.new()
 		b.text = n
-		b.custom_minimum_size = Vector2(158, 76)
-		b.add_theme_font_size_override("font_size", 19)
+		b.custom_minimum_size = Vector2(140, 76)
+		b.add_theme_font_size_override("font_size", 18)
 		b.name = n
 		row.add_child(b)
 
@@ -281,6 +290,8 @@ func back() -> void:
 		pass
 	elif tools != null and tools.bubble.visible:
 		menu_button("Construire").button_pressed = false
+	elif unit_bar != null and unit_bar.active():
+		unit_bar.close()
 	elif orders != null and orders.active():
 		show_lutin(null)
 

@@ -64,7 +64,8 @@ func _process(delta: float) -> void:
 		var m: LutinModel = _models.get(l.id)
 		if m == null:
 			continue
-		var job_view := ("militia" if l.mobilized or l.job == "soldier" else l.job) + ":" + l.age_stage()
+		var soldier := l.mobilized or l.job == "soldier" or l.unit_id >= 0  # en unité : uniforme de la faction
+		var job_view := ("militia" if soldier else l.job) + ":" + l.age_stage()
 		if _jobs[l.id] != job_view:
 			m.build(job_view.split(":")[0], _age_scale(l))
 			_jobs[l.id] = job_view

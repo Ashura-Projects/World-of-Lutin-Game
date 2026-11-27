@@ -10,6 +10,7 @@ var present: bool = false
 var leaves_day: int = 0
 var next_day: int = 0
 var offers: Dictionary = {}  # ressource -> quantité proposée
+var animal_offers: Dictionary = {}  # bête d'élevage (cow, pig) -> nombre proposé
 var _cfg: Dictionary
 
 
@@ -37,6 +38,7 @@ func daily(day: int) -> void:
 	if present and day >= leaves_day:
 		present = false
 		offers.clear()
+		animal_offers.clear()
 		next_day = day + int(_cfg.get("visit_every_days", 4))
 		merchant_left.emit()
 		EventBus.alert.emit("commerce", "Le marchand reprend la route.")
@@ -55,6 +57,11 @@ func _arrive(day: int) -> void:
 		offers[id] = Rng.randi_range(int(qty[0]), int(qty[1]))
 	for _i in Rng.randi_range(int(cnt[0]), int(cnt[1])):
 		offers[ids[Rng.randi_range(0, ids.size() - 1)]] = Rng.randi_range(int(qty[0]), int(qty[1]))
+	var lv: Dictionary = _cfg.get("livestock", {})
+	var lq: Array = lv.get("qty", [1, 3])
+	animal_offers.clear()
+	for k: String in lv.get("kinds", []):
+		animal_offers[k] = Rng.randi_range(int(lq[0]), int(lq[1]))
 	merchant_arrived.emit()
 	EventBus.alert.emit("commerce", "Un marchand arrive au village !")
 
@@ -83,7 +90,7 @@ func sell(id: String, n: int) -> int:
 
 
 func to_dict() -> Dictionary:
-	return {"present": present, "leaves": leaves_day, "next": next_day, "offers": offers}
+	return {"present": present, "leaves": leaves_day, "next": next_day, "offers": offers, "animals": animal_offers}
 
 
 func from_dict(d: Dictionary) -> void:
@@ -94,3 +101,7 @@ func from_dict(d: Dictionary) -> void:
 	var o: Dictionary = d.get("offers", {})
 	for k: String in o:
 		offers[k] = int(o[k])
+	animal_offers = {}
+	var ao: Dictionary = d.get("animals", {})
+	for k: String in ao:
+		animal_offers[k] = int(ao[k])

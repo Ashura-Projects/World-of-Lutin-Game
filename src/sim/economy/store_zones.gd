@@ -77,6 +77,34 @@ static func accepts(z: Dictionary, item: String) -> bool:
 	return f["items"].has(item) or f["cats"].has(str(Stockpile._resource(item).get("category", "")))
 
 
+## Tas visibles (1.3.2) : la réserve répartie dans les cases des zones, un tas d'une seule matière par case,
+## au plus `pile_size` unités par tas (ex. zone 2×2 de paille = 4 tas de 50). Les zones qui filtrent une matière
+## passent en premier, puis les zones « tout ». Renvoie case -> [matière, quantité].
+func layout(items: Dictionary, pile_size: int) -> Dictionary:
+	var out := {}
+	var left := {}
+	for k: String in items:
+		if int(items[k]) > 0 and k != "gold":
+			left[k] = int(items[k])
+	var keys := left.keys()
+	keys.sort_custom(func(a: String, b: String) -> bool: return int(left[a]) > int(left[b]))
+	for pass_all: bool in [false, true]:
+		for z: Dictionary in zones:
+			if bool(z["filter"].get("all", true)) != pass_all:
+				continue
+			var free: Array = z["cells"].filter(func(c: Vector3i) -> bool: return not out.has(c))
+			for k: String in keys:
+				if free.is_empty():
+					break
+				if int(left[k]) <= 0 or not accepts(z, k):
+					continue
+				while int(left[k]) > 0 and not free.is_empty():
+					var n := mini(pile_size, int(left[k]))
+					out[free.pop_front()] = [k, n]
+					left[k] = int(left[k]) - n
+	return out
+
+
 ## Case de zone la plus proche qui accepte l'objet ; sinon `fallback` (la charrette, qui accepte tout).
 func nearest(cell: Vector3i, item: String, fallback: Vector3i) -> Vector3i:
 	var best := fallback

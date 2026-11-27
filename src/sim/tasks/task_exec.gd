@@ -175,6 +175,10 @@ func _complete(l: Lutin, t: Dictionary) -> void:
 				for w: Dictionary in DataRegistry.get_table("crops").get("wild", []):
 					if w["id"] == kind:
 						board.ground.drop(l.cell, w.get("gather", {}))
+		"uproot":
+			Clearing.complete(board, l, t)
+		"terra":
+			Terraform.apply(board, str(t.get("tool", "")), cell)
 		"fish":
 			board.ground.drop(l.cell, DataRegistry.get_table("flora").get("fishing", {}).get("drop", {"fish": 1}))
 			t["progress"] = 0.0

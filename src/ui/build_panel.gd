@@ -17,6 +17,7 @@ const CATEGORIES := [
 	["buildings", "Bâtiments"],
 	["defense", "Défense"],
 	["stable", "Écurie"],
+	["farm", "Ferme"],
 	["windows", "Fenêtres"],
 	["religion", "Religion"],
 ]
@@ -50,6 +51,7 @@ const LIGHT := [
 ]
 const LEISURE := ["dice_table", "chess_table", "card_table", "bar_counter", "brewery", "wine_press"]
 const STABLE := ["water_trough", "feeder", "straw_floor"]
+const FARM := ["fence", "fence_gate", "hay_rack", "pig_trough", "dairy", "butcher_block"]
 const GROUND := ["road_dirt", "road_stone", "dirt_block", "training_ground"]
 const DEFENSE := [
 	"crenel",
@@ -263,6 +265,8 @@ static func _building_category(b: Dictionary) -> String:
 		return "leisure"
 	if STABLE.has(b["id"]):
 		return "stable"
+	if FARM.has(b["id"]):
+		return "farm"
 	if DEFENSE.has(b["id"]):
 		return "defense"
 	if FURNITURE.has(b["id"]):

@@ -3,7 +3,7 @@
   "buildings": [
     {
       "id": "tent",
-      "name": "Tente",
+      "name": "Tente en peau (1 place)",
       "size": [
         2,
         2,
@@ -18,8 +18,10 @@
       "available_from_start": true,
       "build_time": 12,
       "tags": [
-        "bed"
-      ]
+        "bed",
+        "tent"
+      ],
+      "child_slots": 1
     },
     {
       "id": "campfire",
@@ -1816,6 +1818,190 @@
         "siege"
       ],
       "_note": "touchez-la : charger (2 pierres), tirer, tourner, déplacer (2 lutins)"
+    },
+    {
+      "id": "tent_double",
+      "name": "Tente en peau (couple)",
+      "size": [
+        2,
+        2,
+        2
+      ],
+      "cost": {
+        "hide": 5,
+        "log": 3
+      },
+      "sleeps": 2,
+      "child_slots": 1,
+      "warmth": 1,
+      "available_from_start": true,
+      "build_time": 14,
+      "tags": [
+        "bed",
+        "tent"
+      ]
+    },
+    {
+      "id": "tent_cloth",
+      "name": "Tente en tissu (1 place)",
+      "size": [
+        2,
+        2,
+        2
+      ],
+      "cost": {
+        "cloth": 3,
+        "log": 2
+      },
+      "sleeps": 1,
+      "child_slots": 1,
+      "warmth": 1,
+      "available_from_start": true,
+      "build_time": 12,
+      "tags": [
+        "bed",
+        "tent"
+      ]
+    },
+    {
+      "id": "tent_cloth_double",
+      "name": "Tente en tissu (couple)",
+      "size": [
+        2,
+        2,
+        2
+      ],
+      "cost": {
+        "cloth": 5,
+        "log": 3
+      },
+      "sleeps": 2,
+      "child_slots": 1,
+      "warmth": 1,
+      "available_from_start": true,
+      "build_time": 14,
+      "tags": [
+        "bed",
+        "tent"
+      ]
+    },
+    {
+      "id": "fence",
+      "name": "Clôture",
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "cost": {
+        "log": 1
+      },
+      "build_time": 3,
+      "available_from_start": true,
+      "object": true,
+      "tags": [
+        "fence"
+      ],
+      "_note": "barrière fine : bloque les animaux et les lutins ; se relie aux clôtures voisines"
+    },
+    {
+      "id": "fence_gate",
+      "name": "Portillon de clôture",
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "cost": {
+        "log": 1,
+        "plank": 1
+      },
+      "build_time": 4,
+      "available_from_start": true,
+      "object": true,
+      "tags": [
+        "door",
+        "fence"
+      ],
+      "_note": "fermé : personne ne passe (les animaux restent dans l'enclos)"
+    },
+    {
+      "id": "dairy",
+      "name": "Laiterie (baratte et presse à fromage)",
+      "size": [
+        2,
+        1,
+        1
+      ],
+      "cost": {
+        "plank": 6,
+        "barrel_item": 1
+      },
+      "station": "dairy",
+      "build_time": 12,
+      "available_from_start": true,
+      "tags": [
+        "workstation"
+      ],
+      "staff": 1,
+      "job": "cook"
+    },
+    {
+      "id": "butcher_block",
+      "name": "Billot de boucher",
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "cost": {
+        "log": 2,
+        "iron_ingot": 1
+      },
+      "station": "butcher_block",
+      "build_time": 8,
+      "available_from_start": true,
+      "tags": [
+        "workstation"
+      ],
+      "staff": 1,
+      "job": "cook"
+    },
+    {
+      "id": "hay_rack",
+      "name": "Râtelier à foin",
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "cost": {
+        "plank": 3
+      },
+      "build_time": 5,
+      "available_from_start": true,
+      "object": true,
+      "tags": [
+        "feeder"
+      ]
+    },
+    {
+      "id": "pig_trough",
+      "name": "Auge à cochons",
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "cost": {
+        "plank": 2
+      },
+      "build_time": 4,
+      "available_from_start": true,
+      "object": true,
+      "tags": [
+        "trough"
+      ]
     }
   ]
 }

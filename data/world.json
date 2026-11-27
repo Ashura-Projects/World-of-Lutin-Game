@@ -230,5 +230,89 @@
     "radius_min": 1,
     "radius_max": 20,
     "default": 5
+  },
+  "water_flow": {
+    "_doc": "L'eau remplit les trous creusés à côté : cases remplies par tick et au plus par vague.",
+    "cells_per_tick": 12,
+    "max_cells_per_wave": 400
+  },
+  "terraform": {
+    "_doc": "Menu Terraformation : poser de l'eau, de la terre, de la pierre, planter arbres et buissons. Coût pris à la réserve ; un bâtisseur ou un cueilleur fait le travail. En débug (« Terraformation gratuite ») : instantané et gratuit.",
+    "tools": [
+      {
+        "id": "water",
+        "name": "Eau",
+        "cost": {
+          "water_bucket": 1
+        },
+        "returns": {
+          "bucket": 1
+        },
+        "block": "water",
+        "job": "builder",
+        "work": 2
+      },
+      {
+        "id": "dirt",
+        "name": "Terre",
+        "cost": {
+          "dirt": 1
+        },
+        "block": "dirt",
+        "job": "builder",
+        "work": 2
+      },
+      {
+        "id": "grass",
+        "name": "Herbe",
+        "cost": {
+          "dirt": 1
+        },
+        "block": "grass",
+        "job": "builder",
+        "work": 2
+      },
+      {
+        "id": "stone",
+        "name": "Pierre",
+        "cost": {
+          "stone": 1
+        },
+        "block": "stone",
+        "job": "builder",
+        "work": 2
+      },
+      {
+        "id": "sand",
+        "name": "Sable",
+        "cost": {
+          "sand": 1
+        },
+        "block": "sand",
+        "job": "builder",
+        "work": 2
+      },
+      {
+        "id": "tree",
+        "name": "Arbre",
+        "cost": {
+          "log": 1
+        },
+        "plant": "tree",
+        "job": "gatherer",
+        "work": 4
+      },
+      {
+        "id": "bush",
+        "name": "Buisson",
+        "cost": {
+          "berries": 2
+        },
+        "plant": "bush",
+        "job": "gatherer",
+        "work": 3
+      }
+    ],
+    "radius_max": 6
   }
 }

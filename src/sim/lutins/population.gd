@@ -63,6 +63,15 @@ func _free_bed_in(room: Dictionary) -> Dictionary:
 	return {}
 
 
+## Tente du couple avec une place d'enfant libre (child_slots), sinon {}.
+func _tent_child_place(home: Vector3i) -> Dictionary:
+	var s := structures.at(home)
+	if s.is_empty() or s["cell"] != home or not Structures.def(s["kind"]).get("tags", []).has("tent"):
+		return {}
+	var kids := colony.lutins.filter(func(l: Lutin) -> bool: return l.home == home and not l.can_work()).size()
+	return s if kids < int(Structures.def(s["kind"]).get("child_slots", 0)) else {}
+
+
 ## Naissances : un couple marié, une mère avec un foyer dans une pièce où reste un lit libre.
 func _births() -> void:
 	var b: Dictionary = _cfg.get("birth", {})
@@ -75,10 +84,12 @@ func _births() -> void:
 		var m := colony.find_lutin(a.spouse)
 		if m == null or m.age_stage() not in ["adult"]:
 			continue
-		var room := RoomDetector.room_at(world, structures, a.home)
-		if room.is_empty():
-			continue
-		var bed := _free_bed_in(room)
+		var bed := _tent_child_place(a.home)  # tente : 2 parents + 1 enfant
+		if bed.is_empty():
+			var room := RoomDetector.room_at(world, structures, a.home)
+			if room.is_empty():
+				continue
+			bed = _free_bed_in(room)
 		if bed.is_empty() or not Rng.chance(float(b.get("chance_per_day", 0.08)) * mult):
 			continue
 		_birth(a, m, bed)

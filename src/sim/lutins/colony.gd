@@ -363,7 +363,32 @@ func bury(l: Lutin) -> void:
 
 ## Point de réserve le plus proche qui accepte l'objet (charrette ou zone de réserve). "" = n'importe quoi.
 func store_near(cell: Vector3i, item: String = "") -> Vector3i:
-	return stores.nearest(cell, item, stock.pos)
+	var best := stores.nearest(cell, item, stock.pos)
+	var rack := _rack_near(cell, item)
+	if rack.y >= 0 and Vector3(cell).distance_to(Vector3(rack)) < Vector3(cell).distance_to(Vector3(best)) + 30.0:
+		return rack  # armes : on préfère le râtelier qui les accepte
+	return best
+
+
+## Râtelier d'armes bâti qui accepte cette arme (filtre « all », « flintlock », « spear »), le plus proche.
+func _rack_near(cell: Vector3i, item: String) -> Vector3i:
+	if structures == null or item == "" or DataRegistry.find("equipment", "weapons", item).is_empty():
+		return Vector3i(-1, -1, -1)
+	var best := Vector3i(-1, -1, -1)
+	var bd := INF
+	for s: Dictionary in structures.built_with_tag("weapons"):
+		if not rack_accepts(s, item):
+			continue
+		var d := Vector3(cell).distance_to(Vector3(s["cell"]))
+		if d < bd:
+			bd = d
+			best = s["cell"]
+	return best
+
+
+static func rack_accepts(s: Dictionary, item: String) -> bool:
+	var f := str(s.get("rack", "all"))
+	return f == "all" or f == item
 
 
 func at_store(cell: Vector3i, item: String = "") -> bool:

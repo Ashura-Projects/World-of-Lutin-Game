@@ -34,6 +34,22 @@ func harvest_bush(p: Vector3i, day: int) -> void:
 	changed.emit("bushes")
 
 
+func remove_bush(p: Vector3i) -> void:
+	bushes.erase(p)
+	changed.emit("bushes")
+
+
+## Plante un arbre / un buisson (terraformation).
+func add_tree(p: Vector3i, kind: String) -> void:
+	trees[p] = kind
+	changed.emit("trees")
+
+
+func add_bush(p: Vector3i) -> void:
+	bushes[p] = 0
+	changed.emit("bushes")
+
+
 func remove_herb(p: Vector3i) -> String:
 	var k: String = herbs.get(p, "")
 	herbs.erase(p)
@@ -44,10 +60,10 @@ func remove_herb(p: Vector3i) -> String:
 ## Ressources récoltables dans un cercle (rayon en cases) : pour le menu Récolter.
 func in_circle(kind: String, center: Vector3i, radius: int, day: int) -> Array[Vector3i]:
 	var out: Array[Vector3i] = []
-	var src: Dictionary = trees if kind == "tree" else (bushes if kind == "bush" else herbs)
+	var src: Dictionary = trees if kind == "tree" else (bushes if kind in ["bush", "bush_any"] else herbs)
 	for p: Vector3i in src:
 		if Vector2(p.x - center.x, p.z - center.z).length() <= radius + 0.5:
-			if kind != "bush" or bush_ready(p, day):
+			if kind != "bush" or bush_ready(p, day):  # « bush_any » : tous les buissons
 				out.append(p)
 	return out
 

@@ -1195,6 +1195,202 @@
         "wine": 3
       },
       "work": 30
+    },
+    {
+      "id": "make_bucket",
+      "name": "Seau",
+      "station": "cabinetmaker",
+      "job": "carpenter",
+      "in": {
+        "plank": 2,
+        "iron_ingot": 1
+      },
+      "out": {
+        "bucket": 2
+      },
+      "work": 12
+    },
+    {
+      "id": "make_bucket_saw",
+      "name": "Seau (établi)",
+      "station": "sawbench",
+      "job": "carpenter",
+      "in": {
+        "plank": 3,
+        "rope": 1
+      },
+      "out": {
+        "bucket": 1
+      },
+      "work": 14
+    },
+    {
+      "id": "fill_bucket",
+      "name": "Remplir un seau d'eau",
+      "station": "well",
+      "job": "hauler",
+      "in": {
+        "bucket": 1
+      },
+      "out": {
+        "water_bucket": 1
+      },
+      "work": 4
+    },
+    {
+      "id": "make_cheese",
+      "name": "Fromage",
+      "station": "dairy",
+      "job": "cook",
+      "in": {
+        "milk": 3,
+        "salt": 1
+      },
+      "out": {
+        "cheese": 2
+      },
+      "work": 20
+    },
+    {
+      "id": "make_cheese_plain",
+      "name": "Fromage frais",
+      "station": "dairy",
+      "job": "cook",
+      "in": {
+        "milk": 3
+      },
+      "out": {
+        "cheese": 1
+      },
+      "work": 15
+    },
+    {
+      "id": "churn_butter",
+      "name": "Beurre",
+      "station": "dairy",
+      "job": "cook",
+      "in": {
+        "milk": 2
+      },
+      "out": {
+        "butter": 1
+      },
+      "work": 12
+    },
+    {
+      "id": "make_sausage",
+      "name": "Saucisses",
+      "station": "butcher_block",
+      "job": "cook",
+      "in": {
+        "meat": 3,
+        "salt": 1
+      },
+      "out": {
+        "sausage": 4
+      },
+      "work": 15
+    },
+    {
+      "id": "cure_ham",
+      "name": "Jambon",
+      "station": "butcher_block",
+      "job": "cook",
+      "in": {
+        "meat": 4,
+        "salt": 2
+      },
+      "out": {
+        "ham": 2
+      },
+      "work": 25
+    },
+    {
+      "id": "cook_pumpkin_soup",
+      "name": "Soupe de citrouille",
+      "station": "hearth",
+      "job": "cook",
+      "in": {
+        "pumpkin": 1,
+        "water": 1,
+        "butter": 1
+      },
+      "out": {
+        "pumpkin_soup": 3
+      },
+      "work": 15
+    },
+    {
+      "id": "cook_carrot_stew",
+      "name": "Pot-au-feu",
+      "station": "hearth",
+      "job": "cook",
+      "in": {
+        "meat": 2,
+        "carrot": 2,
+        "onion": 1,
+        "water": 1
+      },
+      "out": {
+        "carrot_stew": 3
+      },
+      "work": 20
+    },
+    {
+      "id": "cook_onion_soup",
+      "name": "Soupe à l'oignon",
+      "station": "hearth",
+      "job": "cook",
+      "in": {
+        "onion": 3,
+        "water": 1
+      },
+      "out": {
+        "onion_soup": 2
+      },
+      "work": 12
+    },
+    {
+      "id": "bake_cheese_pie",
+      "name": "Tarte au fromage",
+      "station": "oven",
+      "job": "baker",
+      "in": {
+        "flour": 1,
+        "cheese": 1,
+        "butter": 1,
+        "log": 1
+      },
+      "out": {
+        "cheese_pie": 2
+      },
+      "work": 20
+    },
+    {
+      "id": "spin_hemp_rope",
+      "name": "Corde de chanvre",
+      "station": "spinning_wheel",
+      "job": "weaver",
+      "in": {
+        "hemp": 3
+      },
+      "out": {
+        "rope": 2
+      },
+      "work": 12
+    },
+    {
+      "id": "weave_hemp_cloth",
+      "name": "Toile de chanvre",
+      "station": "loom",
+      "job": "weaver",
+      "in": {
+        "hemp": 4
+      },
+      "out": {
+        "cloth": 1
+      },
+      "work": 20
     }
   ]
 }

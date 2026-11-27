@@ -42,24 +42,85 @@ func _process(delta: float) -> void:
 
 
 func refresh() -> void:
+	var fences := {}
+	for s: Dictionary in _st.items.values():
+		if Structures.def(s["kind"]).get("tags", []).has("fence"):
+			fences[s["cell"]] = true
 	for id: int in _nodes.keys():
-		if not _st.items.has(id) or _nodes[id][1] != _st.items[id]["built"]:
+		var gone: bool = not _st.items.has(id) or _nodes[id][1] != _st.items[id]["built"]
+		if not gone and _st.items[id]["kind"] == "fence":
+			gone = int(_nodes[id][2]) != fence_mask(_st.items[id]["cell"], fences)
+		elif not gone and _st.items[id]["kind"] == "weapon_rack":
+			gone = int(_nodes[id][2]) != hash(str(_st.items[id].get("rack", "all")))
+		if gone:
 			_nodes[id][0].queue_free()
 			_nodes.erase(id)
 	for s: Dictionary in _st.items.values():
 		if _nodes.has(s["id"]):
 			continue
-		var n := model(s["kind"])
-		n.position = Vector3(s["cell"]) + Vector3(0.5, 0, 0.5)
-		n.rotation.y = _facing(s["cell"])
-		if Structures.def(s["kind"]).get("tags", []).has("door"):
-			n.rotation.y = 0.0 if int(s.get("rot", 0)) % 2 == 0 else -PI / 2.0  # dans l'axe de la porte animée
-		elif s["kind"] == "catapult":
-			n.rotation.y = float(s.get("yaw", 0.0))
+		var n := place(s)
+		var mask := 0
+		if s["kind"] == "fence":
+			mask = fence_mask(s["cell"], fences)
+			var post: Node3D = n.get_child(0) if n.get_child_count() > 0 else n
+			for c in post.get_children():
+				c.queue_free()
+			FarmModels.fence(post, mask)
+		elif s["kind"] == "weapon_rack":
+			mask = hash(str(s.get("rack", "all")))
+			var holder: Node3D = n.get_child(0) if n.get_child_count() > 0 else n
+			for c in holder.get_children():
+				c.queue_free()
+			CraftModels.weapon_rack(holder, str(s.get("rack", "all")))
+		if Structures.def(s["kind"]).get("on_wall", false):
+			n.rotation.y = _facing(s["cell"])
 		if not s["built"]:
 			_ghostify(n)
 		add_child(n)
-		_nodes[s["id"]] = [n, s["built"]]
+		_nodes[s["id"]] = [n, s["built"], mask]
+
+
+## Nœud placé et orienté : les objets muraux sont dos au mur, les portes dans leur axe, la catapulte selon
+## son orientation ; les autres tournent autour du centre de leur emprise (sens choisi à la pose : ⟳).
+static func place(s: Dictionary) -> Node3D:
+	var m := model(s["kind"])
+	var d := Structures.def(s["kind"])
+	if d.get("tags", []).has("door"):
+		m.position = Vector3(s["cell"]) + Vector3(0.5, 0, 0.5)
+		m.rotation.y = 0.0 if int(s.get("rot", 0)) % 2 == 0 else -PI / 2.0  # dans l'axe de la porte animée
+		return m
+	if s["kind"] == "catapult":
+		m.position = Vector3(s["cell"]) + Vector3(0.5, 0, 0.5)
+		m.rotation.y = float(s.get("yaw", 0.0))
+		return m
+	if d.get("on_wall", false):
+		m.position = Vector3(s["cell"]) + Vector3(0.5, 0, 0.5)
+		m.rotation.y = 0.0  # tourné dos au mur par refresh()
+		return m
+	var sz: Array = d.get("size", [1, 1, 1])
+	var raw := Vector3(maxf(1.0, float(sz[0])), 0, maxf(1.0, float(sz[1]) if sz.size() > 1 else 1.0))
+	var dm := Structures.dims(s)
+	var pivot := Node3D.new()
+	pivot.position = Vector3(s["cell"]) + Vector3(dm.x / 2.0, 0, dm.z / 2.0)
+	pivot.rotation.y = rot_angle(int(s.get("rot", 0)))
+	m.position = -Vector3((raw.x - 1.0) / 2.0, 0, (raw.z - 1.0) / 2.0)
+	pivot.add_child(m)
+	return pivot
+
+
+## Clôtures voisines (1 = -Z, 2 = +X, 4 = +Z, 8 = -X) : les lisses vont vers elles.
+static func fence_mask(cell: Vector3i, fences: Dictionary) -> int:
+	var m := 0
+	var dirs := [Vector3i(0, 0, -1), Vector3i(1, 0, 0), Vector3i(0, 0, 1), Vector3i(-1, 0, 0)]
+	for i in 4:
+		if fences.has(cell + dirs[i]):
+			m |= 1 << i
+	return m
+
+
+## Sens de pose (0..3) -> angle : l'avant de l'objet (-Z) regarde la caméra au moment de la pose.
+static func rot_angle(rot: int) -> float:
+	return PI - rot * PI / 2.0
 
 
 ## Orientation : dos au mur le plus proche (fanions muraux, armoires…).
@@ -76,12 +137,18 @@ func _facing(cell: Vector3i) -> float:
 
 
 func _ghostify(n: Node) -> void:
+	ghostify(n, _ghost)
+
+
+static func ghostify(n: Node, mat: Material) -> void:
 	for c in n.get_children():
 		if c is MeshInstance3D:
-			c.material_override = _ghost
+			c.material_override = mat
 		elif c is Light3D:
 			c.visible = false
-		_ghostify(c)
+		elif c is GPUParticles3D or c is CPUParticles3D:
+			c.visible = false
+		ghostify(c, mat)
 
 
 static func _box(
@@ -103,9 +170,10 @@ static func model(kind: String) -> Node3D:
 		return bm
 	if Structures.def(kind).get("tags", []).has("door"):
 		return DecorModels.door_frame(kind)  # le battant animé est dessiné par GatesView
-	var dm := DecorModels.build(kind)
-	if dm != null:
-		return dm
+	for builder: Callable in [WorkshopModels.build, CraftModels.build, FarmModels.build, DecorModels.build]:
+		var m: Node3D = builder.call(kind)
+		if m != null:
+			return m
 	var r := Node3D.new()
 	match kind:
 		"tent":  # toile de peaux tendue sur deux perches

@@ -92,7 +92,7 @@ func add_build_block(cell: Vector3i, block_id: int, shape: int = 0) -> int:
 
 ## Objet ou bâtiment à monter (tente, feu de camp, lit…).
 func add_structure(kind: String, cell: Vector3i, extra: Dictionary = {}) -> int:
-	if structures == null or not structures.at(cell).is_empty():
+	if structures == null or not structures.footprint_free(kind, cell, int(extra.get("rot", 0))):
 		return -1
 	var on_wall: bool = Structures.def(kind).get("on_wall", false)
 	if on_wall:
@@ -211,6 +211,8 @@ func add_hunt(animal_id: int) -> int:
 func order_circle(kind: String, center: Vector3i, radius: int) -> int:
 	var n := 0
 	match kind:
+		"uproot":
+			n = Clearing.order_circle(self, center, radius)
 		"cut":
 			for p in flora.in_circle("tree", center, radius, GameClock.day()):
 				n += int(add_cut(p) >= 0)
@@ -250,6 +252,8 @@ func cancel(id: int) -> void:
 	tasks.erase(id)
 	if t["kind"] == "build_struct" and structures != null:
 		structures.remove(int(t["struct_id"]))
+	elif t["kind"] == "terra":
+		Terraform.refund(self, t)
 	tasks_changed.emit()
 
 

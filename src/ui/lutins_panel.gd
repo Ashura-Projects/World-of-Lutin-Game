@@ -103,13 +103,51 @@ func _fill_family() -> void:
 		var lab := Label.new()
 		lab.text = "%s (%d ans) — %s" % [l.name, l.age_days / 20, s]
 		lab.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		lab.custom_minimum_size = Vector2(850, 0)
+		lab.custom_minimum_size = Vector2(640, 0)
 		lab.add_theme_font_size_override("font_size", 18)
-		_list.add_child(lab)
+		var row := HBoxContainer.new()
+		row.add_child(lab)
+		var partner := Kinship.partner_of(game.colony, l)
+		if partner == null or partner.id > l.id or not l.can_work():
+			var house := Button.new()
+			house.text = "🏠 Loger…"
+			house.tooltip_text = "Touchez une maison (pièce avec des lits), une tente ou un lit pour y loger la famille"
+			house.custom_minimum_size = Vector2(170, 46)
+			house.pressed.connect(_house_family.bind(l))
+			row.add_child(house)
+		_list.add_child(row)
 	if not any:
 		var lab := Label.new()
 		lab.text = "Pas encore de famille : les couples ont des enfants quand ils ont un foyer (Population)."
 		_list.add_child(lab)
+
+
+## Loger une famille (le lutin, son conjoint, leurs enfants) : maison = pièce touchée, sinon la tente / le lit.
+func _house_family(l: Lutin) -> void:
+	var ids := [l.id]
+	var partner := Kinship.partner_of(game.colony, l)
+	if partner != null:
+		ids.append(partner.id)
+	for c: Lutin in Kinship.children_of(game.colony, l):
+		if not c.can_work():
+			ids.append(c.id)
+	game.hud.menu_button("Lutins").button_pressed = false
+	game.hud.windows.pick_cell(
+		"Touchez la maison, la tente ou le lit",
+		func(c: Vector3i) -> void:
+			var st: Structures = game.structures
+			var s := st.at(c)
+			if s.is_empty():
+				s = st.at(c + Vector3i.UP)
+			var room := RoomDetector.room_at(game.world, st, c + Vector3i.UP)
+			if not room.is_empty() and st.assign_room(room["cells"], ids, game.colony) > 0:
+				EventBus.alert.emit("info", "Famille logée dans cette maison.")
+			elif not s.is_empty() and int(Structures.def(s["kind"]).get("sleeps", 0)) > 0:
+				st.assign_bed(s["id"], ids, game.colony)
+				EventBus.alert.emit("info", "Famille logée ici.")
+			else:
+				EventBus.alert.emit("alerte", "Pas de lit ici : touchez une maison avec des lits, une tente ou un lit.")
+	)
 
 
 ## Toucher : choisir le lutin (barre d'ordres). Double toucher : centrer la caméra sur lui et fermer le menu.

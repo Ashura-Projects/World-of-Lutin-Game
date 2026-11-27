@@ -1,5 +1,31 @@
 # Journal des versions
 
+## 1.3.2 — Ferme, ateliers réels, terrain, unités (2026-11-27)
+- **Arbres, buissons, plantes** : on les touche pour voir ce qu'ils donnent et Couper / Cueillir / **Enlever** ;
+  Récolter › Enlever en cercle ; débug « Enlever instantané ».
+- **Vrais modèles low poly texturés** (pierre, brique, planche…) pour tous les ateliers qui étaient des cubes : forge
+  (foyer, hotte, soufflet, enclume), enclume, verrerie (gros four à verre), four à pain, four de potier, cheminée de
+  cuisine avec marmite, puits, meule, brasserie, pressoir, métier à tisser, rouet, herboristerie, tannerie, tailleur,
+  ébéniste, cuve de teinture, école, bibliothèque, atelier de maître, établi.
+- **Raccourcis sous la bulle** de construction : outils, forme, sens ⟳, annuler, déplacer ; ⟳ tourne les objets
+  (fantôme du vrai modèle). Un gros objet se touche **n'importe où sur son volume** (fiche, gomme).
+- **Unités** : uniforme aux couleurs de l'étendard, une case par soldat (plus de chevauchement), rangs alignés,
+  formation **double ligne** ; **barre d'ordres** verticale à symboles (⬇ aller, ⚔ attaquer, ✋, ⌂, ◎, formations) :
+  chaque toucher donne un ordre. **Marqueur** là où l'on touche la carte. **Catapulte** : PV, dégâts, portée.
+- **Eau** : elle remplit les trous creusés à côté. **Menu Terrain** : eau (seau d'eau), terre, herbe, pierre, sable,
+  arbres, buissons, enlever ; coût en ressources ; débug gratuit et instantané. Nouveaux objets : seau, seau d'eau.
+- **Élevage** : vaches (lait, viande, peaux) et cochons (viande, peau), achetés / vendus au marchand, abattus d'un
+  toucher, petits quand ils sont bien nourris ; **clôtures** fines qui se relient, portillon ; râtelier à foin, auge.
+  Laiterie (fromage, beurre), billot (saucisses, jambon). Cultures : carotte, oignon, navet, citrouille, chanvre ;
+  nouveaux plats (pot-au-feu, soupes, tarte au fromage…).
+- **Fiche de fabrication** d'un atelier touché : artisans, recette, quantité, « faire / garder / en continu »,
+  **file d'attente** ▲ ▼ ✕.
+- **Tentes** en peau ou en tissu, 1 place ou couple, + 1 enfant ; les couples s'y ont un enfant ; maisons sans limite
+  tant qu'il reste un lit ; **loger une famille** (Lutins › Familles › 🏠).
+- **Râteliers d'armes** : fusils, lances ou toutes les armes. **Tas** dans les zones de stockage (50 par case) avec
+  la vraie forme des objets.
+- Menu du bas : nouveau bouton **Terrain** ; Guide complété.
+
 ## 1.3.1 — Pièces, fenêtres, catapultes (2026-11-27)
 - **Portes** : on les touche pour ouvrir, fermer, verrouiller 🔒 ou démonter ; non verrouillées, les lutins passent
   (elles s'ouvrent devant eux) ; verrouillées, personne ne passe. La **Gomme** démonte portes, grandes portes, herses,

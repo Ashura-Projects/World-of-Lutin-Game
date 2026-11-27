@@ -37,6 +37,8 @@ static func model(kind: String) -> Node3D:
 		return OrcModel.build(kind)
 	if kind == "horse":
 		return HorseModel.build()
+	if kind in ["cow", "pig"]:
+		return FarmModels.animal(kind)
 	if NpcLook.is_npc(kind):
 		return NpcLook.build(kind)
 	var root := Node3D.new()

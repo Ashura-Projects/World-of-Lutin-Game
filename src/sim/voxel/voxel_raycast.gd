@@ -20,7 +20,7 @@ static func cast(
 	var t := 0.0
 	while t <= max_dist:
 		if cell.y < max_y and world.is_solid(cell):
-			return {"hit": true, "pos": cell, "normal": normal}
+			return {"hit": true, "pos": cell, "normal": normal, "t": t}
 		if t_max.x < t_max.y and t_max.x < t_max.z:
 			cell.x += step.x
 			t = t_max.x
@@ -36,7 +36,7 @@ static func cast(
 			t = t_max.z
 			t_max.z += t_delta.z
 			normal = Vector3i(0, 0, -step.z)
-	return {"hit": false, "pos": Vector3i.ZERO, "normal": Vector3i.ZERO}
+	return {"hit": false, "pos": Vector3i.ZERO, "normal": Vector3i.ZERO, "t": max_dist}
 
 
 static func _first(o: float, d: float, c: int) -> float:

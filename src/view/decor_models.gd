@@ -40,6 +40,8 @@ const TAPESTRIES := {
 
 ## Encadrement d'une porte (le battant est animé par GatesView).
 static func door_frame(kind: String) -> Node3D:
+	if kind == "fence_gate":
+		return FarmModels.build(kind)
 	var r := Node3D.new()
 	var w := 2.0 if kind == "double_door" else 1.0
 	var col := "4a4a52" if kind == "iron_door" else "5a3e28"
@@ -51,6 +53,10 @@ static func door_frame(kind: String) -> Node3D:
 
 ## Battant de porte (charnière à gauche) : bois, fer ou grande porte.
 static func door_leaf(kind: String) -> Node3D:
+	if kind == "fence_gate":
+		var g := FarmModels.gate_leaf()
+		g.position.x = 0.06
+		return g
 	var r := Node3D.new()
 	var w := 1.9 if kind == "double_door" else 0.9
 	var col := "4a4a52" if kind == "iron_door" else "6e4e30"

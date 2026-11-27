@@ -120,6 +120,21 @@ Settings, GameSetup), GUT 9.7.1 headless, export Android arm64 (`com.ashura.worl
     (com.ashura.worldoflutin) pour garder les sauvegardes et installer par-dessus.
 - Non testé : sur téléphone.
 
+## v1.3.2 (demandes d'Ashura)
+- Fait : voir CHANGELOG 1.3.2.
+- Preuves : 155 tests GUT verts (nouveau `tests/test_v132.gd` : enlever, volume des objets, clôtures, portillon,
+  tentes, élevage, file d'atelier, formations sans chevauchement, eau, terraformation, râteliers, tas, sauvegardes),
+  gdlint propre, tous les scripts compilent, captures `build/captures/v132_*`.
+- Choix faits sans Ashura :
+  - « Enlever » un arbre = le couper (bûches) ; un buisson ou une plante = déraciné par un cueilleur ;
+  - clôture = bloc invisible solide sur 2 de haut (les bêtes ne sautent pas) ; portillon fermé = personne ne passe ;
+  - vache 60 or, cochon 35 or, revente à 70 % ; lait 2 par vache nourrie et par jour ; un petit tous les 12 jours
+    (vache) / 8 jours (cochon) s'il y a au moins 2 bêtes nourries (20 au plus par espèce) ;
+  - terraformation : coût payé à l'ordre, remboursé si on annule ; eau = 1 seau d'eau (le seau revient) ;
+  - l'eau coule dans les trous seulement depuis une case d'eau voisine, 400 cases au plus par vague ;
+  - tentes : 1 ou 2 adultes + 1 enfant ; un tas = 50 unités ; les armes vont au râtelier qui les accepte.
+- Non testé : sur téléphone.
+
 ## v1.3.1 (corrections et demandes d'Ashura)
 - Fait : voir CHANGELOG 1.3.1. Preuves : 141 tests GUT verts (nouveau `tests/test_v131.gd`), captures `build/captures/v131_*`.
 - Choix faits sans Ashura : école, bibliothèque, atelier de maître et meule deviennent des objets (pas des bâtiments) ;

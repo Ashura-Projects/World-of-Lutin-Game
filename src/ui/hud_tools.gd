@@ -11,6 +11,7 @@ var view: WorldView
 var tool: BuildTool
 var bubble: Button
 var _bubble_panel: Control
+var shortcuts: BuildShortcuts  # raccourcis sous la bulle de construction
 var _floor_panel: PanelContainer
 var _floor_slider: VSlider
 var _floor_label: Label
@@ -46,17 +47,29 @@ func show_bubble(panel: Control, label: String) -> void:
 	_bubble_panel = panel
 	bubble.text = "  ▸ %s  " % label
 	bubble.visible = true
+	if panel is BuildPanel:
+		if shortcuts == null:
+			shortcuts = BuildShortcuts.new()
+			shortcuts.position = Vector2(12, 372)
+			root.add_child(shortcuts)
+			shortcuts.setup(panel)
+		shortcuts.refresh()
+		shortcuts.visible = true
 
 
 func hide_bubble() -> void:
 	bubble.visible = false
 	_bubble_panel = null
+	if shortcuts != null:
+		shortcuts.visible = false
 
 
 func _reopen() -> void:
 	if _bubble_panel != null:
 		_bubble_panel.visible = true
 	bubble.visible = false
+	if shortcuts != null:
+		shortcuts.visible = false
 
 
 # --- jauge d'étage dans un menu déroulant -------------------------------------------------------

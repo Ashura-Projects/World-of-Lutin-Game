@@ -5,19 +5,22 @@
       "drop": {
         "log": 4
       },
-      "work": 8
+      "work": 8,
+      "name": "Pin"
     },
     "chene": {
       "drop": {
         "log": 5
       },
-      "work": 10
+      "work": 10,
+      "name": "Chêne"
     },
     "bouleau": {
       "drop": {
         "log": 3
       },
-      "work": 7
+      "work": 7,
+      "name": "Bouleau"
     }
   },
   "bush": {
@@ -25,7 +28,8 @@
       "berries": 3
     },
     "work": 3,
-    "regrow_days": 6
+    "regrow_days": 6,
+    "name": "Buisson à baies"
   },
   "wild": {
     "wild_flax": {
@@ -47,5 +51,9 @@
       "fish": 1
     }
   },
-  "tree_regrow": false
+  "tree_regrow": false,
+  "uproot": {
+    "work": 4,
+    "bush_drop": {}
+  }
 }

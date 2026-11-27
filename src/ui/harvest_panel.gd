@@ -39,6 +39,7 @@ func setup(g: Node) -> void:
 		["dig", "Creuser"],
 		["well", "Puits"],
 		["gather", "Cueillir"],
+		["uproot", "Enlever"],
 		["hunt", "Chasser"],
 		["fish", "Pêcher"],
 		["cancel", "✕ Annuler"]

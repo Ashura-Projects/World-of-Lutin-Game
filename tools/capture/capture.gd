@@ -56,7 +56,11 @@ func _process(delta: float) -> bool:
 			_t
 			< (
 				_action_done_at
-				+ (25.0 if _action in ["travail", "village", "ferme"] else (6.0 if _action == "loups" else 3.0))
+				+ (
+					25.0
+					if _action in ["travail", "village", "ferme", "v132_unite"]
+					else (6.0 if _action == "loups" else 3.0)
+				)
 			)
 		)
 	):

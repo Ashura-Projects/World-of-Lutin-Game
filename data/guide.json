@@ -47,6 +47,41 @@
       "text": "Capturez un cheval sauvage (touchez-le) si une mangeoire et un abreuvoir sont bâtis ; donnez de la paille chaque jour. Barre d'ordres › Cheval pour monter. Jeux (dés, échecs, cartes) et bar (bière, vin) remontent le moral des lutins."
     },
     {
+      "id": "farm",
+      "title": "Ferme et élevage",
+      "text": "Le marchand ambulant vend des vaches et des cochons (Commerce › Animaux d'élevage). Une vache donne 2 laits par jour si elle mange (paille, blé ou navet) ; un cochon mange navets, pommes de terre, légumes, baies ou paille. Deux bêtes bien nourries font un petit de temps en temps. Touchez une bête pour l'abattre (viande, peaux) ou la vendre. Faites un enclos avec des clôtures (Construire › Ferme) : elles se relient toutes seules ; un portillon fermé garde les bêtes dedans. Laiterie : fromage et beurre ; billot : saucisses et jambon. Nouvelles cultures : carotte, oignon, navet, citrouille, chanvre (corde, toile)."
+    },
+    {
+      "id": "crafting",
+      "title": "Fabriquer dans un atelier",
+      "text": "Touchez un atelier (forge, four, métier à tisser…) : affectez un artisan, choisissez une recette, la quantité et le mode (Faire N, Garder N en stock, En continu), puis « Ajouter à la file ». L'atelier suit la file dans l'ordre (▲ ▼ pour changer l'ordre, ✕ pour retirer) dès que les matières sont en réserve."
+    },
+    {
+      "id": "terrain",
+      "title": "Terrain et végétation",
+      "text": "Menu Terrain : verser de l'eau (seau d'eau, rempli au puits), remettre de la terre, de l'herbe, de la pierre, du sable, planter arbres et buissons, ou enlever la végétation, en cercle. Le coût est pris à la réserve. Touchez un arbre ou un buisson pour voir ce qu'il donne et le couper, le cueillir ou l'enlever. Quand on creuse à côté de l'eau, l'eau remplit le trou. En débug : enlever et terraformer instantanément."
+    },
+    {
+      "id": "units",
+      "title": "Commander une unité",
+      "text": "Militaire › Unités › ⚑ Commander (ou touchez un soldat de l'unité) : une bulle et une barre de symboles apparaissent. ⬇ aller et ⚔ attaquer : chaque toucher sur la carte donne l'ordre. ✋ tenir, ⌂ rentrer, ◎ explorer, ⌖ voir l'unité ; formations : ligne, double ligne, colonne, carré, coin. Les soldats d'une unité portent l'uniforme aux couleurs de l'étendard et se rangent chacun sur sa case."
+    },
+    {
+      "id": "storage",
+      "title": "Réserves, tas et râteliers",
+      "text": "Dans les zones de stockage, chaque case montre un tas d'une matière (50 au plus) : une zone 2 × 2 de paille tient 4 tas. Les objets sont empilés avec leur forme (vitres, peaux, pains, outils…). Râtelier d'armes : touchez-le pour choisir s'il range les fusils, les lances ou toutes les armes."
+    },
+    {
+      "id": "homes",
+      "title": "Tentes et maisons",
+      "text": "Tentes en peau ou en tissu : 1 place (célibataire) ou couple, plus 1 place d'enfant ; un couple y a un enfant. Les maisons (pièces avec des lits) n'ont pas de limite tant qu'il reste un lit libre. Lutins › Familles › 🏠 Loger… : touchez une maison, une tente ou un lit pour y installer la famille."
+    },
+    {
+      "id": "build_tips",
+      "title": "Construire plus vite",
+      "text": "Sous la bulle de construction : outils (bloc, ligne, remplir, mur, gomme), forme suivante ◩ (demi-bloc, escalier, pente…), ⟳ sens, ↶ annuler, ✋ déplacer la vue. Pour un objet : ⟳ le tourne avant de le poser (un fantôme montre le résultat). Un gros atelier se touche n'importe où sur son volume (fiche ou gomme)."
+    },
+    {
       "id": "tips",
       "title": "Conseils",
       "text": "• Construisez toujours un toit : sans lui, pas de pièce. • Gardez des réserves de nourriture pour l'hiver. • Des éclaireurs découvrent la carte et les voisins. • Les lits sont libres pour tous ; touchez un lit pour l'attribuer, ou toute une chambre (lit + coffre). • ↩ Retour (en bas à droite ou bouton retour du téléphone) ferme la fenêtre ouverte."

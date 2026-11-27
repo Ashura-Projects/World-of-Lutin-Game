@@ -111,6 +111,84 @@
         "grapes": 4
       },
       "_use": "pressoir → vin"
+    },
+    {
+      "id": "carrot",
+      "name": "Carotte",
+      "seed": {
+        "carrot": 1
+      },
+      "sow": [
+        "spring",
+        "summer"
+      ],
+      "grow_days": 7,
+      "yield": {
+        "carrot": 4
+      },
+      "_use": "pot-au-feu, se mange crue"
+    },
+    {
+      "id": "onion",
+      "name": "Oignon",
+      "seed": {
+        "onion": 1
+      },
+      "sow": [
+        "spring"
+      ],
+      "grow_days": 8,
+      "yield": {
+        "onion": 4
+      },
+      "_use": "soupe à l'oignon, pot-au-feu"
+    },
+    {
+      "id": "turnip",
+      "name": "Navet",
+      "seed": {
+        "turnip": 1
+      },
+      "sow": [
+        "spring",
+        "summer",
+        "autumn"
+      ],
+      "grow_days": 6,
+      "yield": {
+        "turnip": 4
+      },
+      "_use": "se mange, nourrit les cochons"
+    },
+    {
+      "id": "pumpkin",
+      "name": "Citrouille",
+      "seed": {
+        "pumpkin": 1
+      },
+      "sow": [
+        "spring"
+      ],
+      "grow_days": 11,
+      "yield": {
+        "pumpkin": 2
+      },
+      "_use": "soupe de citrouille"
+    },
+    {
+      "id": "hemp",
+      "name": "Chanvre",
+      "seed": {
+        "hemp": 1
+      },
+      "sow": [
+        "spring"
+      ],
+      "grow_days": 9,
+      "yield": {
+        "hemp": 3
+      },
+      "_use": "rouet → corde ; métier à tisser → toile"
     }
   ],
   "wild": [

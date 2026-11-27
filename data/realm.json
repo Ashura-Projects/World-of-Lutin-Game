@@ -165,6 +165,10 @@
         "name": "Ligne"
       },
       {
+        "id": "double_line",
+        "name": "Double ligne"
+      },
+      {
         "id": "column",
         "name": "Colonne"
       },

@@ -93,6 +93,7 @@
     "speed": 14.0,
     "rotate_step_deg": 15,
     "pushers": 2,
-    "push_speed_mult": 0.6
+    "push_speed_mult": 0.6,
+    "hp": 200
   }
 }

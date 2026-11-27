@@ -135,6 +135,17 @@ func refresh() -> void:
 			b.add_theme_font_size_override("font_size", 17)
 			b.pressed.connect(_order.bind(uid, str(a[0])))
 			row.add_child(b)
+		var cmd := Button.new()
+		cmd.text = "⚑ Commander"
+		cmd.tooltip_text = "Barre d'ordres à symboles : chaque toucher sur la carte donne un ordre"
+		cmd.custom_minimum_size = Vector2(170, 46)
+		cmd.add_theme_font_size_override("font_size", 17)
+		cmd.pressed.connect(
+			func() -> void:
+				game.hud.menu_button("Militaire").button_pressed = false
+				game.hud.unit_bar.open(uid)
+		)
+		row.add_child(cmd)
 		var d := Button.new()
 		d.text = "Dissoudre"
 		d.custom_minimum_size = Vector2(140, 46)

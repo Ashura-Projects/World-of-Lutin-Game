@@ -197,6 +197,61 @@
         "straw": 1
       },
       "_note": "capturable avec un abreuvoir et une mangeoire bâtis ; un lutin monté va 2,2 × plus vite"
+    },
+    {
+      "id": "cow",
+      "name": "Vache",
+      "livestock": true,
+      "per_1000": 0,
+      "hp": 70,
+      "flees": false,
+      "speed": 0.9,
+      "drop": {
+        "meat": 8,
+        "hide": 2
+      },
+      "price": 60,
+      "product": {
+        "milk": 2
+      },
+      "eats_any": [
+        "straw",
+        "wheat",
+        "turnip"
+      ],
+      "breed_days": 12,
+      "_note": "élevage : lait chaque jour si nourrie (paille) ; abattue = viande et peaux"
+    },
+    {
+      "id": "pig",
+      "name": "Cochon",
+      "livestock": true,
+      "per_1000": 0,
+      "hp": 45,
+      "flees": false,
+      "speed": 1.0,
+      "drop": {
+        "meat": 7,
+        "hide": 1
+      },
+      "price": 35,
+      "product": {},
+      "eats_any": [
+        "turnip",
+        "potato",
+        "vegetables",
+        "berries",
+        "straw"
+      ],
+      "breed_days": 8,
+      "_note": "élevage : viande et peau ; se reproduit vite"
     }
-  ]
+  ],
+  "livestock": {
+    "_doc": "Élevage : un animal à soi mange 1 de ses aliments par jour (réserve) ; sans manger 3 jours il maigrit (PV). Deux adultes nourris de la même espèce font un petit tous les breed_days jours si l'élevage compte moins de max_per_kind bêtes.",
+    "max_per_kind": 20,
+    "roam": 5,
+    "hungry_hp_loss": 10,
+    "sell_ratio": 0.7
+  }
 }

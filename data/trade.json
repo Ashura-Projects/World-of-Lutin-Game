@@ -78,12 +78,39 @@
     "beer": 6,
     "wine": 9,
     "hops": 2,
-    "grapes": 2
+    "grapes": 2,
+    "bucket": 4,
+    "water_bucket": 5,
+    "milk": 2,
+    "cheese": 7,
+    "butter": 5,
+    "carrot": 2,
+    "onion": 2,
+    "turnip": 1,
+    "pumpkin": 3,
+    "hemp": 2,
+    "sausage": 7,
+    "ham": 12,
+    "pumpkin_soup": 7,
+    "carrot_stew": 10,
+    "onion_soup": 6,
+    "cheese_pie": 10
   },
   "always_offer": [
     "iron_ingot",
     "salt",
     "healing_potion",
     "axe"
-  ]
+  ],
+  "livestock": {
+    "_doc": "Animaux d'élevage proposés par le marchand (prix d'achat en or ; on les revend à prix × sell_ratio).",
+    "kinds": [
+      "cow",
+      "pig"
+    ],
+    "qty": [
+      1,
+      3
+    ]
+  }
 }

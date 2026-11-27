@@ -8,6 +8,12 @@ var _title: Label
 var _body: VBoxContainer
 var _kind: String = ""
 var _ref: Variant = null
+var _scroll: ScrollContainer
+
+
+## La fiche grandit avec son contenu, puis défile (jamais plus haute que l'écran).
+func _fit() -> void:
+	_scroll.custom_minimum_size = Vector2(600, minf(_body.get_combined_minimum_size().y, 520.0))
 
 
 func setup(g: Node) -> void:
@@ -24,9 +30,13 @@ func setup(g: Node) -> void:
 	_title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	head.add_child(_title)
 	head.add_child(UiStyle.close_button(func() -> void: visible = false))
+	_scroll = ScrollContainer.new()
+	_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	v.add_child(_scroll)
 	_body = VBoxContainer.new()
 	_body.add_theme_constant_override("separation", 6)
-	v.add_child(_body)
+	_scroll.add_child(_body)
+	_body.resized.connect(_fit)
 	visible = false
 
 
@@ -70,6 +80,21 @@ func _reopen() -> void:
 			show_gate(_ref)
 		"structure":
 			show_structure(_ref)
+		"flora":
+			show_flora(_ref[0], _ref[1])
+
+
+## Arbre, buisson ou plante : ressources et ordres (couper, cueillir, enlever).
+func show_flora(what: String, cell: Vector3i) -> void:
+	_kind = "flora"
+	_ref = [what, cell]
+	_clear()
+	var f: Flora = game.flora
+	if not {"tree": f.trees, "bush": f.bushes, "herb": f.herbs}[what].has(cell):
+		visible = false  # déjà enlevé
+		return
+	FloraDialog.fill(self, what, cell)
+	visible = true
 
 
 # --- animaux -------------------------------------------------------------------------------------
@@ -113,6 +138,20 @@ func show_animal(a: Dictionary) -> void:
 			_button(row, "Capturer", func() -> void: _say(Horses.capture(game.sim, a)))
 		else:
 			_button(row, "Relâcher", func() -> void: _say(Horses.release(game.sim, a)))
+	if Livestock.is_livestock(a["kind"]) and a.get("owned", false):
+		var prod: Dictionary = d.get("product", {})
+		var gives := (
+			"donne %s chaque jour" % _names(prod.keys()) if not prod.is_empty() else "viande et peau à l'abattage"
+		)
+		_label("Élevage · %s · mange : %s" % [gives, _names(d.get("eats_any", []))], 18, UiStyle.TXT_D)
+		var row2 := _row()
+		_button(row2, "Abattre", func() -> void: _gone(Livestock.slaughter(game.sim, a)), 170)
+		_button(
+			row2,
+			"Vendre (%d or)" % Livestock.sell_price(a["kind"]),
+			func() -> void: _gone(Livestock.sell(game.sim, a)),
+			220
+		)
 	if d.get("npc", false) and float(a.get("faith", 0)) >= 100.0:
 		_button(row, "Recruter", func() -> void: _say("Recruté !" if game.sim.religion.recruit(a) != null else ""))
 	visible = true
@@ -121,6 +160,22 @@ func show_animal(a: Dictionary) -> void:
 func _hunt(a: Dictionary) -> void:
 	var id: int = game.board.add_hunt(a["id"])
 	_say("Ordre de chasse donné aux chasseurs." if id >= 0 else "Déjà chassé.")
+
+
+static func _names(ids: Array) -> String:
+	var out := []
+	for k: String in ids:
+		out.append(str(Stockpile._resource(k).get("name", k)).to_lower())
+	return ", ".join(out)
+
+
+## L'animal a disparu (abattu, vendu) : on ferme la fiche.
+func _gone(t: String) -> void:
+	EventBus.alert.emit("info", t)
+	if game.fauna.find(_ref["id"]).is_empty():
+		visible = false
+	else:
+		_reopen.call_deferred()
 
 
 func _say(t: String) -> void:
@@ -181,6 +236,10 @@ func show_structure(s: Dictionary) -> void:
 		_bed(s, d)
 	if s["built"] and s["kind"] == "catapult":
 		_catapult(s)
+	if s["built"] and d.has("station"):
+		CraftTab.fill(self, s)
+	if s["kind"] == "weapon_rack":
+		_rack(s)
 	if str(s.get("epitaph", "")) != "":
 		_label("Ici repose %s." % s["epitaph"], 20, UiStyle.PARCH)
 	var row := _row()
@@ -238,6 +297,33 @@ func _bed(s: Dictionary, d: Dictionary) -> void:
 	)
 
 
+## Râtelier d'armes : il range les fusils, les lances, ou toutes les armes.
+func _rack(s: Dictionary) -> void:
+	var st: Stockpile = game.colony.stock
+	_label(
+		(
+			"Armes en réserve : %d fusil(s), %d lance(s), %d épée(s)"
+			% [st.count("flintlock"), st.count("spear"), st.count("short_sword")]
+		),
+		19,
+		UiStyle.GOLD
+	)
+	_label("Ce râtelier accepte :", 18, UiStyle.TXT_D)
+	var row := _row()
+	for e: Array in [["flintlock", "Fusils"], ["spear", "Lances"], ["all", "Toutes les armes"]]:
+		var b := _button(
+			row,
+			e[1],
+			func() -> void:
+				s["rack"] = e[0]
+				game.structures.changed.emit()
+				_reopen.call_deferred(),
+			190
+		)
+		if str(s.get("rack", "all")) == e[0]:
+			b.add_theme_stylebox_override("normal", UiStyle.box(UiStyle.BLOOD, UiStyle.GOLD))
+
+
 func _remove_gate(g: Dictionary) -> void:
 	var s: Dictionary = game.structures.items.get(int(g["struct_id"]), {})
 	if not s.is_empty():
@@ -248,6 +334,23 @@ func _remove_gate(g: Dictionary) -> void:
 ## Catapulte : charger, tirer (toucher la cible), tourner, déplacer (2 lutins).
 func _catapult(s: Dictionary) -> void:
 	var cat: Catapults = game.sim.catapults
+	var cc: Dictionary = DataRegistry.get_table("military")["catapult"]
+	var rng: Array = cc.get("range", [8, 45])
+	_label(
+		(
+			"PV %d / %d · Dégâts %d (rayon %.1f) · Portée %d à %d blocs · 2 pierres par tir"
+			% [
+				int(s.get("hp", cc.get("hp", 200))),
+				int(cc.get("hp", 200)),
+				int(cc.get("damage", 45)),
+				float(cc.get("damage_radius", 2.5)),
+				int(rng[0]),
+				int(rng[1])
+			]
+		),
+		20,
+		UiStyle.GOLD
+	)
 	_label(
 		(
 			"État : %s · tir à %d° de chaque côté de l'avant"

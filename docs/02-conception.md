@@ -212,5 +212,16 @@
   entier. Portes en « gates » (verrou = bloc invisible solide). Cimetière en zone. Créneau = demi-bloc par défaut.
   Fenêtres (formes 10-12). Catapulte (`data/military.json › catapult`). Cavalerie (`population.json › combat.cavalry`).
 
+## 14. Ajouts v1.3.2
+- **Végétation** : fiche au toucher (ressources, couper, cueillir, enlever) ; ordre « Enlever » en cercle (`Clearing`).
+- **Objets** : un objet occupe tout son volume (taille × sens) pour la pose, la fiche et la gomme ; sens de pose ⟳.
+- **Élevage** (`Livestock`, data/animals.json › cow, pig, livestock) : achat / vente au marchand, repas quotidien,
+  produit (lait), petits, abattage. Clôtures = bloc invisible solide sur 2 de haut ; portillon = porte qui bloque fermée.
+- **Eau** (`WaterFlow`, world.json › water_flow) ; **terraformation** (`Terraform`, world.json › terraform).
+- **Ateliers** : file de commandes ordonnée (faire N, garder N, en continu), retrait automatique des commandes finies.
+- **Logement** : tentes 1 ou 2 adultes + `child_slots` enfants ; naissances possibles en tente ; loger une famille.
+- **Unités** : places uniques alignées sur la grille (4 directions), formation double ligne ; barre d'ordres à symboles.
+- **Stockage** : tas visibles de 50 par case (resources.json › piles) ; râteliers d'armes filtrés (fusils, lances, tout).
+
 ## Questions ouvertes
 1. Carte aléatoire, ou aussi des cartes dessinées à la main ? (par défaut : aléatoire seedée)

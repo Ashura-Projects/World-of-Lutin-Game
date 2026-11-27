@@ -23,7 +23,11 @@ var max_y: int = 9999
 var place_handler: Callable
 ## Pose d'un objet ou bâtiment (tente, lit…) : (kind, case) -> bool.
 var structure_handler: Callable
+## Gomme : objet traversé par le rayon (origine, direction, distance max) -> Dictionary (Structures.pick_ray).
+var structure_picker: Callable
 var object_kind: String = ""
+var object_rot: int = -1  # sens de l'objet (0..3) ; -1 = face à la caméra
+var _ghost_obj: Node3D
 var _touches: Dictionary = {}
 var _start := Vector3i.ZERO
 var _start_ok: bool = false
@@ -67,6 +71,14 @@ func _ray(screen: Vector2) -> Dictionary:
 ## Case visée : collée à la face (pose) ou le bloc lui-même (gomme).
 func target_cell(screen: Vector2) -> Dictionary:
 	var r := _ray(screen)
+	if mode == Mode.ERASE and structure_picker.is_valid():  # gomme : tout le volume d'un objet est touchable
+		var cam := camera.cam
+		var s: Dictionary = structure_picker.call(
+			cam.project_ray_origin(screen), cam.project_ray_normal(screen), float(r.get("t", 400.0)) + 0.5
+		)
+		if not s.is_empty():
+			last_normal = Vector3i.ZERO
+			return {"ok": true, "cell": s["cell"], "normal": Vector3i.UP}
 	if not r["hit"]:
 		return {"ok": false}
 	var p: Vector3i = r["pos"]
@@ -165,11 +177,35 @@ func stroke(a: Vector3i, b: Vector3i) -> int:
 func _cancel() -> void:
 	_start_ok = false
 	_cells = []
+	if is_instance_valid(_ghost_obj):
+		_ghost_obj.queue_free()
+	_ghost_obj = null
 	if _preview:
 		_preview.multimesh = null
 
 
+## Sens de pose d'un objet : choisi avec ⟳, sinon face à la caméra.
+func current_rot() -> int:
+	return object_rot if object_rot >= 0 else posmod(roundi(-camera.yaw / (PI / 2.0)), 4)
+
+
+## Fantôme du vrai modèle de l'objet sous le doigt (dans le bon sens).
+func show_object_ghost() -> void:
+	if is_instance_valid(_ghost_obj):
+		_ghost_obj.queue_free()
+	_ghost_obj = null
+	if mode != Mode.OBJECT or not _start_ok or object_kind == "":
+		return
+	_ghost_obj = StructuresView.place({"kind": object_kind, "cell": _start, "rot": current_rot(), "built": false})
+	StructuresView.ghostify(_ghost_obj, _mat_ok)
+	add_child(_ghost_obj)
+
+
 func _show_preview() -> void:
+	if mode == Mode.OBJECT:
+		_preview.multimesh = null
+		show_object_ghost()
+		return
 	var mm := MultiMesh.new()
 	mm.transform_format = MultiMesh.TRANSFORM_3D
 	var box := BoxMesh.new()

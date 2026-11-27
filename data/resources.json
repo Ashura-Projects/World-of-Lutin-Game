@@ -651,6 +651,118 @@
       "category": "drink",
       "stack": 40,
       "fun": 8
+    },
+    {
+      "id": "bucket",
+      "name": "Seau",
+      "category": "tool",
+      "stack": 10
+    },
+    {
+      "id": "water_bucket",
+      "name": "Seau d'eau",
+      "category": "processed",
+      "stack": 10
+    },
+    {
+      "id": "milk",
+      "name": "Lait",
+      "category": "food",
+      "stack": 20,
+      "nutrition": 8
+    },
+    {
+      "id": "cheese",
+      "name": "Fromage",
+      "category": "food",
+      "stack": 30,
+      "nutrition": 30
+    },
+    {
+      "id": "butter",
+      "name": "Beurre",
+      "category": "processed",
+      "stack": 20
+    },
+    {
+      "id": "carrot",
+      "name": "Carotte",
+      "category": "food",
+      "stack": 40,
+      "nutrition": 12
+    },
+    {
+      "id": "onion",
+      "name": "Oignon",
+      "category": "food",
+      "stack": 40,
+      "nutrition": 8
+    },
+    {
+      "id": "pumpkin",
+      "name": "Citrouille",
+      "category": "food",
+      "stack": 20,
+      "nutrition": 18
+    },
+    {
+      "id": "hemp",
+      "name": "Chanvre",
+      "category": "raw",
+      "stack": 30
+    },
+    {
+      "id": "turnip",
+      "name": "Navet",
+      "category": "food",
+      "stack": 40,
+      "nutrition": 10
+    },
+    {
+      "id": "sausage",
+      "name": "Saucisses",
+      "category": "food",
+      "stack": 30,
+      "nutrition": 35
+    },
+    {
+      "id": "ham",
+      "name": "Jambon",
+      "category": "food",
+      "stack": 20,
+      "nutrition": 45
+    },
+    {
+      "id": "pumpkin_soup",
+      "name": "Soupe de citrouille",
+      "category": "food",
+      "stack": 20,
+      "nutrition": 35
+    },
+    {
+      "id": "cheese_pie",
+      "name": "Tarte au fromage",
+      "category": "food",
+      "stack": 20,
+      "nutrition": 45
+    },
+    {
+      "id": "carrot_stew",
+      "name": "Pot-au-feu",
+      "category": "food",
+      "stack": 20,
+      "nutrition": 50
+    },
+    {
+      "id": "onion_soup",
+      "name": "Soupe à l'oignon",
+      "category": "food",
+      "stack": 20,
+      "nutrition": 30
     }
-  ]
+  ],
+  "piles": {
+    "_doc": "Tas visibles dans les zones de stockage : unités par tas (une case = un tas d'une seule matière).",
+    "size": 50
+  }
 }
