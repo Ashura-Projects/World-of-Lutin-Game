@@ -25,7 +25,7 @@ static func siblings_of(colony: Colony, l: Lutin) -> Array:
 
 
 ## Parents, enfants, frères et sœurs : pas de mariage entre eux.
-static func close_kin(colony: Colony, a: Lutin, b: Lutin) -> bool:
+static func close_kin(_colony: Colony, a: Lutin, b: Lutin) -> bool:
 	if a.parents.has(b.id) or b.parents.has(a.id):
 		return true
 	return a.parents.any(func(p: int) -> bool: return b.parents.has(p))
