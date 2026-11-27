@@ -64,6 +64,7 @@ const DEFENSE := [
 	"catapult",
 	"watchtower",
 	"claim_post",
+	"village_post",
 	"weapon_rack"
 ]
 const WINDOW_FRAMES := ["plank_block", "wood_block", "stone_block", "cut_stone_block", "brick_block"]

@@ -1,176 +1,185 @@
 {
- "_doc": "Tenues des lutins par métier (couleurs déjà assombries, STYLE-VALIDE §2-3). Généré depuis tools/style/lutin.py.",
- "skin": "466ca0",
- "skin_shade": "365684",
- "skin_elder": "7c94b4",
- "outfits": {
-  "hauler": {
-   "tunic": "837862",
-   "hat": "bandeau",
-   "hat_color": "7c443b",
-   "extras": [
-    "sangles"
-   ]
-  },
-  "woodcutter": {
-   "tunic": "643430",
-   "hat": "pointu",
-   "hat_color": "325137",
-   "extras": []
-  },
-  "miner": {
-   "tunic": "414146",
-   "hat": "casque",
-   "hat_color": "847344",
-   "extras": []
-  },
-  "digger": {
-   "tunic": "604f3d",
-   "hat": "pointu",
-   "hat_color": "4b3a2d",
-   "extras": []
-  },
-  "builder": {
-   "tunic": "8c6a3e",
-   "hat": "pointu",
-   "hat_color": "978649",
-   "extras": [
-    "ceinture_outils"
-   ]
-  },
-  "gatherer": {
-   "tunic": "616e48",
-   "hat": "capuche",
-   "hat_color": "7c485a",
-   "extras": []
-  },
-  "fisher": {
-   "tunic": "384e5f",
-   "hat": "large",
-   "hat_color": "93864e",
-   "extras": []
-  },
-  "hunter": {
-   "tunic": "3a4731",
-   "hat": "capuche",
-   "hat_color": "2d3a28",
-   "extras": [
-    "corne_poudre"
-   ]
-  },
-  "farmer": {
-   "tunic": "5a6c7d",
-   "hat": "large",
-   "hat_color": "908461",
-   "extras": []
-  },
-  "carpenter": {
-   "tunic": "7a583e",
-   "hat": "pointu",
-   "hat_color": "5c4231",
-   "extras": [
-    "tablier_cuir"
-   ]
-  },
-  "stonemason": {
-   "tunic": "72726d",
-   "hat": "beret",
-   "hat_color": "505054",
-   "extras": [
-    "tablier_cuir"
-   ]
-  },
-  "smith": {
-   "tunic": "2a292a",
-   "hat": "calotte",
-   "hat_color": "1d1d1e",
-   "extras": [
-    "tablier_cuir"
-   ]
-  },
-  "cook": {
-   "tunic": "a5a5a2",
-   "hat": "toque",
-   "hat_color": "b5b5b4",
-   "extras": [
-    "tablier_blanc"
-   ]
-  },
-  "teacher": {
-   "tunic": "533d5c",
-   "hat": "beret",
-   "hat_color": "342b45",
-   "extras": [
-    "lunettes"
-   ]
-  },
-  "researcher": {
-   "tunic": "2d3650",
-   "hat": "pointu_haut",
-   "hat_color": "242842",
-   "extras": [
-    "lunettes",
-    "robe"
-   ]
-  },
-  "master_artisan": {
-   "tunic": "57282c",
-   "hat": "beret",
-   "hat_color": "6e3236",
-   "extras": [
-    "ceinture_outils",
-    "medaille"
-   ]
-  },
-  "militia": {
-   "tunic": "2c3b64",
-   "hat": "chapeau_fer",
-   "hat_color": "6d6f72",
-   "extras": [
-    "baudriers"
-   ]
-  },
-  "weaver": {
-   "tunic": "6b5e73",
-   "hat": "capuche",
-   "hat_color": "807389",
-   "extras": []
-  },
-  "miller": {
-   "tunic": "9b9891",
-   "hat": "beret",
-   "hat_color": "8c877f",
-   "extras": []
-  },
-  "baker": {
-   "tunic": "a5a5a2",
-   "hat": "toque",
-   "hat_color": "b5b5b4",
-   "extras": [
-    "tablier_blanc"
-   ]
-  },
-  "tanner": {
-   "tunic": "4b3a2d",
-   "hat": "calotte",
-   "hat_color": "392c23",
-   "extras": [
-    "tablier_cuir"
-   ]
-  },
-  "healer": {
-   "tunic": "445544",
-   "hat": "capuche",
-   "hat_color": "a4a4a0",
-   "extras": [
-    "lunettes"
-   ]
-  },
-  "none": {
-   "tunic": "566349",
-   "hat": "pointu",
-   "hat_color": "763d39",
-   "extras": []
+  "_doc": "Tenues des lutins par métier (couleurs déjà assombries, STYLE-VALIDE §2-3). Généré depuis tools/style/lutin.py.",
+  "skin": "466ca0",
+  "skin_shade": "365684",
+  "skin_elder": "7c94b4",
+  "outfits": {
+    "hauler": {
+      "tunic": "837862",
+      "hat": "bandeau",
+      "hat_color": "7c443b",
+      "extras": [
+        "sangles"
+      ]
+    },
+    "woodcutter": {
+      "tunic": "643430",
+      "hat": "pointu",
+      "hat_color": "325137",
+      "extras": []
+    },
+    "miner": {
+      "tunic": "414146",
+      "hat": "casque",
+      "hat_color": "847344",
+      "extras": []
+    },
+    "digger": {
+      "tunic": "604f3d",
+      "hat": "pointu",
+      "hat_color": "4b3a2d",
+      "extras": []
+    },
+    "builder": {
+      "tunic": "8c6a3e",
+      "hat": "pointu",
+      "hat_color": "978649",
+      "extras": [
+        "ceinture_outils"
+      ]
+    },
+    "gatherer": {
+      "tunic": "616e48",
+      "hat": "capuche",
+      "hat_color": "7c485a",
+      "extras": []
+    },
+    "fisher": {
+      "tunic": "384e5f",
+      "hat": "large",
+      "hat_color": "93864e",
+      "extras": []
+    },
+    "hunter": {
+      "tunic": "3a4731",
+      "hat": "capuche",
+      "hat_color": "2d3a28",
+      "extras": [
+        "corne_poudre"
+      ]
+    },
+    "farmer": {
+      "tunic": "5a6c7d",
+      "hat": "large",
+      "hat_color": "908461",
+      "extras": []
+    },
+    "carpenter": {
+      "tunic": "7a583e",
+      "hat": "pointu",
+      "hat_color": "5c4231",
+      "extras": [
+        "tablier_cuir"
+      ]
+    },
+    "stonemason": {
+      "tunic": "72726d",
+      "hat": "beret",
+      "hat_color": "505054",
+      "extras": [
+        "tablier_cuir"
+      ]
+    },
+    "smith": {
+      "tunic": "2a292a",
+      "hat": "calotte",
+      "hat_color": "1d1d1e",
+      "extras": [
+        "tablier_cuir"
+      ]
+    },
+    "cook": {
+      "tunic": "a5a5a2",
+      "hat": "toque",
+      "hat_color": "b5b5b4",
+      "extras": [
+        "tablier_blanc"
+      ]
+    },
+    "teacher": {
+      "tunic": "533d5c",
+      "hat": "beret",
+      "hat_color": "342b45",
+      "extras": [
+        "lunettes"
+      ]
+    },
+    "researcher": {
+      "tunic": "2d3650",
+      "hat": "pointu_haut",
+      "hat_color": "242842",
+      "extras": [
+        "lunettes",
+        "robe"
+      ]
+    },
+    "master_artisan": {
+      "tunic": "57282c",
+      "hat": "beret",
+      "hat_color": "6e3236",
+      "extras": [
+        "ceinture_outils",
+        "medaille"
+      ]
+    },
+    "militia": {
+      "tunic": "2c3b64",
+      "hat": "chapeau_fer",
+      "hat_color": "6d6f72",
+      "extras": [
+        "baudriers"
+      ]
+    },
+    "weaver": {
+      "tunic": "6b5e73",
+      "hat": "capuche",
+      "hat_color": "807389",
+      "extras": []
+    },
+    "miller": {
+      "tunic": "9b9891",
+      "hat": "beret",
+      "hat_color": "8c877f",
+      "extras": []
+    },
+    "baker": {
+      "tunic": "a5a5a2",
+      "hat": "toque",
+      "hat_color": "b5b5b4",
+      "extras": [
+        "tablier_blanc"
+      ]
+    },
+    "tanner": {
+      "tunic": "4b3a2d",
+      "hat": "calotte",
+      "hat_color": "392c23",
+      "extras": [
+        "tablier_cuir"
+      ]
+    },
+    "healer": {
+      "tunic": "445544",
+      "hat": "capuche",
+      "hat_color": "a4a4a0",
+      "extras": [
+        "lunettes"
+      ]
+    },
+    "none": {
+      "tunic": "566349",
+      "hat": "pointu",
+      "hat_color": "763d39",
+      "extras": []
+    },
+    "diplomat": {
+      "tunic": "5a3a7a",
+      "hat": "large",
+      "hat_color": "2a1a3a",
+      "extras": [
+        "lunettes",
+        "robe"
+      ]
+    }
   }
- }
 }

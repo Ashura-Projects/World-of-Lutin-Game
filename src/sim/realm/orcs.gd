@@ -209,6 +209,9 @@ func _advance(a: Dictionary) -> void:
 	var cell: Vector3i = a["cell"]
 	var d := Vector2(target.x - cell.x, target.z - cell.z)
 	if d.length() < 3.0:
+		if str(a["kind"]).begins_with("bandit"):
+			a["wait"] = tps_wait(2)
+			return  # bandits : Bandits.tick_second les fait piller puis rentrer
 		a["goal"] = colony.stock.pos  # arrivé : il cherche des lutins (Combat) autour du village
 		a["wait"] = tps_wait(2)
 		return

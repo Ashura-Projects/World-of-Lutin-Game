@@ -114,5 +114,28 @@
     "camp_radius": 4,
     "skill_max_level": 20,
     "levels_per_squad": 5
+  },
+  "bandits": {
+    "_doc": "Bandits gris des grandes forêts (1.4) : un camp pour area_per_camp cases de carte, pillage tous les raid_every_days jours.",
+    "enabled": true,
+    "area_per_camp": 40000,
+    "max_camps": 12,
+    "min_distance": 50,
+    "min_trees": 12,
+    "roam": 7,
+    "raid_every_days": 9,
+    "raid_size": 4,
+    "steal_per_bandit": 6,
+    "camp_gold": 15,
+    "camp_band": [
+      {
+        "kind": "bandit_club",
+        "n": 3
+      },
+      {
+        "kind": "bandit_archer",
+        "n": 2
+      }
+    ]
   }
 }

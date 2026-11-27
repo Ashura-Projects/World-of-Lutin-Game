@@ -34,6 +34,37 @@ func bind(o: Orcs, t: Territory, w: VoxelWorld) -> void:
 	add_child(_terr)
 
 
+## Camps de bandits (1.4) : tentes grises en haillons autour d'un feu, visibles une fois explorés.
+func _bandit_camps() -> void:
+	if Bandits.active == null:
+		return
+	for c: Dictionary in Bandits.active.camps:
+		var key := "b%d" % int(c["id"])
+		var seen: bool = territory.explored.has(territory.col_of(c["cell"])) and not c["destroyed"]
+		var cur: Array = _camps.get(key, [null, false])
+		if cur[1] == seen:
+			continue
+		if cur[0] != null:
+			cur[0].queue_free()
+		var n: Node3D = null
+		if seen:
+			n = Node3D.new()
+			for i in 3:
+				var a := i * TAU / 3.0
+				ModelKit.prism(
+					n,
+					Vector3(1.4, 1.0, 1.6),
+					ModelKit.col("4a4a4e", 0.95),
+					Vector3(cos(a) * 2.2, 0.5, sin(a) * 2.2),
+					Vector3(0, a, 0)
+				)
+			ModelKit.logs(n, Vector3(0, 0, 0), 2)
+			ModelKit.flame(n, Vector3(0, 0.3, 0), 1.2)
+			n.position = Vector3(c["cell"]) + Vector3(0.5, 0, 0.5)
+			add_child(n)
+		_camps[key] = [n, seen]
+
+
 static func faction_color(id: String) -> Color:
 	if id == "player":
 		return Color(Faction.current.color1 if Faction.current != null else "2c4a96")
@@ -45,6 +76,7 @@ static func faction_color(id: String) -> Color:
 func _process(_d: float) -> void:
 	if orcs == null or Engine.get_process_frames() % 20 != 0:
 		return
+	_bandit_camps()
 	for c: Dictionary in orcs.camps:
 		var seen: bool = territory.explored.has(territory.col_of(c["cell"]))
 		var state := "hidden" if not seen else ("ruins" if c["destroyed"] else "camp")

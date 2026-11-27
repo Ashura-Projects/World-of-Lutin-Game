@@ -7,6 +7,7 @@ var structures: Structures
 var production: Production
 var research: Research
 var focus: String = "balanced"  # cours de l'école
+var adult_students: Dictionary = {}  # id lutin adulte -> aptitude travaillée aux cours du soir (1.4)
 var trainees: Dictionary = {}  # id lutin -> {"center": id centre, "days": jours restants, "eff": efficacité}
 var _cfg: Dictionary
 
@@ -59,6 +60,17 @@ func efficiency_for(l: Lutin, center_id: String) -> float:
 	return 1.0
 
 
+## Cours du soir pour un adulte : "" = le désinscrire. False si plus de place.
+func study(l: Lutin, aptitude: String) -> bool:
+	if aptitude == "":
+		adult_students.erase(l.id)
+		return true
+	if not adult_students.has(l.id) and adult_students.size() >= int(_cfg.get("adult_classes", {}).get("seats", 4)):
+		return false
+	adult_students[l.id] = aptitude
+	return true
+
+
 ## Inscrire un adulte à un centre de formation construit (bibliothèque, atelier de maître, herboristerie).
 func enroll(l: Lutin, center_struct_id: int) -> bool:
 	var s: Dictionary = structures.items.get(center_struct_id, {})
@@ -90,6 +102,16 @@ func daily() -> void:
 					l.aptitudes[k] = mini(
 						100, int(l.aptitudes.get(k, 0)) + maxi(1, roundi(float(c["gives"][k]) * share * mult))
 					)
+	# cours pour adultes (1.4) : un adulte inscrit gagne un peu de l'aptitude choisie chaque jour de classe
+	if has_teacher():
+		var gain := int(_cfg.get("adult_classes", {}).get("gain_per_day", 1))
+		for lid: int in adult_students.keys():
+			var a := colony.find_lutin(lid)
+			if a == null:
+				adult_students.erase(lid)
+				continue
+			var k := str(adult_students[lid])
+			a.aptitudes[k] = mini(100, int(a.aptitudes.get(k, 0)) + gain)
 	# formations
 	for lid: int in trainees.keys():
 		var l := colony.find_lutin(lid)
@@ -121,7 +143,10 @@ func to_dict() -> Dictionary:
 	var tr := {}
 	for k: int in trainees:
 		tr[str(k)] = trainees[k]
-	return {"focus": focus, "trainees": tr, "research": research.to_dict()}
+	var ad := {}
+	for k: int in adult_students:
+		ad[str(k)] = adult_students[k]
+	return {"focus": focus, "trainees": tr, "research": research.to_dict(), "adults": ad}
 
 
 func from_dict(d: Dictionary) -> void:
@@ -131,3 +156,6 @@ func from_dict(d: Dictionary) -> void:
 		var t: Dictionary = d["trainees"][k]
 		trainees[int(k)] = {"center": t["center"], "days": int(t["days"]), "eff": float(t["eff"])}
 	research.from_dict(d.get("research", {}))
+	adult_students.clear()
+	for k: String in d.get("adults", {}):
+		adult_students[int(k)] = str(d["adults"][k])

@@ -25,7 +25,9 @@ const SAVE_KEYS := [
 	"rivals",
 	"religion",
 	"gates",
-	"missions"
+	"missions",
+	"settlements",
+	"bandits"
 ]
 
 var world: VoxelWorld
@@ -55,6 +57,8 @@ var gates: Gates
 var missions: TutorialMissions
 var catapults: Catapults
 var water: WaterFlow
+var settlements: Settlements
+var bandits: Bandits
 
 
 func _init(w: VoxelWorld) -> void:
@@ -91,6 +95,9 @@ func _init(w: VoxelWorld) -> void:
 	missions = TutorialMissions.new(self)
 	catapults = Catapults.new(self)
 	water = WaterFlow.new(w)
+	settlements = Settlements.new(colony, structures, w)
+	bandits = Bandits.new(self)
+	structures.changed.connect(settlements.sync)
 	structures.changed.connect(gates.sync_with_structures)
 
 
@@ -98,10 +105,12 @@ func _init(w: VoxelWorld) -> void:
 func new_game(gen: WorldGenerator, start: Vector3i, lutins: int) -> void:
 	flora.load_from_generator(gen)
 	colony.spawn_start(start, lutins)
+	settlements.found(str(Settlements.cfg().get("first_name", "Premier village")), start)
 	colony.auto_assign_jobs()
 	fauna.populate(["deer", "boar", "horse"], start)
 	fauna.populate(["wolf", "bear"], start, 40.0)
 	orcs.setup_new(start)
+	bandits.setup_new(start)
 	rivals.setup_new(start, rules.ai_factions)
 	if rules.mode == "tutorial":
 		missions.start_current()
@@ -121,6 +130,8 @@ func tick() -> void:
 	combat.tick()
 	orcs.tick()
 	var tps := GameClock.ticks_per_second()
+	if GameClock.tick_index % (tps / 2) == 0:
+		NpcCombat.tick(fauna, 0.5)
 	if GameClock.tick_index % 2 == 0:
 		var cells := []
 		for l in colony.lutins:
@@ -130,6 +141,7 @@ func tick() -> void:
 		religion.tick_second()
 		production.plan()
 		UnitCamp.tick_second(units)
+		bandits.tick_second()
 		colony.heating_ok = not production.fire_out
 	if GameClock.tick_index % (tps * 5) == 0:
 		village.check()
@@ -156,6 +168,10 @@ func daily() -> void:
 	religion.daily()
 	Horses.daily(self)
 	Livestock.daily(self)
+	if settlements.items.is_empty():
+		settlements.found(str(Settlements.cfg().get("first_name", "Premier village")), colony.stock.pos)
+	settlements.daily()
+	bandits.daily()
 	Leisure.daily(colony)
 
 
@@ -183,7 +199,9 @@ func register_saves() -> void:
 		rivals,
 		religion,
 		gates,
-		missions
+		missions,
+		settlements,
+		bandits
 	]
 	for i in SAVE_KEYS.size():
 		SaveManager.register(SAVE_KEYS[i], objs[i])

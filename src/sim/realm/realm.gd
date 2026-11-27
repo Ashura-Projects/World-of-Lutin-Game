@@ -10,6 +10,7 @@ var colony: Colony
 var structures: Structures
 var world: VoxelWorld
 var lord_id: int = -1
+var diplomat_id: int = -1  # diplomate du royaume (Diplomacy)
 var tax: String = "low"
 var laws: Dictionary = {}  # id -> true
 var relations: Dictionary = {}  # id faction -> {"relation": float, "status": String}
@@ -353,6 +354,8 @@ func daily() -> void:
 		r["relation"] = move_toward(float(r["relation"]), float(f.get("relation", 0)), drift)
 	if lord_id >= 0 and colony.find_lutin(lord_id) == null:
 		lord_id = -1
+	if diplomat_id >= 0 and colony.find_lutin(diplomat_id) == null:
+		diplomat_id = -1
 
 
 func to_dict() -> Dictionary:
@@ -364,6 +367,7 @@ func to_dict() -> Dictionary:
 		fl.append([c.x, c.y, c.z])
 	return {
 		"lord": lord_id,
+		"diplomat": diplomat_id,
 		"tax": tax,
 		"laws": laws.keys(),
 		"relations": relations,
@@ -375,13 +379,16 @@ func to_dict() -> Dictionary:
 
 func from_dict(d: Dictionary) -> void:
 	lord_id = int(d.get("lord", -1))
+	diplomat_id = int(d.get("diplomat", -1))
 	tax = str(d.get("tax", tax))
 	laws.clear()
 	for k: String in d.get("laws", []):
 		laws[k] = true
 	var rel: Dictionary = d.get("relations", {})
 	for k: String in rel:
-		relations[k] = {"relation": float(rel[k]["relation"]), "status": str(rel[k]["status"])}
+		relations[k] = Dictionary(rel[k]).duplicate()
+		relations[k]["relation"] = float(rel[k]["relation"])
+		relations[k]["status"] = str(rel[k]["status"])
 	training_cells.clear()
 	for e: Array in d.get("training", []):
 		training_cells[Vector3i(int(e[0]), int(e[1]), int(e[2]))] = true

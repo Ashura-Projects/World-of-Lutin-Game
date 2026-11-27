@@ -11,7 +11,19 @@ var next_id: int = 1
 var _defs: Dictionary = {}
 ## Champs en plus sauvegardés (orcs, soldats ennemis, villageois des voisins).
 const EXTRA_KEYS := [
-	"camp", "raid", "home", "goal", "faction", "roam", "faith", "npc_id", "name", "owned", "rider", "hungry"
+	"camp",
+	"raid",
+	"home",
+	"goal",
+	"faction",
+	"roam",
+	"faith",
+	"npc_id",
+	"name",
+	"owned",
+	"rider",
+	"hungry",
+	"target_faction"
 ]
 
 

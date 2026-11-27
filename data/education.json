@@ -3,7 +3,8 @@
   "aptitudes": [
     "knowledge",
     "strength",
-    "dexterity"
+    "dexterity",
+    "charisma"
   ],
   "school": {
     "building": "school",
@@ -29,6 +30,13 @@
         "name": "Jeux et lutte",
         "gives": {
           "strength": 2
+        }
+      },
+      {
+        "id": "eloquence",
+        "name": "Éloquence et bonnes manières",
+        "gives": {
+          "charisma": 2
         }
       }
     ],
@@ -76,6 +84,16 @@
       },
       "days": 6,
       "phase": 1
+    },
+    {
+      "id": "embassy",
+      "name": "Chancellerie",
+      "trains": "diplomat",
+      "requires": {
+        "charisma": 40
+      },
+      "days": 8,
+      "phase": 1
     }
   ],
   "adult_without_school_penalty": 0.5,
@@ -86,5 +104,10 @@
   "child_start_aptitude": [
     0,
     10
-  ]
+  ],
+  "adult_classes": {
+    "_doc": "Cours pour adultes à l'école (1.4) : un adulte inscrit gagne cette aptitude chaque jour où un maître enseigne.",
+    "gain_per_day": 1,
+    "seats": 4
+  }
 }

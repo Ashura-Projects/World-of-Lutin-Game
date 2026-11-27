@@ -210,37 +210,7 @@ func _do(ok: bool, fail_msg: String) -> void:
 
 # --- Diplomatie ----------------------------------------------------------------------------------
 func _diplomacy_tab() -> void:
-	var r := _realm()
-	_label(
-		"Cadeaux, commerce et alliance améliorent les prix. En guerre, leurs soldats attaquent ; conquérez leur village.",
-		18,
-		UiStyle.TXT_D
-	)
-	if r.neighbours().is_empty():
-		_label("Aucun voisin rencontré : explorez la carte (éclaireurs) pour les trouver.", 20)
-	for f: Dictionary in r.neighbours():
-		var id: String = f["id"]
-		_label("%s — %s" % [f["name"], f["desc"]], 21, UiStyle.GOLD)
-		var info := "Relation : %d / 100 · %s" % [int(r.relation(id)), r.status_name(id)]
-		if Rivals.active != null and Rivals.active.states.has(id):
-			var st: Dictionary = Rivals.active.states[id]
-			info += " · %d habitants, %d soldats" % [int(st["population"]), int(st["soldiers"])]
-			if st.get("peace_offer", false):
-				info += " · PROPOSE LA PAIX"
-		_label(info, 19)
-		if r.status(id) == "conquered":
-			continue
-		var row := _row()
-		for a: Array in [
-			["gift", "Cadeau (%d or)" % int(DataRegistry.get_table("realm")["diplomacy"].get("gift_gold", 20))],
-			["treaty", "Commerce"],
-			["alliance", "Alliance"],
-			["peace", "Paix"],
-			["war", "Guerre"],
-			["insult", "Insulter"]
-		]:
-			var act: String = a[0]
-			_button(row, a[1], func() -> void: _diplo(id, act), 160)
+	DiplomacyTab.fill(self)
 
 
 func _diplo(id: String, act: String) -> void:

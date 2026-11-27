@@ -105,6 +105,12 @@ static func build(kind: String) -> Node3D:
 			_b(r, Vector3(0.12, 0.12, 2.2), "7a5836", c + Vector3(0, 1.1, -0.1), Vector3(0.55, 0, 0))
 			_b(r, Vector3(0.4, 0.2, 0.4), "5a3e28", c + Vector3(0, 1.85, -0.75))
 			_b(r, Vector3(0.6, 0.6, 0.6), "6a6a6a", c + Vector3(0, 0.75, 0.75))
+		"village_post":  # poteau à lanterne et panneau du village
+			_b(r, Vector3(0.35, 0.3, 0.35), "8a8278", Vector3(0, 0.15, 0))
+			_b(r, Vector3(0.12, 2.4, 0.12), "5a3e28", Vector3(0, 1.2, 0))
+			_b(r, Vector3(0.9, 0.4, 0.06), "8a6440", Vector3(0.3, 1.8, 0))
+			_b(r, Vector3(0.7, 0.06, 0.07), "c49e54", Vector3(0.3, 1.9, 0))
+			_b(r, Vector3(0.18, 0.22, 0.18), "ffd27a", Vector3(0, 2.5, 0), Vector3.ZERO, 4.0)
 		"claim_post":
 			var col := Faction.current.color1 if Faction.current != null else "2c4a96"
 			_b(r, Vector3(0.3, 0.3, 0.3), "8a8278", Vector3(0, 0.15, 0))

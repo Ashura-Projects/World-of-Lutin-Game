@@ -144,7 +144,140 @@
         "price_bonus_trade": 0.15
       }
     ],
-    "alliance_min": 70
+    "alliance_min": 70,
+    "levels": [
+      {
+        "id": "mortal",
+        "name": "Ennemi mortel",
+        "min": -100,
+        "color": "8a1010"
+      },
+      {
+        "id": "enemy",
+        "name": "Ennemi",
+        "min": -75,
+        "color": "c83a2a"
+      },
+      {
+        "id": "suspicious",
+        "name": "Suspicieux",
+        "min": -40,
+        "color": "d89040"
+      },
+      {
+        "id": "neutral",
+        "name": "Neutre",
+        "min": -10,
+        "color": "a0a0a0"
+      },
+      {
+        "id": "favorable",
+        "name": "Favorable",
+        "min": 15,
+        "color": "8ac060"
+      },
+      {
+        "id": "support",
+        "name": "Soutien",
+        "min": 40,
+        "color": "4ab070"
+      }
+    ],
+    "no_diplomat_mult": 0.6,
+    "charisma_mult": 0.01,
+    "skill_mult": 0.06,
+    "actions": [
+      {
+        "id": "gift_gold",
+        "name": "Cadeau d'or",
+        "min_skill": -1,
+        "cost": {
+          "gold": 20
+        },
+        "relation": 8,
+        "xp": 8,
+        "done": "Cadeau d'or remis."
+      },
+      {
+        "id": "gift_goods",
+        "name": "Cadeau de vivres",
+        "min_skill": -1,
+        "cost": {
+          "bread": 10
+        },
+        "relation": 5,
+        "xp": 6,
+        "done": "Vivres offerts."
+      },
+      {
+        "id": "praise",
+        "name": "Compliments et banquet",
+        "min_skill": 1,
+        "cost": {
+          "beer": 4
+        },
+        "relation": 6,
+        "daily": true,
+        "xp": 10,
+        "done": "Le banquet a plu."
+      },
+      {
+        "id": "trade",
+        "name": "Accord commercial",
+        "min_skill": 2,
+        "min_relation": 15,
+        "relation": 4,
+        "xp": 15,
+        "done": "Accord commercial signé : meilleurs prix."
+      },
+      {
+        "id": "non_aggression",
+        "name": "Pacte de non-agression",
+        "min_skill": 3,
+        "min_relation": 5,
+        "relation": 5,
+        "xp": 20,
+        "done": "Pacte de non-agression signé."
+      },
+      {
+        "id": "tribute",
+        "name": "Exiger un tribut",
+        "min_skill": 4,
+        "min_relation": -100,
+        "relation": -12,
+        "gold": 20,
+        "daily": true,
+        "xp": 12,
+        "done": "Tribut exigé."
+      },
+      {
+        "id": "alliance",
+        "name": "Alliance",
+        "min_skill": 5,
+        "min_relation": 40,
+        "relation": 10,
+        "xp": 30,
+        "done": "Alliance conclue !"
+      },
+      {
+        "id": "incite",
+        "name": "Les monter contre un voisin",
+        "min_skill": 6,
+        "min_relation": 15,
+        "relation": 2,
+        "daily": true,
+        "xp": 20,
+        "done": "C'est fait."
+      },
+      {
+        "id": "insult",
+        "name": "Insulter",
+        "min_skill": -1,
+        "relation": -15,
+        "xp": 2,
+        "done": "Votre messager les a insultés."
+      }
+    ]
   },
   "military": {
     "soldier_job": "soldier",
@@ -194,5 +327,23 @@
     "color": "1c2028",
     "alpha": 0.94
   },
-  "watchtower_radius_cols": 5
+  "watchtower_radius_cols": 5,
+  "settlements": {
+    "_doc": "Villages et villes (1.4) : rayon d'appartenance (blocs), règles de ville, noms des nouveaux villages.",
+    "radius": 40,
+    "city_residents": 50,
+    "city_cages": 5,
+    "city_training_cells": 4,
+    "first_name": "Premier village",
+    "names": [
+      "Hameau du Ruisseau",
+      "Bourg-Fougère",
+      "Val-Mousse",
+      "Pierre-Haute",
+      "Gué-aux-Saules",
+      "Clairière-Dorée",
+      "Roche-Brune",
+      "Pré-Fleuri"
+    ]
+  }
 }

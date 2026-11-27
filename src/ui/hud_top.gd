@@ -33,7 +33,7 @@ func setup(h: Hud, g: Node) -> void:
 	]:
 		var b := Button.new()
 		b.position = Vector2(x, 6)
-		var wide := 184 if r[0] == "food" else 128
+		var wide := 160 if r[0] == "food" else 112
 		b.custom_minimum_size = Vector2(wide, 50)
 		b.add_theme_font_size_override("font_size", 17)
 		b.tooltip_text = "Toutes les ressources"
@@ -42,6 +42,14 @@ func setup(h: Hud, g: Node) -> void:
 		root.add_child(b)
 		_res_labels[r[0]] = [b, r[1]]
 		x += wide + 6
+	var pop := Button.new()  # compteur de lutins : un toucher ouvre la liste par village et ville (filtres)
+	pop.position = Vector2(x, 6)
+	pop.custom_minimum_size = Vector2(86, 50)
+	pop.add_theme_font_size_override("font_size", 17)
+	pop.tooltip_text = "Lutins par village et ville"
+	pop.pressed.connect(func() -> void: hud.settlements_panel.open_people())
+	root.add_child(pop)
+	_res_labels["lutins"] = [pop, "☺"]
 	_build_map()
 
 
@@ -102,6 +110,8 @@ func refresh() -> void:
 	var st: Stockpile = game.colony.stock
 	for k: String in _res_labels:
 		var n := st.food_total() if k == "food" else st.count(k)
+		if k == "lutins":
+			n = game.colony.lutins.size()
 		_res_labels[k][0].text = "%s %d ▾" % [_res_labels[k][1], n] if k == "food" else "%s %d" % [_res_labels[k][1], n]
 
 

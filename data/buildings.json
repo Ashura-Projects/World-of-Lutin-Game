@@ -1042,7 +1042,7 @@
     },
     {
       "id": "claim_post",
-      "name": "Borne de territoire",
+      "name": "Balise de royaume (territoire)",
       "size": [
         1,
         1,
@@ -2019,6 +2019,49 @@
         "camp"
       ],
       "_note": "posée par une unité au repos, retirée quand elle repart"
+    },
+    {
+      "id": "chancellery_desk",
+      "name": "Bureau de chancellerie",
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "cost": {
+        "plank": 6,
+        "cloth": 2,
+        "gold": 5
+      },
+      "build_time": 8,
+      "available_from_start": true,
+      "object": true,
+      "training": "embassy",
+      "tags": [
+        "decor",
+        "chancellery"
+      ],
+      "_note": "forme les diplomates (charisme 40 conseillé)"
+    },
+    {
+      "id": "village_post",
+      "name": "Balise de village (fonde un village)",
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "cost": {
+        "log": 2,
+        "stone": 4,
+        "gold": 10
+      },
+      "build_time": 10,
+      "available_from_start": true,
+      "object": true,
+      "tags": [
+        "village_post"
+      ]
     }
   ]
 }

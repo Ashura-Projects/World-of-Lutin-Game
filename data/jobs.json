@@ -230,6 +230,13 @@
       "requires_building": "chapel",
       "_note": "célèbre les offices (foi), marie les couples, peut prêcher chez les voisins",
       "requires_training": "priest"
+    },
+    {
+      "id": "diplomat",
+      "name": "Diplomate",
+      "tool": null,
+      "requires_training": "diplomat",
+      "tasks": []
     }
   ],
   "work": {
